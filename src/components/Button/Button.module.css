@@ -362,7 +362,7 @@
 .link-subtle {
   background-color: transparent;
   border-color: transparent;
-  text-decoration: underline;
+  text-decoration: underline dotted;
   text-decoration-thickness: 8%;
   text-underline-offset: 8%;
   color: var(--text-secondary);
