@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type * as React from "react";
-import type { DotMenuProps } from "../../types/DotMenu";
+import type { DotMenuProps } from "./DotMenu.types";
 
 /**
  * Hook personnalisé pour gérer l'état et les interactions du composant DotMenu

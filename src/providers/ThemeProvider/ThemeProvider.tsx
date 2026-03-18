@@ -2,9 +2,9 @@ import { CssBaseline } from "@mui/material";
 import { ThemeProvider as ThemeMui, createTheme } from "@mui/material/styles";
 import { deepmerge } from "@mui/utils";
 import { useCallback, useEffect, useMemo, useReducer } from "react";
-import paletteDark from "../palette/dark";
-import paletteLight from "../palette/light";
-import defaultConfig from "../theme";
+import paletteDark from "../../styles/palette/dark";
+import paletteLight from "../../styles/palette/light";
+import defaultConfig from "../../styles/theme";
 import { ThemeContext, initialState, themeReducer } from "./ThemeContext";
 import type { ThemeMode } from "./ThemeContext.types";
 import type { ThemeProviderProps } from "./ThemeProvider.types";
@@ -15,7 +15,7 @@ import type { ThemeProviderProps } from "./ThemeProvider.types";
  * This component provides a theme context to its children.
  *
  * ```tsx
- * import { ThemeProvider } from "@aexae/design-system/styles";
+ * import { ThemeProvider } from "@naxit/comete-design-system/styles";
  *
  * <ThemeProvider>
  *  <App />

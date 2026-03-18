@@ -1,5 +1,5 @@
 import Chip from "@mui/material/Chip";
-import type { ChipProps } from "../../types/Chip";
+import type { ChipProps } from "./Chip.types";
 
 const ChipComponent = ({ size = "small", children, ...props }: ChipProps) => {
   return (

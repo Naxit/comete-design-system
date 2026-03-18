@@ -1,4 +1,4 @@
-import { useTheme } from "../styles/useTheme/useTheme";
+import { useTheme } from "./useTheme";
 import { useMediaQuery } from "@mui/material";
 
 /**

@@ -3,8 +3,7 @@ import type { FieldValues, UseFormReturn } from "react-hook-form";
 import Stack from "@mui/material/Stack";
 import { useForm } from "./useForm";
 import { FormField } from "./FormField";
-// import type { FormProps } from "@types/components/Form"; // TODO: CW-21558
-import type { FormProps } from "../../types/Form";
+import type { FormProps } from "./Form.types";
 import { FormSubmitButton } from "./FormSubmitButton";
 
 /**

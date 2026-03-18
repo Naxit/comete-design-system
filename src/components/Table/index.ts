@@ -5,4 +5,4 @@ export type {
   CustomTableHeadProps,
   CustomTableBodyProps,
   CustomTableProps,
-} from "../../types/Table";
+} from "./Table.types";

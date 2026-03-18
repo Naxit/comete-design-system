@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Form } from "./Form";
-import type { FormConfig } from "../../types/Form";
+import type { FormConfig } from "./Form.types";
 import { createFormField } from "./helpers";
 
 // Mock du provider Snackbar

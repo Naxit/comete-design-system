@@ -36,11 +36,8 @@
   },
   "include": [
     "src",
-    "stories",
-    "storybook",
     "vite.config.js",
     "vitest.config.js",
-    "vitest.setup.js",
     "jest.config.js",
     "jest.setup.js",
     "eslint.config.mjs",

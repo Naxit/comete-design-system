@@ -1,5 +1,5 @@
 import ButtonGroup from "@mui/material/ButtonGroup";
-import type { ButtonGroupProps } from "../../types/Button";
+import type { ButtonGroupProps } from "./Button.types";
 
 /**
  * Composant ButtonGroup

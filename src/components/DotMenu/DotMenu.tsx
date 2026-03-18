@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ListItemText from "@mui/material/ListItemText";
 import IconButton from "@mui/material/IconButton";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import type { DotMenuProps } from "../../types";
+import type { DotMenuProps } from "./DotMenu.types";
 import { useDotMenu } from "./useDotMenu";
 
 /**

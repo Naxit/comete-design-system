@@ -1,6 +1,6 @@
 import type { BaseSyntheticEvent } from "react";
 import type { UseFormReturn, FieldValues, Path } from "react-hook-form";
-import type { FormConfig, FormProps } from "../../types/Form";
+import type { FormConfig, FormProps } from "./Form.types";
 
 /**
  * Props du hook useForm personnalisé

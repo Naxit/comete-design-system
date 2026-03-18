@@ -1,5 +1,5 @@
 import type { FieldValues } from "react-hook-form";
-import type { FormField } from "../../types/Form";
+import type { FormField } from "./Form.types";
 
 /**
  * Props du composant FormField

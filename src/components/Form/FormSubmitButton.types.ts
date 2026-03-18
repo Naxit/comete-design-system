@@ -1,4 +1,4 @@
-import type { FormButtons } from "../../types/Form";
+import type { FormButtons } from "./Form.types";
 
 /**
  * Props du composant FormSubmitButton

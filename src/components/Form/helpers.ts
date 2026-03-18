@@ -1,6 +1,6 @@
 import type { FieldValues, Path } from "react-hook-form";
 import type { ComponentType, ComponentProps } from "react";
-import type { FormField, OmittedFormProps } from "../../types/Form";
+import type { FormField, OmittedFormProps } from "./Form.types";
 
 /**
  * Fonction helper pour créer un champ de formulaire avec inférence de type automatique

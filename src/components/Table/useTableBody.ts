@@ -1,4 +1,4 @@
-import type { CustomTableBodyProps } from "../../types/Table";
+import type { CustomTableBodyProps } from "./Table.types";
 import { type MouseEvent, type ChangeEvent } from "react";
 
 /**

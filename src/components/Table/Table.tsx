@@ -7,7 +7,7 @@ import TablePagination from "@mui/material/TablePagination";
 import Skeleton from "@mui/material/Skeleton";
 import TableHead from "./TableHead";
 import TableBody from "./TableBody";
-import type { Order, CustomTableProps } from "../../types/Table";
+import type { Order, CustomTableProps } from "./Table.types";
 import { getComparator } from "../../utils/getComparator";
 
 export const EnhancedTable = <T,>({

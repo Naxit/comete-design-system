@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Table } from "./index";
-import type { TableColumn } from "../../types/Table";
+import type { TableColumn } from "./Table.types";
 
 // Type pour les données de test
 type TestData = {

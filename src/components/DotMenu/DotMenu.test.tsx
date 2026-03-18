@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DotMenu } from "./DotMenu";
-import type { DotMenuProps } from "../../types/DotMenu";
+import type { DotMenuProps } from "./DotMenu.types";
 
 describe("DotMenu", () => {
   const defaultActions: DotMenuProps["actions"] = [

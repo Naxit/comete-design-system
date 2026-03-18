@@ -1,4 +1,4 @@
-import type { Order } from "../types/Table";
+import type { Order } from "../components/Table/Table.types";
 
 export function getComparator<T>(order: Order, orderBy: string): (a: T, b: T) => number {
   return order === "desc"

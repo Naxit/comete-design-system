@@ -4,7 +4,7 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Box from "@mui/material/Box";
 import { Checkbox } from "../Input";
-import type { CustomTableBodyProps } from "../../types/Table";
+import type { CustomTableBodyProps } from "./Table.types";
 import { useTableBody } from "./useTableBody";
 
 const TableBodyComponent = <T,>({

@@ -1,6 +1,6 @@
 import MuiButton from "@mui/material/Button";
 import { forwardRef } from "react";
-import type { ButtonProps } from "../../types/Button";
+import type { ButtonProps } from "./Button.types";
 
 /**
  * Button component based on MUI Button.

@@ -1,7 +1,7 @@
 import { default as MuiModal } from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
-import type { ModalProps } from "../../types/Modal";
+import type { ModalProps } from "./Modal.types";
 
 const StyledModalBox = styled(Box, {
   shouldForwardProp: (prop) => 

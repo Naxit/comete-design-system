@@ -1,4 +1,5 @@
 export { dark, light } from "./palette";
-export type { ThemeMode, ThemeProviderProps } from "./ThemeProvider";
-export { ThemeProvider } from "./ThemeProvider/ThemeProvider";
-export { useTheme } from "./useTheme";
+// Re-exported from canonical locations to maintain the ./styles subpath export contract
+export type { ThemeMode, ThemeProviderProps } from "../providers/ThemeProvider";
+export { ThemeProvider } from "../providers/ThemeProvider";
+export { useTheme } from "../hooks/useTheme";

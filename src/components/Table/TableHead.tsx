@@ -6,7 +6,7 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Box from "@mui/material/Box";
 import { visuallyHidden } from "@mui/utils";
 import { Checkbox } from "../Input";
-import type { CustomTableHeadProps } from "../../types/Table";
+import type { CustomTableHeadProps } from "./Table.types";
 import Typography from "../Text/Typography";
 
 const TableHeadComponent = ({
