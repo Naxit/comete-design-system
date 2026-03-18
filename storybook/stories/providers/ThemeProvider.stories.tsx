@@ -4,7 +4,7 @@ import {
   dark as defaultDarkPalette,
   light as defaultLightPalette,
   useTheme,
-} from "@aexae/design-system/styles";
+} from "@naxit/comete-design-system/styles";
 import { Box, Button, Chip, Divider, Stack, Typography } from "@mui/material";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 

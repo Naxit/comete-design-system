@@ -10,8 +10,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["../src/*"],
-      "@aexae/design-system": ["../src/index.ts"],
-      "@aexae/design-system/*": ["../src/*"]
+      "@naxit/comete-design-system": ["../src/index.ts"],
+      "@naxit/comete-design-system/*": ["../src/*"]
     }
   },
   "include": ["../src/**/*", "./**/*", ".storybook/**/*"],

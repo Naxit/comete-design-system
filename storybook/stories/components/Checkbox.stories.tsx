@@ -1,5 +1,5 @@
-import { Checkbox } from "@aexae/design-system";
-import type { CheckboxProps } from "@aexae/design-system";
+import { Checkbox } from "@naxit/comete-design-system";
+import type { CheckboxProps } from "@naxit/comete-design-system";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import type { Meta, StoryObj } from "@storybook/react-vite";

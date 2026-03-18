@@ -1,5 +1,5 @@
-import { Chip } from "@aexae/design-system";
-import type { ChipProps } from "@aexae/design-system";
+import { Chip } from "@naxit/comete-design-system";
+import type { ChipProps } from "@naxit/comete-design-system";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import DeleteIcon from "@mui/icons-material/Delete";

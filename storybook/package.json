@@ -1,5 +1,5 @@
 {
-  "name": "@aexae/design-system-storybook",
+  "name": "@naxit/comete-design-system-storybook",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "outdated": "pnpm outdated"
   },
   "dependencies": {
-    "@aexae/design-system": "file:..",
+    "@naxit/comete-design-system": "file:..",
     "@capacitor/app": "^7.1.1",
     "@capacitor/camera": "^7.0.3",
     "@capacitor/core": "^7.4.4",

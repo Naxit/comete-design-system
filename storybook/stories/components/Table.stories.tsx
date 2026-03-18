@@ -1,5 +1,5 @@
-import { Chip, Table } from "@aexae/design-system";
-import type { TableColumn, CustomTableProps } from "@aexae/design-system";
+import { Chip, Table } from "@naxit/comete-design-system";
+import type { TableColumn, CustomTableProps } from "@naxit/comete-design-system";
 import Box from "@mui/material/Box";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 

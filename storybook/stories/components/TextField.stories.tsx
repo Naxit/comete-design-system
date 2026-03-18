@@ -1,5 +1,5 @@
-import { TextField } from "@aexae/design-system";
-import type { TextFieldProps } from "@aexae/design-system";
+import { TextField } from "@naxit/comete-design-system";
+import type { TextFieldProps } from "@naxit/comete-design-system";
 import Box from "@mui/material/Box";
 import InputAdornment from "@mui/material/InputAdornment";
 import Stack from "@mui/material/Stack";

@@ -1,4 +1,4 @@
-import { Illustration } from "@aexae/design-system";
+import { Illustration } from "@naxit/comete-design-system";
 import Box from "@mui/material/Box";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 

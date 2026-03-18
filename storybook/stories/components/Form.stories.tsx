@@ -1,4 +1,4 @@
-import { Button } from "@aexae/design-system";
+import { Button } from "@naxit/comete-design-system";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import {
@@ -7,7 +7,7 @@ import {
   type FormProps,
   createFormField,
   SnackbarProvider,
-} from "@aexae/design-system";
+} from "@naxit/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 // ----------------------------------------------------------------------
