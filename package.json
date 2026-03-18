@@ -1,7 +1,7 @@
 {
   "name": "@naxit/comete-design-system",
   "description": "Comete Design System",
-  "author": "aexae",
+  "author": "naxit",
   "version": "0.2.0",
   "license": "MIT",
   "private": false,
@@ -13,7 +13,7 @@
   "packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aexae/design-system.git"
+    "url": "git+https://github.com/Naxit/comete-design-system.git"
   },
   "keywords": [
     "react",
@@ -31,10 +31,10 @@
   },
   "scripts": {
     "docker": "docker compose -p comete-ds-dev -f compose.dev.yml up -d --build",
-    "build": "tsup && pnpm pack",
-    "test": "jest --watch=false",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage && open-cli coverage/lcov-report/index.html",
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage && open-cli coverage/lcov-report/index.html",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --fix",
     "update": "pnpm update",
@@ -56,7 +56,8 @@
     "@mui/x-date-pickers": "^6.0.0 || ^7.0.0",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0",
-    "react-router-dom": "^6.0.0 || ^7.0.0"
+    "react-router-dom": "^6.0.0 || ^7.0.0",
+    "@naxit/comete-design-tokens": "^0.3.0"
   },
   "devDependencies": {
     "@naxit/comete-design-tokens": "^0.3.0",
@@ -70,7 +71,6 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
-    "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.21",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
@@ -89,16 +89,13 @@
     "eslint-plugin-react-refresh": "^0.4.25",
     "eslint-plugin-storybook": "^10.1.9",
     "globals": "^16.5.0",
-    "jest": "^30.2.0",
-    "jest-environment-jsdom": "^30.2.0",
-    "node-fetch": "^2.7.0",
+    "jsdom": "^26.1.0",
     "open-cli": "^8.0.0",
     "playwright": "^1.57.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "rimraf": "^6.1.2",
     "serve": "^14.2.5",
-    "ts-jest": "^29.4.6",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.50.0",
