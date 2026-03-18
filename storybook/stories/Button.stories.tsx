@@ -95,14 +95,14 @@ export const Disabled: Story = {
 
 /** All contained color variants side by side */
 export const AllColors: Story = {
-  render: () => (
+  render: (args) => (
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-      <Button color="default">Default</Button>
-      <Button color="brand">Brand</Button>
-      <Button color="success">Success</Button>
-      <Button color="critical">Critical</Button>
-      <Button color="warning">Warning</Button>
-      <Button color="information">Information</Button>
+      <Button color="default" variant={args.variant}>Default</Button>
+      <Button color="brand" variant={args.variant}>Brand</Button>
+      <Button color="success" variant={args.variant}>Success</Button>
+      <Button color="critical" variant={args.variant}>Critical</Button>
+      <Button color="warning" variant={args.variant}>Warning</Button>
+      <Button color="information" variant={args.variant}>Information</Button>
     </div>
   ),
 };
@@ -111,10 +111,10 @@ export const AllColors: Story = {
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Button variant="contained" color="brand">Contained</Button>
-      <Button variant="outlined" color="brand">Outlined</Button>
-      <Button variant="subtle" color="brand">Subtle</Button>
-      <Button variant="link" color="brand">Link</Button>
+      <Button variant="contained" color="default">Contained</Button>
+      <Button variant="outlined" color="default">Outlined</Button>
+      <Button variant="link" color="information">Link</Button>
+      <Button variant="subtle" color="default">Subtle</Button>
       <Button variant="link-subtle" color="default">Link Subtle</Button>
     </div>
   ),
