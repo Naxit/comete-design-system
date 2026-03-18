@@ -218,32 +218,163 @@
 }
 
 /* ==========================================================================
-   Variant: text (subtle / ghost)
+   Variant: subtle (ghost — transparent bg, hover reveals fill)
    ========================================================================== */
 
-.text {
+.subtle {
   background-color: transparent;
   border-color: transparent;
 }
 
-.text.default {
+.subtle.default {
   color: var(--text-primary);
 }
-.text.default:not([data-disabled])[data-hovered] {
+.subtle.default:not([data-disabled])[data-hovered] {
   background-color: var(--background-neutral-subtlest-hovered);
 }
-.text.default:not([data-disabled])[data-pressed] {
+.subtle.default:not([data-disabled])[data-pressed] {
   background-color: var(--background-neutral-subtlest-pressed);
 }
 
-.text.brand {
+.subtle.brand {
   color: var(--text-brand);
 }
-.text.brand:not([data-disabled])[data-hovered] {
+.subtle.brand:not([data-disabled])[data-hovered] {
   background-color: var(--background-brand-subtlest-hovered);
 }
-.text.brand:not([data-disabled])[data-pressed] {
+.subtle.brand:not([data-disabled])[data-pressed] {
   background-color: var(--background-brand-subtlest-pressed);
+}
+
+.subtle.success {
+  color: var(--text-success);
+}
+.subtle.success:not([data-disabled])[data-hovered] {
+  background-color: var(--background-success-subtlest-hovered);
+}
+.subtle.success:not([data-disabled])[data-pressed] {
+  background-color: var(--background-success-subtlest-pressed);
+}
+
+.subtle.critical {
+  color: var(--text-critical);
+}
+.subtle.critical:not([data-disabled])[data-hovered] {
+  background-color: var(--background-critical-subtlest-hovered);
+}
+.subtle.critical:not([data-disabled])[data-pressed] {
+  background-color: var(--background-critical-subtlest-pressed);
+}
+
+.subtle.warning {
+  color: var(--text-warning);
+}
+.subtle.warning:not([data-disabled])[data-hovered] {
+  background-color: var(--background-warning-subtlest-hovered);
+}
+.subtle.warning:not([data-disabled])[data-pressed] {
+  background-color: var(--background-warning-subtlest-pressed);
+}
+
+.subtle.information {
+  color: var(--text-information);
+}
+.subtle.information:not([data-disabled])[data-hovered] {
+  background-color: var(--background-information-subtlest-hovered);
+}
+.subtle.information:not([data-disabled])[data-pressed] {
+  background-color: var(--background-information-subtlest-pressed);
+}
+
+/* ==========================================================================
+   Variant: link (text + underline, semantic color)
+   ========================================================================== */
+
+.link {
+  background-color: transparent;
+  border-color: transparent;
+  text-decoration: underline;
+  text-decoration-thickness: 8%;
+  text-underline-offset: 8%;
+}
+
+.link.default {
+  color: var(--text-primary);
+}
+.link.default:not([data-disabled])[data-hovered] {
+  color: var(--text-secondary);
+}
+
+.link.brand {
+  color: var(--text-brand);
+}
+.link.brand:not([data-disabled])[data-hovered] {
+  background-color: var(--background-brand-subtlest-hovered);
+}
+.link.brand:not([data-disabled])[data-pressed] {
+  background-color: var(--background-brand-subtlest-pressed);
+}
+
+.link.success {
+  color: var(--text-success);
+}
+.link.success:not([data-disabled])[data-hovered] {
+  background-color: var(--background-success-subtlest-hovered);
+}
+.link.success:not([data-disabled])[data-pressed] {
+  background-color: var(--background-success-subtlest-pressed);
+}
+
+.link.critical {
+  color: var(--text-critical);
+}
+.link.critical:not([data-disabled])[data-hovered] {
+  background-color: var(--background-critical-subtlest-hovered);
+}
+.link.critical:not([data-disabled])[data-pressed] {
+  background-color: var(--background-critical-subtlest-pressed);
+}
+
+.link.warning {
+  color: var(--text-warning);
+}
+.link.warning:not([data-disabled])[data-hovered] {
+  background-color: var(--background-warning-subtlest-hovered);
+}
+.link.warning:not([data-disabled])[data-pressed] {
+  background-color: var(--background-warning-subtlest-pressed);
+}
+
+.link.information {
+  color: var(--text-information);
+}
+.link.information:not([data-disabled])[data-hovered] {
+  background-color: var(--background-information-subtlest-hovered);
+}
+.link.information:not([data-disabled])[data-pressed] {
+  background-color: var(--background-information-subtlest-pressed);
+}
+
+/* ==========================================================================
+   Variant: link-subtle (text + underline, secondary/muted color)
+   ========================================================================== */
+
+.link-subtle {
+  background-color: transparent;
+  border-color: transparent;
+  text-decoration: underline;
+  text-decoration-thickness: 8%;
+  text-underline-offset: 8%;
+  color: var(--text-secondary);
+}
+
+.link-subtle:not([data-disabled])[data-hovered] {
+  color: var(--text-primary);
+}
+
+.link-subtle:not([data-disabled])[data-pressed] {
+  color: var(--text-primary);
+  background-color: var(--background-neutral-subtlest-pressed);
 }
 
 /* ==========================================================================
