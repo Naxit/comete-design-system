@@ -8,7 +8,7 @@ const meta: Meta<ButtonProps> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["contained", "outlined", "text"],
+      options: ["contained", "outlined", "subtle", "link", "link-subtle"],
     },
     color: {
       control: "select",
@@ -63,8 +63,16 @@ export const Outlined: Story = {
   args: { variant: "outlined", color: "brand", children: "Annuler" },
 };
 
-export const Text: Story = {
-  args: { variant: "text", color: "brand", children: "Voir plus" },
+export const Subtle: Story = {
+  args: { variant: "subtle", color: "brand", children: "Voir plus" },
+};
+
+export const Link: Story = {
+  args: { variant: "link", color: "brand", children: "En savoir plus" },
+};
+
+export const LinkSubtle: Story = {
+  args: { variant: "link-subtle", color: "default", children: "Voir les détails" },
 };
 
 // ----------------------------------------------------------------------
@@ -105,7 +113,9 @@ export const AllVariants: Story = {
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
       <Button variant="contained" color="brand">Contained</Button>
       <Button variant="outlined" color="brand">Outlined</Button>
-      <Button variant="text" color="brand">Text</Button>
+      <Button variant="subtle" color="brand">Subtle</Button>
+      <Button variant="link" color="brand">Link</Button>
+      <Button variant="link-subtle" color="default">Link Subtle</Button>
     </div>
   ),
 };

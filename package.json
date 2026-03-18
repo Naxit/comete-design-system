@@ -31,7 +31,9 @@
     "pnpm": ">=10"
   },
   "scripts": {
-    "build": "tsup",
+    "css-types": "tcm src --pattern '**/*.module.css'",
+    "css-types:watch": "tcm src --pattern '**/*.module.css' --watch",
+    "build": "pnpm css-types && tsup",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
@@ -42,27 +44,33 @@
     "react-aria-components": "^1.8.0"
   },
   "peerDependencies": {
-    "@naxit/comete-design-tokens": "^0.3.0",
+    "@naxit/comete-design-tokens": "^0.3.1",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@naxit/comete-design-tokens": "^0.3.0",
+    "@eslint/js": "^9.39.2",
+    "@naxit/comete-design-tokens": "0.3.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.7.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
+    "globals": "^17.4.0",
+    "jsdom": "^29.0.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "rimraf": "^6.1.2",
     "tsup": "^8.5.1",
+    "typed-css-modules": "^0.9.1",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.57.1",
     "vite": "^7.3.0",
     "vitest": "^4.0.15"
   },
@@ -91,10 +99,18 @@
   },
   "typesVersions": {
     "*": {
-      "*": ["dist/*"],
-      "components": ["dist/components/index.d.ts"],
-      "providers": ["dist/providers/index.d.ts"],
-      "hooks": ["dist/hooks/index.d.ts"]
+      "*": [
+        "dist/*"
+      ],
+      "components": [
+        "dist/components/index.d.ts"
+      ],
+      "providers": [
+        "dist/providers/index.d.ts"
+      ],
+      "hooks": [
+        "dist/hooks/index.d.ts"
+      ]
     }
   },
   "publishConfig": {

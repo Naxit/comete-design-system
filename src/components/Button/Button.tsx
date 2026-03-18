@@ -1,20 +1,11 @@
-import {
-  Button as AriaButton,
-  type ButtonProps as AriaButtonProps,
-} from "react-aria-components";
+import { Button as AriaButton, type ButtonProps as AriaButtonProps } from "react-aria-components";
 import { forwardRef } from "react";
 import styles from "./Button.module.css";
 
 // ----------------------------------------------------------------------
 
-export type ButtonVariant = "contained" | "outlined" | "text";
-export type ButtonColor =
-  | "default"
-  | "brand"
-  | "success"
-  | "critical"
-  | "warning"
-  | "information";
+export type ButtonVariant = "contained" | "outlined" | "subtle" | "link" | "link-subtle";
+export type ButtonColor = "default" | "brand" | "success" | "critical" | "warning" | "information";
 export type ButtonSize = "small" | "medium" | "large";
 
 export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"> {
@@ -62,15 +53,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       children,
       ...ariaProps
     },
-    ref,
+    ref
   ) => {
-    const classNames = [
-      styles.button,
-      styles[variant],
-      styles[color],
-      styles[size],
-      className,
-    ]
+    // NOTE: "link-subtle" uses bracket notation; CSS Modules preserves kebab-case keys.
+    const variantClass = variant === "link-subtle" ? styles["link-subtle"] : styles[variant];
+    const classNames = [styles.button, variantClass, styles[color], styles[size], className]
       .filter(Boolean)
       .join(" ");
 
@@ -81,7 +68,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {iconAfter && <span className={styles.icon}>{iconAfter}</span>}
       </AriaButton>
     );
-  },
+  }
 );
 
 Button.displayName = "Button";

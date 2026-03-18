@@ -295,7 +295,7 @@
   border-color: transparent;
   text-decoration: underline;
   text-decoration-thickness: 8%;
-  text-underline-offset: 8%;
+  text-underline-offset: 16%;
 }
 
 .link.default {
@@ -364,7 +364,7 @@
   border-color: transparent;
   text-decoration: underline dotted;
   text-decoration-thickness: 8%;
-  text-underline-offset: 8%;
+  text-underline-offset: 16%;
   color: var(--text-secondary);
 }
 
