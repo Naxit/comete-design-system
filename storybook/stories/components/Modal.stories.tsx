@@ -1,5 +1,5 @@
-import { Modal } from "@aexae/design-system";
-import type { ModalProps } from "@aexae/design-system";
+import { Modal } from "@naxit/comete-design-system";
+import type { ModalProps } from "@naxit/comete-design-system";
 import { useState } from "react";
 import {Button} from "@mui/material";
 import Stack from "@mui/material/Stack";

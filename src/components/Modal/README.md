@@ -5,7 +5,7 @@ Un composant Modal flexible basé sur le Modal de Material-UI.
 ## Utilisation
 
 ```tsx
-import { Modal } from '@aexae/design-system';
+import { Modal } from '@naxit/comete-design-system';
 
 function MyComponent() {
   const [open, setOpen] = useState(false);

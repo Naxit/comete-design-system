@@ -1,5 +1,5 @@
-import { Button } from "@aexae/design-system";
-import type { ButtonProps } from "@aexae/design-system";
+import { Button } from "@naxit/comete-design-system";
+import type { ButtonProps } from "@naxit/comete-design-system";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import DeleteIcon from "@mui/icons-material/Delete";

@@ -45,7 +45,7 @@ Form
 
 ## Installation
 
-Le composant `Form` est inclus dans le package `@aexae/design-system`. Aucune installation supplémentaire n'est nécessaire.
+Le composant `Form` est inclus dans le package `@naxit/comete-design-system`. Aucune installation supplémentaire n'est nécessaire.
 
 ### Dépendances requises
 
@@ -62,7 +62,7 @@ Le composant `Form` est inclus dans le package `@aexae/design-system`. Aucune in
 ### Exemple minimal
 
 ```typescript
-import { Form, createFormField, type FormConfig } from "@aexae/design-system";
+import { Form, createFormField, type FormConfig } from "@naxit/comete-design-system";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
@@ -147,7 +147,7 @@ type UserData = {
 Utilisez `createFormField` pour chaque champ. Cette fonction permet à TypeScript d'inférer automatiquement les types :
 
 ```typescript
-import { createFormField } from "@aexae/design-system";
+import { createFormField } from "@naxit/comete-design-system";
 import TextField from "@mui/material/TextField";
 
 const fields = [
@@ -228,7 +228,7 @@ onInvalid: (errors) => {
 ### 6. Utiliser le composant
 
 ```typescript
-import { Form } from "@aexae/design-system";
+import { Form } from "@naxit/comete-design-system";
 
 function UserForm() {
   return <Form config={userConfig} id="user-form" sx={{ maxWidth: 600, mx: "auto" }} />;
@@ -382,8 +382,8 @@ const loginConfig: FormConfig<LoginData> = {
 ### Formulaire complexe avec plusieurs types de champs
 
 ```typescript
-import { Select } from "@aexae/design-system";
-import { AvatarInput } from "@aexae/design-system";
+import { Select } from "@naxit/comete-design-system";
+import { AvatarInput } from "@naxit/comete-design-system";
 
 type UserData = {
   name: string;
@@ -898,4 +898,4 @@ Pour toute question ou problème, veuillez ouvrir une issue sur le repository Gi
 
 ## Licence
 
-Ce composant fait partie du package `@aexae/design-system` et suit la même licence.
+Ce composant fait partie du package `@naxit/comete-design-system` et suit la même licence.

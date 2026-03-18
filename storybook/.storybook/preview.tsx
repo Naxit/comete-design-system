@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@aexae/design-system/styles";
+import { ThemeProvider } from "@naxit/comete-design-system/styles";
 import type { Decorator, Preview } from "@storybook/react";
 import { createElement } from "react";
 

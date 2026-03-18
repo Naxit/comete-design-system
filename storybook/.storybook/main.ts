@@ -22,7 +22,7 @@ const config: StorybookConfig = {
       resolve: {
         alias: {
           "@": resolve(__dirname, "../../src"),
-          "@aexae/design-system": resolve(__dirname, "../../src"),
+          "@naxit/comete-design-system": resolve(__dirname, "../../src"),
         },
         // Évite les doublons de React entre Storybook et les composants
         dedupe: [

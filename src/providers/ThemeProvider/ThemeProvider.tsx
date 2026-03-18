@@ -53,6 +53,12 @@ export const ThemeProvider = ({
     setMode(mode);
   }, [mode, setMode]);
 
+  // Synchronise l'attribut data-theme sur <html> pour que les CSS custom
+  // properties de @naxit/comete-design-tokens switchent correctement.
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", state.mode);
+  }, [state.mode]);
+
   // ----------------------------------------------------------------------
 
   const theme = useMemo(() => {

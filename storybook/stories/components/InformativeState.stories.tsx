@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { Button, ButtonGroup, InformativeState } from "@aexae/design-system";
+import { Button, ButtonGroup, InformativeState } from "@naxit/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 
 // ----------------------------------------------------------------------

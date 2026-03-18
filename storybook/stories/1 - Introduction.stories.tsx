@@ -10,7 +10,7 @@ const meta: Meta = {
   },
   component: () => (
     <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
-      <h1>Comète Design System – @aexae/design-system</h1>
+      <h1>Comète Design System – @naxit/comete-design-system</h1>
 
       <p>
         Bienvenue dans le design system <strong>Comète</strong> pour les applications React !
@@ -24,7 +24,7 @@ const meta: Meta = {
       <h2>Utilisation</h2>
 
       <p>
-        Les composants sont disponibles via le package <code>@aexae/design-system</code>.
+        Les composants sont disponibles via le package <code>@naxit/comete-design-system</code>.
       </p>
 
       <h2>Composants disponibles</h2>
@@ -98,7 +98,7 @@ const meta: Meta = {
 
       <ol>
         <li>
-          Importez le <code>ThemeProvider</code> depuis <code>@aexae/design-system/styles</code>
+          Importez le <code>ThemeProvider</code> depuis <code>@naxit/comete-design-system/styles</code>
         </li>
         <li>
           Enveloppez votre application avec le composant en lui passant un mode par défaut (
@@ -138,7 +138,7 @@ const meta: Meta = {
 
       <ol>
         <li>
-          Toujours utiliser les composants via le package <code>@aexae/design-system</code>
+          Toujours utiliser les composants via le package <code>@naxit/comete-design-system</code>
         </li>
         <li>
           Utiliser le <code>ThemeProvider</code> (et idéalement le <code>SnackbarProvider</code>) au
