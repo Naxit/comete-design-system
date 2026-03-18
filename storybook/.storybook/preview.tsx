@@ -1,12 +1,10 @@
-import { ThemeProvider } from "@naxit/comete-design-system/styles";
+import { ThemeProvider } from "@naxit/comete-design-system/providers";
+import "@naxit/comete-design-tokens/css";
 import type { Decorator, Preview } from "@storybook/react";
 import { createElement } from "react";
 
 /**
- * Decorator to apply the ThemeProvider to all stories
- * @param Story - Story component
- * @param context - Storybook context
- * @returns ThemeProvider wrapped Story component
+ * Decorator — wraps all stories with ThemeProvider + tokens CSS.
  */
 const withThemeProvider: Decorator = (Story, context) => {
   const { theme } = context.globals as { theme: "light" | "dark" };
@@ -14,9 +12,6 @@ const withThemeProvider: Decorator = (Story, context) => {
   return <ThemeProvider mode={theme}>{createElement(Story)}</ThemeProvider>;
 };
 
-/**
- * Storybook preview configuration
- */
 const preview: Preview = {
   decorators: [withThemeProvider],
 
@@ -24,7 +19,7 @@ const preview: Preview = {
     theme: {
       name: "Theme",
       description: "Theme global for components",
-      defaultValue: "dark",
+      defaultValue: "light",
 
       toolbar: {
         icon: "circlehollow",
@@ -45,7 +40,5 @@ const preview: Preview = {
     },
   },
 };
-
-// ----------------------------------------------------------------------
 
 export default preview;
