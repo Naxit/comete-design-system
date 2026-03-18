@@ -15,7 +15,6 @@ const config: StorybookConfig = {
     const __dirname = dirname(__filename);
 
     return mergeConfig(config, {
-      publicDir: resolve(__dirname, "../../public"),
       resolve: {
         alias: {
           "@": resolve(__dirname, "../../src"),

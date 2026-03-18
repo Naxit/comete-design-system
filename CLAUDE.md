@@ -8,22 +8,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Dépendances
 pnpm install
 
-# Build (génère dist/ + .tgz)
+# Build (génère dist/)
 pnpm build
 
 # Tests
-pnpm test                # Lance une fois
+pnpm test                # Lance une fois (vitest run)
 pnpm test:watch          # Mode watch
-pnpm test:coverage       # Coverage + rapport HTML
 
 # Lint & format
 pnpm lint                # Vérification (zéro warning toléré)
 pnpm lint:fix            # Auto-correction sur src/
 
 # Storybook (catalogue de composants)
-pnpm docker              # Via Docker → http://localhost:6060
-# ou sans Docker :
 cd storybook && pnpm install && pnpm start  # → http://localhost:6006
+# ou via Docker :
+docker compose -f compose.dev.yml up        # → http://localhost:6060
 
 # Nettoyage
 pnpm clean
@@ -31,96 +30,75 @@ pnpm clean
 
 ## Architecture
 
-**Comète Design System** est une librairie React publiée sur GitHub Packages (`@naxit/comete-design-system`). Elle wrape Material-UI (MUI 6/7) et expose des composants type-safe, un système de thème, et des providers.
+**Comète Design System** est une librairie React publiée sur GitHub Packages (`@naxit/comete-design-system`). Elle utilise React Aria (headless accessible) + CSS Modules + design tokens.
 
 ### Stack
 
 - **React 18/19** + **TypeScript strict** (`strict: true`, `noUncheckedIndexedAccess`, `noUnusedLocals/Parameters`)
-- **MUI** (peer dep) — les composants MUI sont customisés via theme overrides dans `src/styles/`
-- **react-hook-form** + **yup** — uniquement pour le composant Form
-- **tsup** — bundler ESM uniquement, `splitting: false`. MUI, Emotion, React, lodash sont externalisés (pas bundlés)
-- **Jest** + `ts-jest` + jsdom pour les tests
-- **Storybook** dans `storybook/` (workspace pnpm séparé)
+- **React Aria** (`react-aria-components`) — primitives accessibles headless
+- **CSS Modules** — styling scopé, 100% design tokens, zéro valeur hardcodée
+- **@naxit/comete-design-tokens** (peer dep) — CSS custom properties (primitives + semantic light/dark)
+- **tsup** — bundler ESM uniquement, `splitting: false`. React, react-dom, react-aria-components sont externalisés
+- **Vitest** + jsdom + @testing-library/react pour les tests
+- **Storybook 10** dans `storybook/` (workspace pnpm séparé)
 
 ### Structure des sources (`src/`)
 
 ```
 src/
-├── components/    # Composants React (Button, Form, Table, Modal, etc.)
-├── styles/        # Thème MUI : palette light/dark, typographie, overrides
-│   ├── palette/
-│   ├── typography/
-│   ├── components/  # MUI component overrides (button.ts, textField.ts…)
-│   ├── theme/       # createTheme MUI
-│   └── ThemeProvider/ + useTheme/
-├── providers/     # SnackbarProvider + useSnackbar
-├── hooks/         # useBreakpoints
-├── types/         # Types partagés (Form, Table, Button, etc.) via alias @types/*
-├── utils/         # particleVowels.ts, getComparator.ts (chacun avec son .test.ts)
-└── index.ts       # Entry point principal
+├── components/          # Composants React
+│   └── Button/          # Premier composant (React Aria + CSS Modules)
+│       ├── Button.tsx
+│       ├── Button.module.css
+│       ├── Button.test.tsx
+│       └── index.ts
+├── providers/           # ThemeProvider (data-theme light/dark)
+│   └── ThemeProvider/
+├── hooks/               # useTheme
+├── css-modules.d.ts     # Déclaration TS pour les imports .module.css
+└── index.ts             # Entry point principal
 ```
 
 ### Points d'export (package.json `exports`)
 
-- `.` → `src/index.ts` — export principal
+- `.` → `src/index.ts` — export principal (composants + providers + hooks)
 - `./components` → composants uniquement
-- `./styles` → `ThemeProvider`, `useTheme`, `dark`, `light`
-
-### Composant Form
-
-Pièce centrale du design system. API entièrement déclarative + type-safe :
-
-```typescript
-// Créer un champ typé
-const myField = createFormField<DataType, typeof TextField>({
-  name: "fieldName",
-  component: TextField,
-  props: { label: "..." }
-})
-
-// Configurer le formulaire
-const config: FormConfig<DataType> = {
-  defaultValues: { ... },
-  fields: [myField],
-  yupRules: (yup) => yup.object().shape({ ... }),
-  buttons: { submit: { component: Button, props: { ... } } },
-  onValid: async (data) => { ... }
-}
-
-<Form config={config} />
-```
-
-Détails complets dans `src/components/Form/README.md`.
+- `./providers` → ThemeProvider
+- `./hooks` → useTheme
 
 ### Thème
 
-Le thème MUI se construit dans `src/styles/theme/index.ts` en combinant :
-- `src/styles/palette/light.ts` ou `dark.ts`
-- `src/styles/typography/`
-- `src/styles/components/` (overrides MUI par composant)
-
-`ThemeProvider` expose un contexte permettant de switcher light/dark. `useTheme` retourne le mode actif.
+Le thème fonctionne via l'attribut `data-theme` sur `<html>` :
+- `ThemeProvider` expose un contexte pour switcher light/dark
+- `useTheme` retourne le mode actif et les fonctions de bascule
+- Les CSS custom properties de `@naxit/comete-design-tokens` gèrent les couleurs via `:root` (light) et `[data-theme="dark"]`
 
 ### Conventions composants
 
 Chaque composant suit la structure :
 ```
 ComponentName/
-├── ComponentName.tsx
-├── ComponentName.types.ts   # si types complexes
-├── index.ts                 # export public
+├── ComponentName.tsx          # Composant (React Aria)
+├── ComponentName.module.css   # Styles (100% tokens)
+├── ComponentName.test.tsx     # Tests unitaires
+└── index.ts                   # Export public
 ```
 
-Les stories Storybook correspondantes sont dans `storybook/stories/`.
+### Styling
+
+- **Aucune valeur hardcodée** — tout passe par les CSS custom properties de `@naxit/comete-design-tokens`
+- Les CSS Modules utilisent les data-attributes React Aria : `[data-hovered]`, `[data-pressed]`, `[data-focus-visible]`, `[data-disabled]`
+- Build : `typed-css-modules` génère les `.d.ts` pour les imports CSS Modules avant tsup
 
 ### Tests
 
-Tests unitaires avec Jest + jsdom. Fichiers `.test.ts` au même niveau que le fichier testé. Pour tester un fichier spécifique :
+Tests unitaires avec Vitest + jsdom + @testing-library/react. Fichiers `.test.tsx` au même niveau que le fichier testé :
 
 ```bash
-pnpm test -- --testPathPattern="getComparator"
+pnpm test                           # Tous les tests
+pnpm test -- --reporter=verbose     # Mode verbose
 ```
 
 ### Distribution
 
-Le build produit un `.tgz` installable localement. La publication se fait sur GitHub Packages (registry configuré dans `.npmrc`). Les apps consommatrices installent via `pnpm add @naxit/comete-design-system`.
+Publication sur GitHub Packages (registry configuré dans `.npmrc`). Les apps consommatrices installent via `pnpm add @naxit/comete-design-system`.

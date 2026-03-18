@@ -18,6 +18,5 @@ services:
     volumes:
       - ./storybook/.storybook:/app/storybook/.storybook
       - ./storybook/stories:/app/storybook/stories
-      - ./public:/app/public
       - ./src:/app/src
     ports: ["6060:6006"]
