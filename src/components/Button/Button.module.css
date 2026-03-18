@@ -1,0 +1,396 @@
+/* ==========================================================================
+   Button — Comète Design System
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+.button {
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space050);
+
+  /* Shape */
+  border-radius: var(--radius0375);
+  border: 1px solid transparent;
+
+  /* Typography */
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-s);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  text-align: center;
+  white-space: nowrap;
+  text-decoration: none;
+
+  /* Interaction */
+  cursor: pointer;
+  user-select: none;
+  transition-property: background-color, border-color, color, opacity;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-default);
+
+  /* Reset */
+  outline: none;
+}
+
+/* Focus visible --------------------------------------------------------- */
+.button[data-focus-visible] {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Disabled -------------------------------------------------------------- */
+.button[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
+
+/* ==========================================================================
+   Sizes
+   ========================================================================== */
+
+.small {
+  height: var(--size300);
+  padding: var(--space050) var(--space100);
+}
+
+.medium {
+  height: var(--size400);
+  padding: var(--space050) var(--space150);
+}
+
+.large {
+  height: var(--size500);
+  padding: var(--space075) var(--space200);
+}
+
+/* ==========================================================================
+   Variant: contained
+   ========================================================================== */
+
+/* — default (neutral) — */
+.contained.default {
+  background-color: var(--background-neutral-subtler-default);
+  color: var(--text-primary);
+}
+.contained.default:not([data-disabled])[data-hovered] {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+.contained.default:not([data-disabled])[data-pressed] {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+/* — brand — */
+.contained.brand {
+  background-color: var(--background-brand-bold-default);
+  color: var(--text-inverted);
+}
+.contained.brand:not([data-disabled])[data-hovered] {
+  background-color: var(--background-brand-bold-hovered);
+}
+.contained.brand:not([data-disabled])[data-pressed] {
+  background-color: var(--background-brand-bold-pressed);
+}
+
+/* — success — */
+.contained.success {
+  background-color: var(--background-success-bold-default);
+  color: var(--text-inverted);
+}
+.contained.success:not([data-disabled])[data-hovered] {
+  background-color: var(--background-success-bold-hovered);
+}
+.contained.success:not([data-disabled])[data-pressed] {
+  background-color: var(--background-success-bold-pressed);
+}
+
+/* — critical — */
+.contained.critical {
+  background-color: var(--background-critical-bold-default);
+  color: var(--text-inverted);
+}
+.contained.critical:not([data-disabled])[data-hovered] {
+  background-color: var(--background-critical-bold-hovered);
+}
+.contained.critical:not([data-disabled])[data-pressed] {
+  background-color: var(--background-critical-bold-pressed);
+}
+
+/* — warning — */
+.contained.warning {
+  background-color: var(--background-warning-bold-default);
+  color: var(--text-primary);
+}
+.contained.warning:not([data-disabled])[data-hovered] {
+  background-color: var(--background-warning-bold-hovered);
+}
+.contained.warning:not([data-disabled])[data-pressed] {
+  background-color: var(--background-warning-bold-pressed);
+}
+
+/* — information — */
+.contained.information {
+  background-color: var(--background-information-bold-default);
+  color: var(--text-inverted);
+}
+.contained.information:not([data-disabled])[data-hovered] {
+  background-color: var(--background-information-bold-hovered);
+}
+.contained.information:not([data-disabled])[data-pressed] {
+  background-color: var(--background-information-bold-pressed);
+}
+
+/* ==========================================================================
+   Variant: outlined
+   ========================================================================== */
+
+.outlined {
+  background-color: transparent;
+}
+
+.outlined.default {
+  border-color: var(--border-bold);
+  color: var(--text-primary);
+}
+.outlined.default:not([data-disabled])[data-hovered] {
+  background-color: var(--background-neutral-subtlest-hovered);
+}
+.outlined.default:not([data-disabled])[data-pressed] {
+  background-color: var(--background-neutral-subtlest-pressed);
+}
+
+.outlined.brand {
+  border-color: var(--border-brand);
+  color: var(--text-brand);
+}
+.outlined.brand:not([data-disabled])[data-hovered] {
+  background-color: var(--background-brand-subtlest-hovered);
+}
+.outlined.brand:not([data-disabled])[data-pressed] {
+  background-color: var(--background-brand-subtlest-pressed);
+}
+
+.outlined.success {
+  border-color: var(--border-success);
+  color: var(--text-success);
+}
+.outlined.success:not([data-disabled])[data-hovered] {
+  background-color: var(--background-success-subtlest-hovered);
+}
+.outlined.success:not([data-disabled])[data-pressed] {
+  background-color: var(--background-success-subtlest-pressed);
+}
+
+.outlined.critical {
+  border-color: var(--border-critical);
+  color: var(--text-critical);
+}
+.outlined.critical:not([data-disabled])[data-hovered] {
+  background-color: var(--background-critical-subtlest-hovered);
+}
+.outlined.critical:not([data-disabled])[data-pressed] {
+  background-color: var(--background-critical-subtlest-pressed);
+}
+
+.outlined.warning {
+  border-color: var(--border-warning);
+  color: var(--text-warning);
+}
+.outlined.warning:not([data-disabled])[data-hovered] {
+  background-color: var(--background-warning-subtlest-hovered);
+}
+.outlined.warning:not([data-disabled])[data-pressed] {
+  background-color: var(--background-warning-subtlest-pressed);
+}
+
+.outlined.information {
+  border-color: var(--border-information);
+  color: var(--text-information);
+}
+.outlined.information:not([data-disabled])[data-hovered] {
+  background-color: var(--background-information-subtlest-hovered);
+}
+.outlined.information:not([data-disabled])[data-pressed] {
+  background-color: var(--background-information-subtlest-pressed);
+}
+
+/* ==========================================================================
+   Variant: subtle (ghost — transparent bg, hover reveals fill)
+   ========================================================================== */
+
+.subtle {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.subtle.default {
+  color: var(--text-primary);
+}
+.subtle.default:not([data-disabled])[data-hovered] {
+  background-color: var(--background-neutral-subtlest-hovered);
+}
+.subtle.default:not([data-disabled])[data-pressed] {
+  background-color: var(--background-neutral-subtlest-pressed);
+}
+
+.subtle.brand {
+  color: var(--text-brand);
+}
+.subtle.brand:not([data-disabled])[data-hovered] {
+  background-color: var(--background-brand-subtlest-hovered);
+}
+.subtle.brand:not([data-disabled])[data-pressed] {
+  background-color: var(--background-brand-subtlest-pressed);
+}
+
+.subtle.success {
+  color: var(--text-success);
+}
+.subtle.success:not([data-disabled])[data-hovered] {
+  background-color: var(--background-success-subtlest-hovered);
+}
+.subtle.success:not([data-disabled])[data-pressed] {
+  background-color: var(--background-success-subtlest-pressed);
+}
+
+.subtle.critical {
+  color: var(--text-critical);
+}
+.subtle.critical:not([data-disabled])[data-hovered] {
+  background-color: var(--background-critical-subtlest-hovered);
+}
+.subtle.critical:not([data-disabled])[data-pressed] {
+  background-color: var(--background-critical-subtlest-pressed);
+}
+
+.subtle.warning {
+  color: var(--text-warning);
+}
+.subtle.warning:not([data-disabled])[data-hovered] {
+  background-color: var(--background-warning-subtlest-hovered);
+}
+.subtle.warning:not([data-disabled])[data-pressed] {
+  background-color: var(--background-warning-subtlest-pressed);
+}
+
+.subtle.information {
+  color: var(--text-information);
+}
+.subtle.information:not([data-disabled])[data-hovered] {
+  background-color: var(--background-information-subtlest-hovered);
+}
+.subtle.information:not([data-disabled])[data-pressed] {
+  background-color: var(--background-information-subtlest-pressed);
+}
+
+/* ==========================================================================
+   Variant: link (text + underline, semantic color)
+   ========================================================================== */
+
+.link {
+  background-color: transparent;
+  border-color: transparent;
+  text-decoration: underline;
+  text-decoration-thickness: 8%;
+  text-underline-offset: 16%;
+}
+
+.link.default {
+  color: var(--text-primary);
+}
+.link.default:not([data-disabled])[data-hovered] {
+  color: var(--text-secondary);
+}
+
+.link.brand {
+  color: var(--text-brand);
+}
+.link.brand:not([data-disabled])[data-hovered] {
+  background-color: var(--background-brand-subtlest-hovered);
+}
+.link.brand:not([data-disabled])[data-pressed] {
+  background-color: var(--background-brand-subtlest-pressed);
+}
+
+.link.success {
+  color: var(--text-success);
+}
+.link.success:not([data-disabled])[data-hovered] {
+  background-color: var(--background-success-subtlest-hovered);
+}
+.link.success:not([data-disabled])[data-pressed] {
+  background-color: var(--background-success-subtlest-pressed);
+}
+
+.link.critical {
+  color: var(--text-critical);
+}
+.link.critical:not([data-disabled])[data-hovered] {
+  background-color: var(--background-critical-subtlest-hovered);
+}
+.link.critical:not([data-disabled])[data-pressed] {
+  background-color: var(--background-critical-subtlest-pressed);
+}
+
+.link.warning {
+  color: var(--text-warning);
+}
+.link.warning:not([data-disabled])[data-hovered] {
+  background-color: var(--background-warning-subtlest-hovered);
+}
+.link.warning:not([data-disabled])[data-pressed] {
+  background-color: var(--background-warning-subtlest-pressed);
+}
+
+.link.information {
+  color: var(--text-information);
+}
+.link.information:not([data-disabled])[data-hovered] {
+  background-color: var(--background-information-subtlest-hovered);
+}
+.link.information:not([data-disabled])[data-pressed] {
+  background-color: var(--background-information-subtlest-pressed);
+}
+
+/* ==========================================================================
+   Variant: link-subtle (text + underline, secondary/muted color)
+   ========================================================================== */
+
+.link-subtle {
+  background-color: transparent;
+  border-color: transparent;
+  text-decoration: underline dotted;
+  text-decoration-thickness: 8%;
+  text-underline-offset: 16%;
+  color: var(--text-secondary);
+}
+
+.link-subtle:not([data-disabled])[data-hovered] {
+  color: var(--text-primary);
+}
+
+.link-subtle:not([data-disabled])[data-pressed] {
+  color: var(--text-primary);
+  background-color: var(--background-neutral-subtlest-pressed);
+}
+
+/* ==========================================================================
+   Icon slots
+   ========================================================================== */
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size300);
+  height: var(--size300);
+  flex-shrink: 0;
+}
+
+.icon > svg {
+  width: 100%;
+  height: 100%;
+}

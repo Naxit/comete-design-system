@@ -2,8 +2,6 @@ import type { StorybookConfig } from "@storybook/react-vite";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
-// ----------------------------------------------------------------------
-
 const config: StorybookConfig = {
   stories: ["../stories/**/*.mdx", "../stories/**/*.stories.@(ts|tsx)"],
   addons: ["@storybook/addon-docs"],
@@ -17,33 +15,15 @@ const config: StorybookConfig = {
     const __dirname = dirname(__filename);
 
     return mergeConfig(config, {
-      // Configurer le dossier public pour servir les fichiers statiques
-      publicDir: resolve(__dirname, "../../public"),
       resolve: {
         alias: {
           "@": resolve(__dirname, "../../src"),
           "@naxit/comete-design-system": resolve(__dirname, "../../src"),
         },
-        // Évite les doublons de React entre Storybook et les composants
-        dedupe: [
-          "@emotion/react",
-          "@emotion/styled",
-          "@mui/icons-material",
-          "@mui/material",
-          "@mui/utils",
-          "@mui/x-date-pickers",
-          "react",
-          "react-dom",
-        ],
+        dedupe: ["react", "react-dom"],
       },
-      // Optimize MDX processing
-      // optimizeDeps: {
-      //   exclude: ["@storybook/blocks"],
-      // },
     });
   },
 };
-
-// ----------------------------------------------------------------------
 
 export default config;

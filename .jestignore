@@ -1,8 +1,0 @@
-# Dossiers à ignorer par Jest
-node_modules/
-dist/
-build/
-coverage/
-storybook/storybook-static/
-*.log
-*.tmp

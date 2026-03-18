@@ -1,0 +1,136 @@
+// Tests unitaires du composant Button
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { describe, expect, it, vi } from "vitest";
+import { Button } from "./Button";
+
+// NOTE: Vitest transforme les CSS Modules en proxy identité ({ button: "button", ... })
+// Les assertions sur les classes utilisent donc le nom de classe tel que défini dans le CSS.
+
+describe("Button", () => {
+  describe("rendu de base", () => {
+    it("should render children", () => {
+      render(<Button>Enregistrer</Button>);
+      expect(screen.getByRole("button", { name: "Enregistrer" })).toBeInTheDocument();
+    });
+
+    it("should have displayName set to Button", () => {
+      expect(Button.displayName).toBe("Button");
+    });
+  });
+
+  describe("classes CSS par défaut", () => {
+    it("should apply default variant, color and size classes when no props given", () => {
+      render(<Button>Label</Button>);
+      const button = screen.getByRole("button");
+      expect(button).toHaveClass("button", "contained", "default", "medium");
+    });
+  });
+
+  describe("prop variant", () => {
+    it.each([["contained"], ["outlined"], ["subtle"], ["link"]] as const)(
+      "should apply class %s when variant=%s",
+      (variant) => {
+        render(<Button variant={variant}>Label</Button>);
+        expect(screen.getByRole("button")).toHaveClass(variant);
+      }
+    );
+
+    it("should apply class link-subtle when variant=link-subtle", () => {
+      render(<Button variant="link-subtle">Label</Button>);
+      expect(screen.getByRole("button")).toHaveClass("link-subtle");
+    });
+  });
+
+  describe("prop color", () => {
+    it.each([
+      ["default"],
+      ["brand"],
+      ["success"],
+      ["critical"],
+      ["warning"],
+      ["information"],
+    ] as const)("should apply class %s when color=%s", (color) => {
+      render(<Button color={color}>Label</Button>);
+      expect(screen.getByRole("button")).toHaveClass(color);
+    });
+  });
+
+  describe("prop size", () => {
+    it.each([["small"], ["medium"], ["large"]] as const)(
+      "should apply class %s when size=%s",
+      (size) => {
+        render(<Button size={size}>Label</Button>);
+        expect(screen.getByRole("button")).toHaveClass(size);
+      }
+    );
+  });
+
+  describe("prop className", () => {
+    it("should append the custom className to the button", () => {
+      render(<Button className="my-custom-class">Label</Button>);
+      expect(screen.getByRole("button")).toHaveClass("my-custom-class");
+    });
+
+    it("should not remove base classes when a custom className is provided", () => {
+      render(<Button className="extra">Label</Button>);
+      expect(screen.getByRole("button")).toHaveClass("button", "extra");
+    });
+  });
+
+  describe("icônes", () => {
+    it("should render iconBefore inside a span before children", () => {
+      render(<Button iconBefore={<svg data-testid="icon-before" />}>Label</Button>);
+      const icon = screen.getByTestId("icon-before");
+      expect(icon.closest("span")).toHaveClass("icon");
+      const button = screen.getByRole("button");
+      expect(button.firstElementChild).toBe(icon.closest("span"));
+    });
+
+    it("should render iconAfter inside a span after children", () => {
+      render(<Button iconAfter={<svg data-testid="icon-after" />}>Label</Button>);
+      const icon = screen.getByTestId("icon-after");
+      expect(icon.closest("span")).toHaveClass("icon");
+      const button = screen.getByRole("button");
+      expect(button.lastElementChild).toBe(icon.closest("span"));
+    });
+
+    it("should not render icon spans when no icon props are given", () => {
+      render(<Button>Label</Button>);
+      expect(screen.getByRole("button").querySelector("span")).toBeNull();
+    });
+  });
+
+  describe("accessibilité et interactions", () => {
+    it("should call onClick handler when clicked", async () => {
+      const handleClick = vi.fn();
+      render(<Button onPress={handleClick}>Label</Button>);
+      await userEvent.click(screen.getByRole("button"));
+      expect(handleClick).toHaveBeenCalledOnce();
+    });
+
+    it("should not call onClick when isDisabled", async () => {
+      const handleClick = vi.fn();
+      render(
+        <Button isDisabled onPress={handleClick}>
+          Label
+        </Button>
+      );
+      await userEvent.click(screen.getByRole("button"));
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+
+    it("should forward isDisabled as data-disabled attribute", () => {
+      render(<Button isDisabled>Label</Button>);
+      expect(screen.getByRole("button")).toHaveAttribute("data-disabled");
+    });
+  });
+
+  describe("ref forwarding", () => {
+    it("should forward ref to the underlying button element", () => {
+      const ref = { current: null as HTMLButtonElement | null };
+      render(<Button ref={ref}>Label</Button>);
+      expect(ref.current).toBeInstanceOf(HTMLButtonElement);
+    });
+  });
+});

@@ -1,23 +1,72 @@
-import MuiButton from "@mui/material/Button";
+import { Button as AriaButton, type ButtonProps as AriaButtonProps } from "react-aria-components";
 import { forwardRef } from "react";
-import type { ButtonProps } from "./Button.types";
+import styles from "./Button.module.css";
+
+// ----------------------------------------------------------------------
+
+export type ButtonVariant = "contained" | "outlined" | "subtle" | "link" | "link-subtle";
+export type ButtonColor = "default" | "brand" | "success" | "critical" | "warning" | "information";
+export type ButtonSize = "small" | "medium" | "large";
+
+export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"> {
+  /** Visual variant. @default "contained" */
+  variant?: ButtonVariant;
+  /** Color scheme. @default "default" */
+  color?: ButtonColor;
+  /** Size. @default "medium" */
+  size?: ButtonSize;
+  /** Icon displayed before the label. */
+  iconBefore?: React.ReactNode;
+  /** Icon displayed after the label. */
+  iconAfter?: React.ReactNode;
+  /** Additional CSS class names. */
+  className?: string;
+  children: React.ReactNode;
+}
+
+// ----------------------------------------------------------------------
 
 /**
- * Button component based on MUI Button.
- * Styles are applied via the theme overrides in src/styles/components/button.ts
+ * Button — Comète Design System
+ *
+ * Built on React Aria for accessibility (keyboard, focus, ARIA).
+ * Styled with CSS Modules consuming @naxit/comete-design-tokens.
+ *
+ * ```tsx
+ * import { Button } from "@naxit/comete-design-system";
+ *
+ * <Button color="brand">Enregistrer</Button>
+ * <Button variant="outlined" color="critical" iconBefore={<TrashIcon />}>
+ *   Supprimer
+ * </Button>
+ * ```
  */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ loading, disabled, children, ...props }, ref) => {
+  (
+    {
+      variant = "contained",
+      color = "default",
+      size = "medium",
+      iconBefore,
+      iconAfter,
+      className,
+      children,
+      ...ariaProps
+    },
+    ref
+  ) => {
+    // NOTE: "link-subtle" uses bracket notation; CSS Modules preserves kebab-case keys.
+    const variantClass = variant === "link-subtle" ? styles["link-subtle"] : styles[variant];
+    const classNames = [styles.button, variantClass, styles[color], styles[size], className]
+      .filter(Boolean)
+      .join(" ");
+
     return (
-      <MuiButton
-        ref={ref}
-        disableElevation
-        disabled={disabled ?? loading ?? false}
-        loading={loading ?? false}
-        {...props}
-      >
+      <AriaButton ref={ref} className={classNames} {...ariaProps}>
+        {iconBefore && <span className={styles.icon}>{iconBefore}</span>}
         {children}
-      </MuiButton>
+        {iconAfter && <span className={styles.icon}>{iconAfter}</span>}
+      </AriaButton>
     );
   }
 );

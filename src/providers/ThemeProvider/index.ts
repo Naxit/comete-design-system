@@ -1,3 +1,2 @@
-export type { ThemeContextType, ThemeMode } from "./ThemeContext.types";
-export { ThemeProvider } from "./ThemeProvider";
-export type { ThemeProviderProps } from "./ThemeProvider.types";
+export { ThemeProvider, ThemeContext } from "./ThemeProvider";
+export type { ThemeMode, ThemeContextType, ThemeProviderProps } from "./ThemeProvider";
