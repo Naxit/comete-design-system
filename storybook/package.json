@@ -6,7 +6,8 @@
   "scripts": {
     "start": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build",
-    "preview": "serve storybook-static -s -p 6006"
+    "preview": "serve storybook-static -s -p 6006",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
     "@naxit/comete-design-system": "file:..",
@@ -16,12 +17,21 @@
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@storybook/addon-docs": "^10.3.0",
     "@storybook/react": "^10.3.0",
     "@storybook/react-vite": "^10.3.0",
     "@types/node": "^25.5.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-storybook": "^10.1.9",
+    "globals": "^17.4.0",
     "serve": "^14.2.6",
     "storybook": "^10.3.0",
+    "typescript-eslint": "^8.57.1",
     "vite": "^8.0.0"
   }
 }

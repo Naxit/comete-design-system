@@ -55,9 +55,36 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    // NOTE: "link-subtle" uses bracket notation; CSS Modules preserves kebab-case keys.
-    const variantClass = variant === "link-subtle" ? styles["link-subtle"] : styles[variant];
-    const classNames = [styles.button, variantClass, styles[color], styles[size], className]
+    // Map variant to CSS class (handles kebab-case "link-subtle")
+    const variantClassMap: Record<ButtonVariant, string> = {
+      contained: styles.contained,
+      outlined: styles.outlined,
+      subtle: styles.subtle,
+      link: styles.link,
+      "link-subtle": styles["link-subtle"],
+    };
+    const variantClass = variantClassMap[variant];
+
+    // Map color to CSS class
+    const colorClassMap: Record<ButtonColor, string> = {
+      default: styles.default,
+      brand: styles.brand,
+      success: styles.success,
+      critical: styles.critical,
+      warning: styles.warning,
+      information: styles.information,
+    };
+    const colorClass = colorClassMap[color];
+
+    // Map size to CSS class
+    const sizeClassMap: Record<ButtonSize, string> = {
+      small: styles.small,
+      medium: styles.medium,
+      large: styles.large,
+    };
+    const sizeClass = sizeClassMap[size];
+
+    const classNames = [styles.button, variantClass, colorClass, sizeClass, className]
       .filter(Boolean)
       .join(" ");
 
