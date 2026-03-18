@@ -1,0 +1,38 @@
+# ------------------------------------------------------------
+# Dockerfile pour le développement front
+# ------------------------------------------------------------
+FROM node:22-alpine
+
+# Définir le répertoire de travail
+WORKDIR /app
+
+# ------------------------------------------------------------
+# Étape 1: Installation des dépendances
+# ------------------------------------------------------------
+
+# Activer pnpm
+RUN corepack enable pnpm
+
+# Copier les dépendances
+COPY package.json /app/package.json
+COPY pnpm-lock.yaml /app/pnpm-lock.yaml
+COPY tsconfig.json /app/tsconfig.json
+COPY storybook /app/storybook
+
+# Installer les dépendances
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store \
+  pnpm install --prefer-offline --frozen-lockfile && \
+  pnpm --dir storybook install --prefer-offline --frozen-lockfile
+
+# Copier le code source du front
+COPY . /app
+
+# ------------------------------------------------------------
+# Étape 2: Démarrage du serveur de développement
+# ------------------------------------------------------------
+
+# Exposer le port de développement Vite
+EXPOSE 6006
+
+# Démarrage avec hot reload
+CMD cd storybook && pnpm start

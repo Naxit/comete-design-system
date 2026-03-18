@@ -1,0 +1,29 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+**/node_modules
+.pnpm-store
+
+# documentation
+/docs
+
+# production
+**/build
+**/dist
+**/dist_ci
+**/archives
+**/storybook-static
+
+# misc
+.env
+.env.local
+.env.*.local
+.eslintcache
+.DS_Store
+*.lock.icloud
+*.xml.icloud
+*.log
+*.tgz
+*.7z
+stats.html
+coverage

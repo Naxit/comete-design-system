@@ -1,0 +1,23 @@
+services:
+  # ------------------------------------------------------------
+  # Storybook
+  # ------------------------------------------------------------
+  storybook:
+    container_name: design-system-storybook
+    labels:
+      - "environment=dev"
+      - "service=storybook"
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.dev
+    environment:
+      - NODE_ENV=development
+      # Force le watch par polling (Windows/WSL + montages)
+      - CHOKIDAR_USEPOLLING=1
+      - WATCHPACK_POLLING=true
+    volumes:
+      - ./storybook/.storybook:/app/storybook/.storybook
+      - ./storybook/stories:/app/storybook/stories
+      - ./public:/app/public
+      - ./src:/app/src
+    ports: ["6060:6006"]

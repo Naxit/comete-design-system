@@ -1,0 +1,142 @@
+{
+  "name": "@aexae/design-system",
+  "description": "Design system Comète",
+  "author": "aexae",
+  "version": "0.2.0",
+  "license": "MIT",
+  "private": false,
+  "type": "module",
+  "sideEffects": false,
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "packageManager": "pnpm@10.32.1+sha512.a706938f0e89ac1456b6563eab4edf1d1faf3368d1191fc5c59790e96dc918e4456ab2e67d613de1043d2e8c81f87303e6b40d4ffeca9df15ef1ad567348f2be",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aexae/design-system.git"
+  },
+  "keywords": [
+    "react",
+    "components",
+    "ui",
+    "material-ui"
+  ],
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10",
+    "pnpm": ">=10"
+  },
+  "scripts": {
+    "docker": "docker compose -p comete-ds-dev -f compose.dev.yml up -d --build",
+    "build": "tsup && pnpm pack",
+    "test": "jest --watch=false",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage && open-cli coverage/lcov-report/index.html",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint src --fix",
+    "update": "pnpm update",
+    "outdated": "pnpm outdated",
+    "clean": "rimraf dist coverage storybook/storybook-static"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "lodash": "^4.17.21",
+    "react-hook-form": "^7.68.0",
+    "yup": "^1.7.1"
+  },
+  "peerDependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.0.0 || ^7.0.0",
+    "@mui/material": "^6.0.0 || ^7.0.0",
+    "@mui/utils": "^6.0.0 || ^7.0.0",
+    "@mui/x-date-pickers": "^6.0.0 || ^7.0.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "react-router-dom": "^6.0.0 || ^7.0.0"
+  },
+  "devDependencies": {
+    "@naxit/comete-design-tokens": "^0.3.0",
+    "@eslint/compat": "^2.0.0",
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^9.39.2",
+    "@mui/icons-material": "^7.3.6",
+    "@mui/material": "^7.3.6",
+    "@mui/utils": "^7.3.6",
+    "@mui/x-date-pickers": "^8.22.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^30.0.0",
+    "@types/lodash": "^4.17.21",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.50.0",
+    "@typescript-eslint/parser": "^8.50.0",
+    "@vitejs/plugin-react": "^5.1.2",
+    "@vitest/browser": "^4.0.15",
+    "@vitest/coverage-v8": "^4.0.15",
+    "chromatic": "^13.3.4",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.25",
+    "eslint-plugin-storybook": "^10.1.9",
+    "globals": "^16.5.0",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
+    "node-fetch": "^2.7.0",
+    "open-cli": "^8.0.0",
+    "playwright": "^1.57.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "rimraf": "^6.1.2",
+    "serve": "^14.2.5",
+    "ts-jest": "^29.4.6",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.50.0",
+    "vite": "^7.3.0",
+    "vitest": "^4.0.15"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./components": {
+      "types": "./dist/components/index.d.ts",
+      "import": "./dist/components/index.js",
+      "default": "./dist/components/index.js"
+    },
+    "./styles": {
+      "types": "./dist/styles/index.d.ts",
+      "import": "./dist/styles/index.js",
+      "default": "./dist/styles/index.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "dist/*"
+      ],
+      "components": [
+        "dist/components/index.d.ts"
+      ],
+      "styles": [
+        "dist/styles/index.d.ts"
+      ]
+    }
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

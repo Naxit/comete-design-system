@@ -1,0 +1,48 @@
+# Dependencies
+**/node_modules
+
+# Build outputs
+**/dist
+**/build
+**/.next
+**/out
+
+# Development
+**/.cache
+**/.vscode
+**/.idea
+**/.DS_Store
+
+# Git
+.git
+.gitignore
+
+# Documentation
+**/README.md
+**/docs
+
+# Test files
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+**/coverage
+**/.test
+**/.tests
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Misc
+**/logs
+**/*.log
+**/tmp
+**/temp

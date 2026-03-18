@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "../..",
+    "paths": {
+      "@aexae/design-system": ["./src/index.ts"],
+      "@aexae/design-system/*": ["./src/*"]
+    }
+  },
+  "include": ["../../src/**/*", "./**/*"]
+}

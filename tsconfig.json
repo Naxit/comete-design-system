@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "types": ["jest", "@testing-library/jest-dom"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noErrorTruncation": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": false,
+    "baseUrl": ".",
+    "outDir": "./dist",
+    "rootDir": "./",
+    "paths": {
+      "@types/*": ["./src/types/*"]
+    }
+  },
+  "include": [
+    "src",
+    "stories",
+    "storybook",
+    "vite.config.js",
+    "vitest.config.js",
+    "vitest.setup.js",
+    "jest.config.js",
+    "jest.setup.js",
+    "eslint.config.mjs",
+    "tsup.config.ts"
+  ],
+  "exclude": ["dist", "node_modules", "coverage", "storybook-static"]
+}
