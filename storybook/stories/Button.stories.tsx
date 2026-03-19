@@ -1,18 +1,31 @@
 import { Button } from "@naxit/comete-design-system";
 import type { ButtonProps } from "@naxit/comete-design-system";
-import { ConfirmationNumber, type IconProps } from "@naxit/comete-icons";
+import {
+  ArrowDropDown,
+  ChevronRight,
+  Download,
+  Image,
+  Lock,
+  type IconProps,
+} from "@naxit/comete-icons";
 import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
 
 // ----------------------------------------------------------------------
-// Icon registry — add new icons here as @naxit/comete-icons grows
+// Icon registries — separate allowed sets per slot
 
-const ICON_MAP: Record<string, React.ComponentType<IconProps>> = {
-  ConfirmationNumber: ConfirmationNumber as React.ComponentType<IconProps>,
+const ICON_BEFORE_MAP: Record<string, React.ComponentType<IconProps>> = {
+  Image: Image as React.ComponentType<IconProps>,
+  Lock: Lock as React.ComponentType<IconProps>,
+  Download: Download as React.ComponentType<IconProps>,
 };
 
-const ICON_NAMES = Object.keys(ICON_MAP);
+const ICON_AFTER_MAP: Record<string, React.ComponentType<IconProps>> = {
+  Image: Image as React.ComponentType<IconProps>,
+  ChevronRight: ChevronRight as React.ComponentType<IconProps>,
+  ArrowDropDown: ArrowDropDown as React.ComponentType<IconProps>,
+};
 
 // ----------------------------------------------------------------------
 
@@ -25,13 +38,14 @@ type StoryArgs = ButtonProps & {
   iconVariant?: "filled" | "outlined";
 };
 
-/** Resolves an icon component by name and wraps it with the correct props. */
+/** Resolves an icon component from the given map and wraps it with the correct props. */
 function resolveIconByName(
   name: string | undefined,
+  map: Record<string, React.ComponentType<IconProps>>,
   variant: "filled" | "outlined"
 ): React.ReactNode {
   if (!name || name === "none") return undefined;
-  const Icon = ICON_MAP[name];
+  const Icon = map[name];
   if (!Icon) return undefined;
   return <Icon spacing="default" variant={variant} />;
 }
@@ -60,14 +74,14 @@ const meta: Meta<StoryArgs> = {
     },
     iconBeforeName: {
       control: "select",
-      options: ["none", ...ICON_NAMES],
+      options: ["none", ...Object.keys(ICON_BEFORE_MAP)],
       name: "iconBefore",
       description: "Icon before the label — color auto-resolved from variant + color",
       table: { category: "Icons" },
     },
     iconAfterName: {
       control: "select",
-      options: ["none", ...ICON_NAMES],
+      options: ["none", ...Object.keys(ICON_AFTER_MAP)],
       name: "iconAfter",
       description: "Icon after the label — color auto-resolved from variant + color",
       table: { category: "Icons" },
@@ -92,8 +106,8 @@ const meta: Meta<StoryArgs> = {
     iconVariant: "filled",
   },
   render: ({ iconBeforeName, iconAfterName, iconVariant = "filled", ...args }) => {
-    const iconBefore = resolveIconByName(iconBeforeName, iconVariant);
-    const iconAfter = resolveIconByName(iconAfterName, iconVariant);
+    const iconBefore = resolveIconByName(iconBeforeName, ICON_BEFORE_MAP, iconVariant);
+    const iconAfter = resolveIconByName(iconAfterName, ICON_AFTER_MAP, iconVariant);
     return <Button {...args} iconBefore={iconBefore} iconAfter={iconAfter} />;
   },
 };
@@ -194,7 +208,7 @@ export const WithIconBefore: Story = {
   args: {
     color: "brand",
     children: "Enregistrer",
-    iconBeforeName: "ConfirmationNumber",
+    iconBeforeName: "Lock",
     iconVariant: "filled",
   },
 };
@@ -204,7 +218,7 @@ export const WithIconAfter: Story = {
   args: {
     color: "brand",
     children: "Continuer",
-    iconAfterName: "ConfirmationNumber",
+    iconAfterName: "ChevronRight",
     iconVariant: "outlined",
   },
 };
@@ -227,7 +241,7 @@ export const IconAllColors: Story = {
           key={color}
           color={color}
           variant={args.variant}
-          iconBefore={<ConfirmationNumber spacing="default" variant="filled" />}
+          iconBefore={<Image spacing="default" variant="filled" />}
         >
           {color}
         </Button>
