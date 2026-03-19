@@ -6,6 +6,7 @@ const config: StorybookConfig = {
   stories: ["../stories/**/*.stories.@(ts|tsx)"],
   addons: [
     "@storybook/addon-docs",
+    "@storybook/addon-designs",
     "@storybook/addon-a11y",
     "@storybook/addon-vitest",
     { name: "@chromatic-com/storybook", options: { projectId: "693ad068fa0b790fc9c6441c" } },
