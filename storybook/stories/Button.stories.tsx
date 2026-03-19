@@ -1,12 +1,47 @@
 import { Button } from "@naxit/comete-design-system";
 import type { ButtonProps } from "@naxit/comete-design-system";
+import { ConfirmationNumber, type IconProps } from "@naxit/comete-icons";
 import type { Meta, StoryObj } from "@storybook/react";
+import React from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
 
-const meta: Meta<ButtonProps> = {
+// ----------------------------------------------------------------------
+// Icon registry — add new icons here as @naxit/comete-icons grows
+
+const ICON_MAP: Record<string, React.ComponentType<IconProps>> = {
+  ConfirmationNumber: ConfirmationNumber as React.ComponentType<IconProps>,
+};
+
+const ICON_NAMES = Object.keys(ICON_MAP);
+
+// ----------------------------------------------------------------------
+
+type StoryArgs = ButtonProps & {
+  /** Name of the icon to display before the label */
+  iconBeforeName?: string;
+  /** Name of the icon to display after the label */
+  iconAfterName?: string;
+  /** Visual variant applied to both icons */
+  iconVariant?: "filled" | "outlined";
+};
+
+/** Resolves an icon component by name and wraps it with the correct props. */
+function resolveIconByName(
+  name: string | undefined,
+  variant: "filled" | "outlined"
+): React.ReactNode {
+  if (!name || name === "none") return undefined;
+  const Icon = ICON_MAP[name];
+  if (!Icon) return undefined;
+  return <Icon spacing="default" variant={variant} />;
+}
+
+// ----------------------------------------------------------------------
+
+const meta: Meta<StoryArgs> = {
   title: "Components/Button",
   component: Button,
-  tags: ['autodocs'], 
+  tags: ["autodocs"],
   argTypes: {
     variant: {
       control: "select",
@@ -23,6 +58,30 @@ const meta: Meta<ButtonProps> = {
     isDisabled: {
       control: "boolean",
     },
+    iconBeforeName: {
+      control: "select",
+      options: ["none", ...ICON_NAMES],
+      name: "iconBefore",
+      description: "Icon before the label — color auto-resolved from variant + color",
+      table: { category: "Icons" },
+    },
+    iconAfterName: {
+      control: "select",
+      options: ["none", ...ICON_NAMES],
+      name: "iconAfter",
+      description: "Icon after the label — color auto-resolved from variant + color",
+      table: { category: "Icons" },
+    },
+    iconVariant: {
+      control: "select",
+      options: ["filled", "outlined"],
+      name: "icon variant",
+      description: "Visual style applied to both icons (spacing=default)",
+      table: { category: "Icons" },
+    },
+    // Hide raw ReactNode props from controls — managed via iconBeforeName / iconAfterName
+    iconBefore: { table: { disable: true } },
+    iconAfter: { table: { disable: true } },
   },
   args: {
     children: "Button",
@@ -30,11 +89,17 @@ const meta: Meta<ButtonProps> = {
     color: "default",
     size: "medium",
     onPress: fn(),
+    iconVariant: "filled",
+  },
+  render: ({ iconBeforeName, iconAfterName, iconVariant = "filled", ...args }) => {
+    const iconBefore = resolveIconByName(iconBeforeName, iconVariant);
+    const iconAfter = resolveIconByName(iconAfterName, iconVariant);
+    return <Button {...args} iconBefore={iconBefore} iconAfter={iconAfter} />;
   },
 };
 
 export default meta;
-type Story = StoryObj<ButtonProps>;
+type Story = StoryObj<StoryArgs>;
 
 // ----------------------------------------------------------------------
 
@@ -120,6 +185,55 @@ export const KeyboardNavigation: Story = {
     await userEvent.keyboard("{Enter}");
     void expect(args.onPress).toHaveBeenCalledOnce();
   },
+};
+
+// ----------------------------------------------------------------------
+
+/** Icône filled avant le label — couleur auto-résolue selon variant + color */
+export const WithIconBefore: Story = {
+  args: {
+    color: "brand",
+    children: "Enregistrer",
+    iconBeforeName: "ConfirmationNumber",
+    iconVariant: "filled",
+  },
+};
+
+/** Icône outlined après le label */
+export const WithIconAfter: Story = {
+  args: {
+    color: "brand",
+    children: "Continuer",
+    iconAfterName: "ConfirmationNumber",
+    iconVariant: "outlined",
+  },
+};
+
+/** Icône + label sur toutes les couleurs contained — vérifie l'inversion automatique */
+export const IconAllColors: Story = {
+  render: (args) => (
+    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+      {(
+        [
+          "default",
+          "brand",
+          "success",
+          "critical",
+          "warning",
+          "information",
+        ] as const
+      ).map((color) => (
+        <Button
+          key={color}
+          color={color}
+          variant={args.variant}
+          iconBefore={<ConfirmationNumber spacing="default" variant="filled" />}
+        >
+          {color}
+        </Button>
+      ))}
+    </div>
+  ),
 };
 
 // ----------------------------------------------------------------------
