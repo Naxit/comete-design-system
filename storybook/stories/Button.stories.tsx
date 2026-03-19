@@ -51,6 +51,14 @@ function resolveIconByName(
 }
 
 // ----------------------------------------------------------------------
+// Figma design URLs — public file, addon-designs embeds
+
+const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
+
+/** Builds a Figma URL with a specific node ID for the addon-designs panel */
+const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+
+// ----------------------------------------------------------------------
 
 const meta: Meta<StoryArgs> = {
   title: "Components/Button",
@@ -105,6 +113,12 @@ const meta: Meta<StoryArgs> = {
     onPress: fn(),
     iconVariant: "outlined",
   },
+  parameters: {
+    design: {
+      type: "figma",
+      url: figmaUrl("213:725"),
+    },
+  },
   render: ({ iconBeforeName, iconAfterName, iconVariant = "outlined", ...args }) => {
     const iconBefore = resolveIconByName(iconBeforeName, ICON_BEFORE_MAP, iconVariant);
     const iconAfter = resolveIconByName(iconAfterName, ICON_AFTER_MAP, iconVariant);
@@ -117,10 +131,23 @@ type Story = StoryObj<StoryArgs>;
 
 // ----------------------------------------------------------------------
 
-export const Default: Story = {};
+export const Default: Story = {
+  parameters: {
+    design: {
+      type: "figma",
+      url: figmaUrl("12:508"),
+    },
+  },
+};
 
 export const Brand: Story = {
   args: { color: "brand", children: "Enregistrer" },
+  parameters: {
+    design: {
+      type: "figma",
+      url: figmaUrl("1981:18041"),
+    },
+  },
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button"));
@@ -130,36 +157,84 @@ export const Brand: Story = {
 
 export const Success: Story = {
   args: { color: "success", children: "Valider" },
+  parameters: {
+    design: {
+      type: "figma",
+      url: figmaUrl("1973:8737"),
+    },
+  },
 };
 
 export const Critical: Story = {
   args: { color: "critical", children: "Supprimer" },
+  parameters: {
+    design: {
+      type: "figma",
+      url: figmaUrl("2420:45925"),
+    },
+  },
 };
 
 export const Warning: Story = {
   args: { color: "warning", children: "Attention" },
+  parameters: {
+    design: {
+      type: "figma",
+      url: figmaUrl("2420:43580"),
+    },
+  },
 };
 
 export const Information: Story = {
   args: { color: "information", children: "En savoir plus" },
+  parameters: {
+    design: {
+      type: "figma",
+      url: figmaUrl("2420:46791"),
+    },
+  },
 };
 
 // ----------------------------------------------------------------------
 
 export const Outlined: Story = {
   args: { variant: "outlined", color: "brand", children: "Annuler" },
+  parameters: {
+    design: {
+      type: "figma",
+      url: figmaUrl("2105:5778"),
+    },
+  },
 };
 
 export const Subtle: Story = {
   args: { variant: "subtle", color: "brand", children: "Voir plus" },
+  parameters: {
+    design: {
+      type: "figma",
+      url: figmaUrl("1973:8972"),
+    },
+  },
 };
 
 export const Link: Story = {
   args: { variant: "link", color: "brand", children: "En savoir plus" },
+  parameters: {
+    design: {
+      type: "figma",
+      url: figmaUrl("1973:8388"),
+    },
+  },
 };
 
 export const LinkSubtle: Story = {
   args: { variant: "link-subtle", color: "default", children: "Voir les détails" },
+  parameters: {
+    design: {
+      type: "figma",
+      url: figmaUrl("1973:8451"),
+    },
+  },
 };
 
 // ----------------------------------------------------------------------
