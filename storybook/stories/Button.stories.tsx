@@ -6,6 +6,7 @@ import { expect, fn, userEvent, within } from "storybook/test";
 const meta: Meta<ButtonProps> = {
   title: "Components/Button",
   component: Button,
+  tags: ['autodocs'], 
   argTypes: {
     variant: {
       control: "select",
