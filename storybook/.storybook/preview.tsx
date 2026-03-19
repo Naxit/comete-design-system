@@ -1,27 +1,39 @@
 import { ThemeProvider } from "@naxit/comete-design-system/providers";
 import "@naxit/comete-design-tokens/css";
 import type { Decorator, Preview } from "@storybook/react";
-import { createElement } from "react";
+import { createElement, useEffect } from "react";
 import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 
 /**
  * Decorator — wraps all stories with ThemeProvider + tokens CSS.
+ * Sets data-theme directly on <html> to ensure immediate sync with
+ * the Storybook global (avoids the 2-pass delay of ThemeProvider's
+ * internal useReducer → useEffect chain).
  */
 const withThemeProvider: Decorator = (Story, context) => {
   const { theme } = context.globals as { theme: "light" | "dark" };
+  const mode = theme ?? "light";
 
-  return <ThemeProvider mode={theme}>{createElement(Story)}</ThemeProvider>;
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", mode);
+  }, [mode]);
+
+  return <ThemeProvider mode={mode}>{createElement(Story)}</ThemeProvider>;
 };
 
 const preview: Preview = {
   decorators: [withThemeProvider],
 
+  // NOTE: globals sets the initial values for Storybook 8+ (defaultValue in
+  // globalTypes is deprecated since Storybook 8.3).
+  globals: {
+    theme: "light",
+  },
+
   globalTypes: {
     theme: {
       name: "Theme",
       description: "Theme global for components",
-      defaultValue: "light",
-
       toolbar: {
         icon: "circlehollow",
         items: [
