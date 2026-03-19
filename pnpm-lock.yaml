@@ -19,8 +19,8 @@ importers:
         specifier: 0.3.2
         version: 0.3.2
       '@naxit/comete-icons':
-        specifier: 0.2.0
-        version: 0.2.0(react@19.2.4)
+        specifier: file:../comete-icons
+        version: file:../comete-icons(react@19.2.4)
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -97,8 +97,8 @@ importers:
         specifier: ^0.3.2
         version: 0.3.2
       '@naxit/comete-icons':
-        specifier: 0.2.0
-        version: 0.2.0(react@19.2.4)
+        specifier: file:../../comete-icons
+        version: file:../comete-icons(react@19.2.4)
       react:
         specifier: ^19.2.4
         version: 19.2.4
@@ -636,8 +636,8 @@ packages:
     resolution: {integrity: sha512-09hy/9rRe+kzf98rNe1yM5PFtDP4M4p0gcDRL73jqQpqPz9dmh/wYkARiVgMDHdU+8UTIFj0YeoBeSAKGiFqkA==, tarball: https://npm.pkg.github.com/download/@naxit/comete-design-tokens/0.3.2/78ba44ea11f59d672d93143b6828731fcf35f56e}
     engines: {node: '>=22'}
 
-  '@naxit/comete-icons@0.2.0':
-    resolution: {integrity: sha512-c3+JAHfEktwmqXHAv+4Yi1anJv9phHBZaEJjq5WIZE2CG30iBtDq3w/9fSlzeacIATVwmBALriV7ejfJr2y1UQ==, tarball: https://npm.pkg.github.com/download/@naxit/comete-icons/0.2.0/6bddbfdf0eba96ef47f949055061ea3a0af472ad}
+  '@naxit/comete-icons@file:../comete-icons':
+    resolution: {directory: ../comete-icons, type: directory}
     engines: {node: '>=22'}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
@@ -4418,7 +4418,7 @@ snapshots:
 
   '@naxit/comete-design-tokens@0.3.2': {}
 
-  '@naxit/comete-icons@0.2.0(react@19.2.4)':
+  '@naxit/comete-icons@file:../comete-icons(react@19.2.4)':
     dependencies:
       react: 19.2.4
 

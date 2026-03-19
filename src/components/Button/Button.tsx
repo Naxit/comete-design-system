@@ -41,7 +41,9 @@ function resolveIconColor(variant: ButtonVariant, color: ButtonColor): IconColor
   if (variant === "link-subtle") return "subtle";
 
   if (variant === "contained") {
-    // NOTE: These colors render a bold background with inverted (white) text
+    // NOTE: warning bold background is light/yellow — needs dark icons, not white
+    if (color === "warning") return "on-warning";
+    // brand, success, critical, information render bold backgrounds with inverted (white) text
     const invertedColors: readonly ButtonColor[] = ["brand", "success", "critical", "information"];
     return invertedColors.includes(color) ? "inverted" : "default";
   }

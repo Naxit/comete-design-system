@@ -103,9 +103,9 @@ const meta: Meta<StoryArgs> = {
     color: "default",
     size: "medium",
     onPress: fn(),
-    iconVariant: "filled",
+    iconVariant: "outlined",
   },
-  render: ({ iconBeforeName, iconAfterName, iconVariant = "filled", ...args }) => {
+  render: ({ iconBeforeName, iconAfterName, iconVariant = "outlined", ...args }) => {
     const iconBefore = resolveIconByName(iconBeforeName, ICON_BEFORE_MAP, iconVariant);
     const iconAfter = resolveIconByName(iconAfterName, ICON_AFTER_MAP, iconVariant);
     return <Button {...args} iconBefore={iconBefore} iconAfter={iconAfter} />;
@@ -203,13 +203,13 @@ export const KeyboardNavigation: Story = {
 
 // ----------------------------------------------------------------------
 
-/** Icône filled avant le label — couleur auto-résolue selon variant + color */
+/** Icône outlined avant le label — couleur auto-résolue selon variant + color */
 export const WithIconBefore: Story = {
   args: {
     color: "brand",
     children: "Enregistrer",
     iconBeforeName: "Lock",
-    iconVariant: "filled",
+    iconVariant: "outlined",
   },
 };
 
