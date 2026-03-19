@@ -4,7 +4,7 @@ import type { Decorator, Preview } from "@storybook/react";
 // NOTE: useEffect and useGlobals must both come from storybook/preview-api when
 // used together in a decorator. Mixing React hooks with Storybook hooks in the
 // same function causes a runtime error.
-import { useEffect, useGlobals } from "storybook/preview-api";
+import { useGlobals } from "storybook/preview-api";
 import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 
 // ----------------------------------------------------------------------
@@ -13,9 +13,9 @@ const withThemeProvider: Decorator = (Story) => {
   const [globals] = useGlobals(); // eslint-disable-line react-hooks/rules-of-hooks
   const mode = (globals["theme"] as "light" | "dark") ?? "light";
 
-  useEffect(() => { // eslint-disable-line react-hooks/rules-of-hooks
-    document.documentElement.setAttribute("data-theme", mode);
-  }, [mode]);
+  // NOTE: Set synchronously (not in useEffect) — Storybook's useEffect has
+  // different timing guarantees and was not reliably updating the DOM attribute.
+  document.documentElement.setAttribute("data-theme", mode);
 
   return <ThemeProvider mode={mode}><Story /></ThemeProvider>;
 };
