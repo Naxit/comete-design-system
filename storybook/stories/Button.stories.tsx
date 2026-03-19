@@ -1,6 +1,7 @@
 import { Button } from "@naxit/comete-design-system";
 import type { ButtonProps } from "@naxit/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react";
+import { expect, fn, userEvent, within } from "storybook/test";
 
 const meta: Meta<ButtonProps> = {
   title: "Components/Button",
@@ -27,6 +28,7 @@ const meta: Meta<ButtonProps> = {
     variant: "contained",
     color: "default",
     size: "medium",
+    onPress: fn(),
   },
 };
 
@@ -39,6 +41,11 @@ export const Default: Story = {};
 
 export const Brand: Story = {
   args: { color: "brand", children: "Enregistrer" },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button"));
+    void expect(args.onPress).toHaveBeenCalledOnce();
+  },
 };
 
 export const Success: Story = {
@@ -89,6 +96,29 @@ export const Large: Story = {
 
 export const Disabled: Story = {
   args: { isDisabled: true, color: "brand", children: "Désactivé" },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button");
+    await userEvent.click(button);
+    void expect(args.onPress).not.toHaveBeenCalled();
+    void expect(button).toBeDisabled();
+  },
+};
+
+// ----------------------------------------------------------------------
+
+/** Vérifie la navigation clavier : Tab pour focus, Enter pour déclencher onPress */
+export const KeyboardNavigation: Story = {
+  args: { color: "brand", children: "Action clavier" },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button");
+    await userEvent.tab();
+    void expect(button).toHaveFocus();
+    void expect(button).toHaveAttribute("data-focus-visible");
+    await userEvent.keyboard("{Enter}");
+    void expect(args.onPress).toHaveBeenCalledOnce();
+  },
 };
 
 // ----------------------------------------------------------------------
