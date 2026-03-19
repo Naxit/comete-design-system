@@ -1,18 +1,25 @@
 import { ThemeProvider } from "@naxit/comete-design-system/providers";
 import "@naxit/comete-design-tokens/css";
 import type { Decorator, Preview } from "@storybook/react";
-import { createElement, useEffect } from "react";
+import { useEffect } from "react";
 import { useGlobals } from "storybook/preview-api";
 import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 
+// ----------------------------------------------------------------------
+
+interface WithThemeProps {
+  Story: React.ComponentType;
+}
+
 /**
- * Decorator — wraps all stories with ThemeProvider + tokens CSS.
+ * Inner React component — holds the hooks so ESLint react-hooks/rules-of-hooks
+ * is satisfied (uppercase name = valid React component).
  *
  * NOTE: useGlobals (storybook/preview-api) is the correct way to subscribe
  * reactively to global changes in Storybook 8+. context.globals in the
  * decorator signature is a snapshot — it does not trigger re-renders.
  */
-const withThemeProvider: Decorator = (Story) => {
+function WithTheme({ Story }: WithThemeProps) {
   const [globals] = useGlobals();
   const mode = (globals["theme"] as "light" | "dark") ?? "light";
 
@@ -20,8 +27,12 @@ const withThemeProvider: Decorator = (Story) => {
     document.documentElement.setAttribute("data-theme", mode);
   }, [mode]);
 
-  return <ThemeProvider mode={mode}>{createElement(Story)}</ThemeProvider>;
-};
+  return <ThemeProvider mode={mode}><Story /></ThemeProvider>;
+}
+
+const withThemeProvider: Decorator = (Story) => <WithTheme Story={Story} />;
+
+// ----------------------------------------------------------------------
 
 const preview: Preview = {
   decorators: [withThemeProvider],
