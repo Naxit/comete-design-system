@@ -32,10 +32,14 @@ jobs:
 
       - name: Install root dependencies
         run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Storybook dependencies
         working-directory: storybook
         run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Chromatic
         uses: chromaui/action@latest
