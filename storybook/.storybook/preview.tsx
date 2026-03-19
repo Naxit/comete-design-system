@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@naxit/comete-design-system/providers";
 import "@naxit/comete-design-tokens/css";
+import "./preview.css";
 import type { Decorator, Preview } from "@storybook/react";
 // NOTE: useEffect and useGlobals must both come from storybook/preview-api when
 // used together in a decorator. Mixing React hooks with Storybook hooks in the

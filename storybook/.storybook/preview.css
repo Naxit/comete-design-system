@@ -1,0 +1,7 @@
+/* Storybook preview global styles
+ * Sets the canvas background to the design system's default background token
+ * so the body color adapts when data-theme switches between light and dark. */
+
+body {
+  background-color: var(--background-default) !important;
+}
