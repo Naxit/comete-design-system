@@ -3,5 +3,5 @@
  * so the body color adapts when data-theme switches between light and dark. */
 
 body {
-  background-color: var(--background-default) !important;
+  background-color: var(--background-default-default) !important;
 }
