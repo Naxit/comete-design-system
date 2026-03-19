@@ -1,57 +1,69 @@
 # @naxit/comete-design-system v1.0.0-alpha.1 — Première release
 
-La première brique du design system Comète : une bibliothèque de composants React accessibles, thémables et entièrement pilotés par des design tokens.
+La première brique du design system Comète : une bibliothèque de composants React accessibles, thémables et 100% pilotés par des design tokens.
 
-> ⚠️ **Alpha** — L'API des composants peut encore évoluer. Le catalogue va s'enrichir progressivement.
+> **Alpha** — L'API des composants peut encore évoluer. Le catalogue va s'enrichir progressivement.
 
-## Ce que contient cette release
+## Composant : Button
 
-### Composants
-
-**Button** — Composant principal avec une couverture complète des cas d'usage :
+Le seul composant de cette release, avec une couverture complète des cas d'usage :
 
 ```tsx
 import { Button } from "@naxit/comete-design-system";
+import { Lock, ChevronRight } from "@naxit/comete-icons";
 
 <Button variant="contained" color="brand">Valider</Button>
 <Button variant="outlined" color="critical" size="small">Supprimer</Button>
-<Button variant="link" iconStart={<ChevronRight />}>Voir plus</Button>
+<Button variant="link" color="information" iconAfter={<ChevronRight />}>Voir plus</Button>
+<Button iconBefore={<Lock />} color="brand">Connexion</Button>
 ```
 
-- 5 variants : `contained`, `outlined`, `subtle`, `link`, `link-subtle`
-- 6 couleurs sémantiques : `default`, `brand`, `success`, `critical`, `warning`, `information`
-- 3 tailles : `small`, `medium`, `large`
-- Support des icônes (start/end) via `@naxit/comete-icons`
-- États : hover, pressed, focus-visible, disabled
+- **5 variants** : `contained`, `outlined`, `subtle`, `link`, `link-subtle`
+- **6 couleurs** : `default`, `brand`, `success`, `critical`, `warning`, `information`
+- **3 tailles** : `small`, `medium`, `large`
+- **Icônes** : props `iconBefore` / `iconAfter`, couleur automatiquement résolue selon variant + color (inversion sur fond bold, sémantique sur outlined/subtle)
+- **États** : hover, pressed, focus-visible, disabled — gérés via data-attributes React Aria
 
-### Providers & Hooks
-
-- **ThemeProvider** — Gestion du light/dark mode via `data-theme` sur le DOM
-- **useTheme** — Hook pour accéder au thème courant et le basculer
+## ThemeProvider & useTheme
 
 ```tsx
-import { ThemeProvider } from "@naxit/comete-design-system";
+import { ThemeProvider, useTheme } from "@naxit/comete-design-system";
 
-<ThemeProvider defaultTheme="light">
+<ThemeProvider mode="light">
   <App />
 </ThemeProvider>
+
+// Dans un composant enfant :
+const { mode, toggleTheme, setMode } = useTheme();
 ```
+
+- Gère le light/dark mode via l'attribut `data-theme` sur `<html>`
+- Synchronisation automatique prop → DOM
+- API : `mode`, `toggleTheme()`, `setMode("light" | "dark")`
+
+## Tests
+
+27 tests unitaires couvrant : rendu, variants, couleurs, tailles, icônes, accessibilité, interactions clavier, états disabled, forwarded ref.
+
+## Storybook
+
+20 stories pour le Button : toutes les couleurs, variants, tailles, combinaisons d'icônes, états disabled. Tests d'interaction intégrés (click, clavier, focus-visible). Lien Figma intégré via `@storybook/addon-designs`.
 
 ## Architecture
 
-- **React Aria** — Chaque composant repose sur les primitives headless de React Aria pour une accessibilité native (ARIA, clavier, focus management)
-- **CSS Modules** — Styles scopés, zéro valeur hardcodée, tout passe par les tokens
-- **100% token-driven** — Les couleurs, espacements et typographies proviennent exclusivement de `@naxit/comete-design-tokens`
-- **Styling par data-attributes** — `data-hovered`, `data-pressed`, `data-focus-visible`, `data-disabled`
+- **React Aria Components** — Accessibilité native (ARIA, clavier, focus management)
+- **CSS Modules** — Styles scopés, zéro valeur hardcodée
+- **100% token-driven** — Toutes les valeurs visuelles proviennent de `@naxit/comete-design-tokens`
+- **Styling par data-attributes** — `[data-hovered]`, `[data-pressed]`, `[data-focus-visible]`, `[data-disabled]`
 
 ## Stack technique
 
 - React 18/19, TypeScript strict, ESM uniquement
-- React Aria Components pour l'accessibilité
-- CSS Modules pour le styling
-- tsup pour le build
-- Vitest + Testing Library pour les tests
-- Storybook 10 pour le catalogue de composants
+- React Aria Components ^1.16.0
+- CSS Modules + typed-css-modules pour le typage
+- tsup (ESM, code splitting, tree-shaking, source maps)
+- Vitest + @testing-library/react
+- Storybook 10.3.0
 
 ## Utilisation
 
@@ -61,11 +73,11 @@ pnpm add @naxit/comete-design-system @naxit/comete-design-tokens
 
 ```tsx
 import { Button, ThemeProvider } from "@naxit/comete-design-system";
-import "@naxit/comete-design-tokens/build/css/comete-tokens.css";
+import "@naxit/comete-design-tokens/css";
 
 function App() {
   return (
-    <ThemeProvider>
+    <ThemeProvider mode="light">
       <Button variant="contained" color="brand">
         Commencer
       </Button>
@@ -76,4 +88,4 @@ function App() {
 
 ## Écosystème
 
-Ce package est le consommateur principal de `@naxit/comete-design-tokens` (theming + styles) et `@naxit/comete-icons` (icônes dans les composants). Les trois packages forment ensemble la base de l'écosystème Comète.
+Consomme `@naxit/comete-design-tokens` (theming + styles) et `@naxit/comete-icons` (icônes dans les composants). Les trois packages forment la base de l'écosystème Comète.
