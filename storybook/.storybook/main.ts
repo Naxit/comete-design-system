@@ -3,8 +3,13 @@ import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
 const config: StorybookConfig = {
-  stories: ["../stories/**/*.mdx", "../stories/**/*.stories.@(ts|tsx)"],
-  addons: ["@storybook/addon-docs"],
+  stories: ["../stories/**/*.stories.@(ts|tsx)"],
+  addons: [
+    "@storybook/addon-docs",
+    "@storybook/addon-a11y",
+    "@storybook/addon-vitest",
+    { name: "@chromatic-com/storybook", options: { projectId: "693ad068fa0b790fc9c6441c" } },
+  ],
   framework: {
     name: "@storybook/react-vite",
     options: {},
