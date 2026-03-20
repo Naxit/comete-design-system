@@ -1,6 +1,24 @@
 <style>
-  /* Hide sidebar type icons (Component, Story, Document, BookmarkHollow) */
-  [data-nodetype] svg:first-of-type {
+  /* Hide sidebar type icons (Component, Story, Document, BookmarkHollow)
+     on all levels except root */
+  [data-nodetype]:not([data-nodetype="root"]) svg:first-of-type {
     display: none;
+  }
+
+  /* Root nodes: restore the collapse indicator SVG */
+  [data-nodetype="root"] [data-action="collapse-root"] svg {
+    display: block;
+    transition: transform 0.15s ease-out;
+  }
+
+  /* Closed root: rotate 180° → chevron points left */
+  [data-nodetype="root"] [data-action="collapse-root"][aria-expanded="false"] svg {
+    transform: rotateZ(180deg);
+  }
+
+  /* Open root: CollapseIconWrapper already applies rotateZ(90deg) on the parent div,
+     keep SVG at 0° so the combined result is 90° → arrow points down */
+  [data-nodetype="root"] [data-action="collapse-root"][aria-expanded="true"] svg {
+    transform: none;
   }
 </style>
