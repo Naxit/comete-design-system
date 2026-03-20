@@ -316,7 +316,7 @@ export const IconAllColors: Story = {
           key={color}
           color={color}
           variant={args.variant}
-          iconBefore={<Image spacing="default" variant="filled" />}
+          iconBefore={<Image spacing="default" variant={args.iconVariant ?? "outlined"} />}
         >
           {color}
         </Button>
@@ -345,7 +345,7 @@ export const AllColors: Story = {
 export const AllVariants: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Button variant="contained" color="default">Contained</Button>
+      <Button variant="contained" color="default">Contained-</Button>
       <Button variant="outlined" color="default">Outlined</Button>
       <Button variant="link" color="information">Link</Button>
       <Button variant="subtle" color="default">Subtle</Button>
