@@ -1,4 +1,4 @@
-name: Chromatic
+name: CI
 
 on:
   push:
@@ -9,16 +9,14 @@ on:
       - main
 
 jobs:
-  chromatic:
-    name: Visual tests
+  ci:
+    name: Lint, Test & Build
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -37,14 +35,21 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PKG_READ_TOKEN }}
 
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
       - name: Install Storybook dependencies
         working-directory: storybook
         run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.PKG_READ_TOKEN }}
 
-      - name: Run Chromatic
-        uses: chromaui/action@latest
-        with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-          workingDir: storybook
+      - name: Lint Storybook
+        working-directory: storybook
+        run: pnpm lint
