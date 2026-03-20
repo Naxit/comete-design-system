@@ -1,0 +1,202 @@
+/* ==========================================================================
+   Avatar — Comète Design System
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+.avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  background-color: var(--background-neutral-subtler-default);
+  color: var(--text-primary);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-medium);
+
+  user-select: none;
+  cursor: default;
+
+  /* Reset button defaults */
+  border: none;
+  padding: 0;
+  outline: none;
+
+  transition-property: background-color, opacity;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-default);
+}
+
+/* Selected ----------------------------------------------------------------- */
+
+.avatar[data-selected] {
+  background-color: var(--background-selected-subtlest-default);
+}
+
+/* Interactive states (button mode) ---------------------------------------- */
+
+.avatar[data-hovered]:not([data-disabled]) {
+  background-color: var(--background-neutral-subtler-hovered);
+  cursor: pointer;
+}
+
+.avatar[data-pressed]:not([data-disabled]) {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+.avatar[data-focus-visible] {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Disabled ----------------------------------------------------------------- */
+
+.avatar[data-disabled] {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Appearance: square (corner radii defined per size below)
+   ========================================================================== */
+
+.square {
+  /* border-radius set per size */
+}
+
+/* ==========================================================================
+   Sizes (square & rounded)
+   ========================================================================== */
+
+.xsmall {
+  width: var(--size200);
+  height: var(--size200);
+  border-radius: var(--radius025);
+  font-size: var(--font-size-ui-xxxs);
+}
+
+.small {
+  width: var(--size300);
+  height: var(--size300);
+  border-radius: var(--radius0375);
+  font-size: var(--font-size-ui-xxs);
+}
+
+.medium {
+  width: var(--size400);
+  height: var(--size400);
+  border-radius: var(--radius050);
+  font-size: var(--font-size-ui-xs);
+}
+
+.large {
+  width: var(--size500);
+  height: var(--size500);
+  border-radius: var(--radius075);
+  font-size: var(--font-size-ui-s);
+}
+
+.xlarge {
+  width: var(--size1200);
+  height: var(--size1200);
+  border-radius: var(--radius100);
+  font-size: var(--font-size-ui-xl);
+}
+
+.xxlarge {
+  width: var(--size1600);
+  height: var(--size1600);
+  border-radius: var(--radius150);
+  font-size: var(--font-size-ui-xxl);
+}
+
+/* ==========================================================================
+   Appearance: rounded
+   Override border-radius after size declarations (same specificity, later wins)
+   ========================================================================== */
+
+.rounded.xsmall,
+.rounded.small,
+.rounded.medium,
+.rounded.large,
+.rounded.xlarge,
+.rounded.xxlarge {
+  border-radius: var(--radius-round);
+}
+
+/* ==========================================================================
+   Appearance: identity (portrait 3:4 — height = size, width computed)
+   ========================================================================== */
+
+.identity.xsmall {
+  width: auto;
+  height: var(--size200);
+  aspect-ratio: 3 / 4;
+}
+
+.identity.small {
+  width: auto;
+  height: var(--size300);
+  aspect-ratio: 3 / 4;
+}
+
+.identity.medium {
+  width: auto;
+  height: var(--size400);
+  aspect-ratio: 3 / 4;
+}
+
+.identity.large {
+  width: auto;
+  height: var(--size500);
+  aspect-ratio: 3 / 4;
+}
+
+.identity.xlarge {
+  width: auto;
+  height: var(--size1200);
+  aspect-ratio: 3 / 4;
+}
+
+.identity.xxlarge {
+  width: auto;
+  height: var(--size1600);
+  aspect-ratio: 3 / 4;
+}
+
+/* ==========================================================================
+   Photo
+   ========================================================================== */
+
+.photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ==========================================================================
+   Initials
+   ========================================================================== */
+
+.initials {
+  line-height: 1;
+  letter-spacing: 0;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Icon slot
+   ========================================================================== */
+
+.iconSlot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 50%;
+  pointer-events: none;
+}
