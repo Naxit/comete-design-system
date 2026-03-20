@@ -179,6 +179,32 @@ const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 ```
 
+#### Props de type icône (`React.ReactNode`)
+
+Les props acceptant une icône (`icon`, `startIcon`, `endIcon`, etc.) ne sont pas sérialisables dans `args`. Utiliser le pattern `mapping` :
+
+```ts
+import type { ReactNode } from "react";
+import { Person, SomeOtherIcon } from "@naxit/comete-icons";
+
+// REASON: React.ReactNode n'est pas sérialisable dans Storybook args.
+// Storybook résout la clé string en valeur ReactNode avant de passer au composant.
+const ICON_MAPPING: Record<string, ReactNode> = {
+  none: undefined,
+  Person: <Person spacing="none" variant="filled" />,
+  // Ajouter d'autres icônes de @naxit/comete-icons selon le contexte du composant
+};
+const ICON_OPTIONS = Object.keys(ICON_MAPPING);
+
+// Dans argTypes du meta :
+icon: { control: "select", options: ICON_OPTIONS, mapping: ICON_MAPPING },
+
+// Dans args d'une story :
+args: { icon: "Person" },
+```
+
+Toujours inclure au minimum `none` et une icône représentative provenant de `@naxit/comete-icons`.
+
 ### 6. Commit et push
 
 ```bash
