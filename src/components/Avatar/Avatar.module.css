@@ -128,46 +128,6 @@
 }
 
 /* ==========================================================================
-   Appearance: identity (portrait 3:4 — height = size, width computed)
-   ========================================================================== */
-
-.identity.xsmall {
-  width: auto;
-  height: var(--size200);
-  aspect-ratio: 3 / 4;
-}
-
-.identity.small {
-  width: auto;
-  height: var(--size300);
-  aspect-ratio: 3 / 4;
-}
-
-.identity.medium {
-  width: auto;
-  height: var(--size400);
-  aspect-ratio: 3 / 4;
-}
-
-.identity.large {
-  width: auto;
-  height: var(--size500);
-  aspect-ratio: 3 / 4;
-}
-
-.identity.xlarge {
-  width: auto;
-  height: var(--size1200);
-  aspect-ratio: 3 / 4;
-}
-
-.identity.xxlarge {
-  width: auto;
-  height: var(--size1600);
-  aspect-ratio: 3 / 4;
-}
-
-/* ==========================================================================
    Photo
    ========================================================================== */
 

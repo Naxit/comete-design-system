@@ -24,7 +24,7 @@ const meta: Meta<AvatarProps> = {
   argTypes: {
     appearance: {
       control: "select",
-      options: ["square", "rounded", "identity"],
+      options: ["square", "rounded"],
     },
     size: {
       control: "select",
@@ -98,13 +98,6 @@ export const Rounded: Story = {
   args: { appearance: "rounded", initials: "AB", size: "xlarge" },
   parameters: {
     design: { type: "figma", url: figmaUrl("2745:15627") },
-  },
-};
-
-export const Identity: Story = {
-  args: { appearance: "identity", initials: "AB", size: "xlarge" },
-  parameters: {
-    design: { type: "figma", url: figmaUrl("2790:16981") },
   },
 };
 

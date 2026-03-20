@@ -27,7 +27,7 @@ describe("Avatar", () => {
   });
 
   describe("prop appearance", () => {
-    it.each([["square"], ["rounded"], ["identity"]] as const)(
+    it.each([["square"], ["rounded"]] as const)(
       "should apply class %s when appearance=%s",
       (appearance) => {
         const { container } = render(<Avatar appearance={appearance} />);

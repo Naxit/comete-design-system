@@ -8,7 +8,7 @@ import styles from "./Avatar.module.css";
 
 // ----------------------------------------------------------------------
 
-export type AvatarAppearance = "square" | "rounded" | "identity";
+export type AvatarAppearance = "square" | "rounded";
 export type AvatarSize =
   | "xsmall"
   | "small"
@@ -95,7 +95,7 @@ function resolveContent(
  * <Avatar initials="AB" onPress={() => openProfile()} isSelected={active} />
  * ```
  *
- * @param appearance - Shape: "square" | "rounded" | "identity". @default "square"
+ * @param appearance - Shape: "square" | "rounded". @default "square"
  * @param size       - Avatar size. @default "medium"
  * @param src        - Photo URL (takes priority over initials/icon).
  * @param alt        - Alt text / accessible label.
