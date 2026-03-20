@@ -2,7 +2,6 @@ import { Avatar } from "@naxit/comete-design-system";
 import type { AvatarProps } from "@naxit/comete-design-system";
 import { Person } from "@naxit/comete-icons";
 import type { Meta, StoryObj } from "@storybook/react";
-import React from "react";
 import { expect, fn, userEvent, within } from "storybook/test";
 
 // ----------------------------------------------------------------------
@@ -74,11 +73,8 @@ export const WithPhoto: Story = {
 };
 
 export const WithIcon: Story = {
-  args: {
-    icon: <Person spacing="none" variant="filled" />,
-    size: "xlarge",
-    initials: undefined,
-  },
+  // REASON: React.ReactNode in args is not serializable by Storybook — use render instead
+  render: (args) => <Avatar {...args} icon={<Person spacing="none" variant="filled" />} initials={undefined} size="xlarge" />,
   parameters: {
     design: { type: "figma", url: figmaUrl("2739:5312") },
   },
