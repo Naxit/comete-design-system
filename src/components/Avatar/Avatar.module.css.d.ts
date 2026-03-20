@@ -1,7 +1,6 @@
 declare const styles: {
   readonly "avatar": string;
   readonly "iconSlot": string;
-  readonly "identity": string;
   readonly "initials": string;
   readonly "large": string;
   readonly "medium": string;
