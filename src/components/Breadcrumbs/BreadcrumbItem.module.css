@@ -1,0 +1,69 @@
+/* ==========================================================================
+   BreadcrumbItem — Comète Design System
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+/* Item ------------------------------------------------------------------ */
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--space075); /* 6px entre séparateur et contenu */
+}
+
+/* Séparateur "/" — masqué sur le premier item */
+
+.separator {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);       /* 14px */
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);   /* 20px */
+  color: var(--text-subtlest);
+  user-select: none;
+}
+
+.item:first-child .separator {
+  display: none;
+}
+
+/* Lien / texte de l'item ------------------------------------------------ */
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space075); /* 6px entre icône et label */
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);       /* 14px */
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);   /* 20px */
+  color: var(--text-subtle);
+  text-decoration: none;
+}
+
+/* Lien interactif : soulignement au survol */
+a.link:hover {
+  text-decoration: underline;
+}
+
+/* Focus visible : anneau de focus */
+a.link:focus-visible {
+  outline: 2px solid var(--border-focused);
+  outline-offset: 2px;
+  border-radius: var(--radius025);
+}
+
+/* Page courante : non cliquable, style identique */
+.current {
+  cursor: default;
+}
+
+/* Icônes avant / après -------------------------------------------------- */
+
+.iconBefore,
+.iconAfter {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-bottom: 2px; /* Ajustement vertical pour aligner avec le texte */
+}
