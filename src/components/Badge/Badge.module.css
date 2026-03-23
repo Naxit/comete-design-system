@@ -47,15 +47,6 @@
 }
 
 /* ==========================================================================
-   Disabled — toutes apparences confondues
-   ========================================================================== */
-
-.disabled {
-  background-color: var(--background-disabled-default);
-  color: var(--text-disabled);
-}
-
-/* ==========================================================================
    Apparences × importance
    Sélecteurs composés : .appearance.importance
    ========================================================================== */
@@ -95,3 +86,14 @@
 .accent.high   { background-color: var(--background-accent-bold-default);     color: var(--text-inverted); }
 .accent.medium { background-color: var(--background-accent-subtlest-default); color: var(--text-accent); }
 .accent.low    { background-color: var(--background-accent-bold-default); }
+
+/* ==========================================================================
+   Disabled — placé en dernier pour surcharger tous les sélecteurs composés
+   .badge.disabled = spécificité (0,2,0), même rang que .appearance.importance,
+   mais déclaré après → victoire par ordre de source.
+   ========================================================================== */
+
+.badge.disabled {
+  background-color: var(--background-disabled-default);
+  color: var(--text-disabled);
+}
