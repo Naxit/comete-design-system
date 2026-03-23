@@ -41,3 +41,9 @@
   background-color: var(--background-critical-bold-default);
   color: var(--text-inverted);
 }
+
+/* announcement : fond neutre sombre, texte inversé (blanc) */
+.announcement {
+  background-color: var(--background-neutral-bold-default);
+  color: var(--text-inverted);
+}
