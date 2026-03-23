@@ -43,7 +43,9 @@
    ========================================================================== */
 
 .cutoutBorder {
-  box-shadow: 0 0 0 1px var(--background-default-default);
+  /* NOTE: --badge-cutout-color peut être surchargé par le composant parent
+     pour que l'anneau corresponde à la couleur de fond du conteneur. */
+  box-shadow: 0 0 0 1px var(--badge-cutout-color, var(--background-default-default));
 }
 
 /* ==========================================================================

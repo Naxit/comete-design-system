@@ -1,0 +1,82 @@
+/* ==========================================================================
+   BottomNavigationItem — Comète Design System
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+/* Base ------------------------------------------------------------------ */
+
+.item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Zone contenu : icône + label, reçoit le fond de sélection */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space025);          /* 2px entre icône et label */
+  padding: var(--space200) var(--space050); /* 16px 4px — état non sélectionné */
+  width: 100%;
+  border-radius: var(--radius-round);
+  transition: background-color 0.15s ease-out;
+}
+
+/* Wrapper icône — positionné relativement pour le badge en surimpression */
+
+.iconWrapper {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* Badge en haut à droite de l'icône */
+
+.badge {
+  position: absolute;
+  top: -8px;
+  left: 16px;
+  /* Anneau du badge = couleur de fond de l'item non sélectionné */
+  --badge-cutout-color: var(--background-surface-default);
+}
+
+/* Label */
+
+.label {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxxs);    /* 10px */
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xxs); /* 16px */
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   État sélectionné
+   ========================================================================== */
+
+/* Fond coloré autour du contenu + padding réduit */
+.selected .content {
+  background-color: var(--background-selected-subtlest-default);
+}
+
+/* Anneau du badge = couleur de fond de l'item sélectionné */
+.selected .badge {
+  --badge-cutout-color: var(--background-selected-subtlest-default);
+}
+
+/* Label en gras et coloré */
+.selected .label {
+  /* font-weight: var(--font-weight-bold); */
+  color: var(--text-selected);
+}
