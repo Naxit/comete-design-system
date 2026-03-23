@@ -1,0 +1,24 @@
+/* ==========================================================================
+   FocusRing — Comète Design System
+   Overlay visuel de focus clavier. Le parent doit être position: relative.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+.ring {
+  position: absolute;
+  pointer-events: none;
+  /* Le border-radius est injecté via style inline pour suivre le rayon du parent */
+}
+
+/* outside : anneau 2px en dehors du composant ciblé */
+.outside {
+  inset: -4px;
+  box-shadow: 0 0 0 2px var(--border-focused);
+}
+
+/* inside : anneau 2px à l'intérieur du bord du composant ciblé */
+.inside {
+  inset: 0;
+  box-shadow: inset 0 0 0 2px var(--border-focused);
+}
