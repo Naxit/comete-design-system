@@ -4,9 +4,14 @@
     display: none;
   }
 
-  /* Component node: nudge the icon down slightly for visual alignment */
+  /* Component node: nudge the arrow icon down slightly for visual alignment */
   [data-nodetype="component"] > button > div {
     margin-top: 6px;
+  }
+
+  /* Component node: hide the component type icon */
+  [type="component"] {
+    display: none;
   }
 
   /* Root and component nodes: restore the collapse indicator SVG */
