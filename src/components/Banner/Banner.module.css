@@ -1,0 +1,42 @@
+/* ==========================================================================
+   Banner — Comète Design System
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+/* Base ------------------------------------------------------------------ */
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space050);      /* 4px */
+  padding: var(--space150);  /* 12px */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Zone contenu ---------------------------------------------------------- */
+
+.content {
+  flex: 1;
+  min-width: 0; /* empêche le débordement en flex */
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  padding: var(--space075) var(--space150); /* 6px 12px */
+  background-color: var(--background-surface-critical);
+}
+
+/* ==========================================================================
+   Apparences
+   ========================================================================== */
+
+/* warning : fond jaune saturé, icône sombre */
+.warning {
+  background-color: var(--background-warning-bold-default);
+}
+
+/* critical : fond rouge saturé, icône inversée (blanche) */
+.critical {
+  background-color: var(--background-critical-bold-default);
+}
