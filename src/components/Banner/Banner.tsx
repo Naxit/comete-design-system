@@ -36,7 +36,7 @@ export function Banner({ appearance, children }: BannerProps): ReactElement {
         size={24}
         spacing="none"
         variant="filled"
-        color={appearance === "warning" ? "primary" : "inverted"}
+        color={appearance === "warning" ? "on-warning" : "inverted"}
       />
       <div className={styles.content}>{children}</div>
     </div>
