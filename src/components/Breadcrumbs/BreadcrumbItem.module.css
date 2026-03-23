@@ -65,4 +65,5 @@ a.link:focus-visible {
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
+  padding-bottom: 2px; /* Ajustement vertical pour aligner avec le texte */
 }
