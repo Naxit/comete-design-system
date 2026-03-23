@@ -57,7 +57,7 @@ export function BottomNavigationItem({
           />
           {badge !== undefined && (
             <span className={styles.badge}>
-              <Badge appearance="critical" importance="high" label={badge} />
+              <Badge appearance="critical" importance="high" label={badge} cutoutBorder />
             </span>
           )}
         </span>
