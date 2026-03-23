@@ -1,0 +1,97 @@
+/* ==========================================================================
+   Badge — Comète Design System
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+/* Base ------------------------------------------------------------------ */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-round);
+
+  /* Typography */
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xxs);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   Importance — dimensions
+   ========================================================================== */
+
+/* high et medium : pill avec texte */
+.high,
+.medium {
+  height: var(--size200);      /* 16px */
+  min-width: var(--size150);   /* 12px */
+  padding: 0 var(--space075);  /* 0 6px */
+}
+
+/* low : point coloré sans texte */
+.low {
+  width: var(--size100);   /* 8px */
+  height: var(--size100);  /* 8px */
+}
+
+/* ==========================================================================
+   Cutout border — anneau blanc de séparation
+   ========================================================================== */
+
+.cutoutBorder {
+  box-shadow: 0 0 0 1px var(--background-default-default);
+}
+
+/* ==========================================================================
+   Disabled — toutes apparences confondues
+   ========================================================================== */
+
+.disabled {
+  background-color: var(--background-disabled-default);
+  color: var(--text-disabled);
+}
+
+/* ==========================================================================
+   Apparences × importance
+   Sélecteurs composés : .appearance.importance
+   ========================================================================== */
+
+/* — neutral — */
+.neutral.high   { background-color: var(--background-neutral-bold-default);     color: var(--text-inverted); }
+.neutral.medium { background-color: var(--background-neutral-subtler-default);   color: var(--text-primary); }
+.neutral.low    { background-color: var(--background-neutral-bold-default); }
+
+/* — primary — */
+.primary.high   { background-color: var(--background-information-bold-default);     color: var(--text-inverted); }
+.primary.medium { background-color: var(--background-information-subtlest-default); color: var(--text-information); }
+.primary.low    { background-color: var(--background-information-bold-default); }
+
+/* — primary-inverted (fond blanc, texte information) — */
+/* NOTE: CSS Modules expose le nom de classe tel quel via styles["primary-inverted"] */
+.primary-inverted.high   { background-color: var(--background-default-default); color: var(--text-information); }
+.primary-inverted.medium { background-color: var(--background-default-default); color: var(--text-selected); }
+.primary-inverted.low    { background-color: var(--background-default-default); }
+
+/* — critical — */
+.critical.high   { background-color: var(--background-critical-bold-default);     color: var(--text-inverted); }
+.critical.medium { background-color: var(--background-critical-subtlest-default); color: var(--text-critical); }
+.critical.low    { background-color: var(--background-critical-bold-default); }
+
+/* — success — */
+.success.high   { background-color: var(--background-success-bold-default);     color: var(--text-inverted); }
+.success.medium { background-color: var(--background-success-subtlest-default); color: var(--text-success); }
+.success.low    { background-color: var(--background-success-bold-default); }
+
+/* — warning (fond clair/jaune : texte sombre dans les deux niveaux) — */
+.warning.high   { background-color: var(--background-warning-bold-default);     color: var(--text-primary); }
+.warning.medium { background-color: var(--background-warning-subtlest-default); color: var(--text-primary); }
+.warning.low    { background-color: var(--background-warning-bold-default); }
+
+/* — accent — */
+.accent.high   { background-color: var(--background-accent-bold-default);     color: var(--text-inverted); }
+.accent.medium { background-color: var(--background-accent-subtlest-default); color: var(--text-accent); }
+.accent.low    { background-color: var(--background-accent-bold-default); }
