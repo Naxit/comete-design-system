@@ -359,7 +359,7 @@ const SAMPLES: Record<string, string> = {
 // -----------------------------------------------------------------------
 // Composants d'affichage
 
-const css: Record<string, CSSProperties> = {
+const css = {
   page: {
     padding: 32,
     fontFamily: "var(--font-family-primary, system-ui, sans-serif)",
@@ -450,7 +450,7 @@ const css: Record<string, CSSProperties> = {
     fontStyle: "italic",
     marginTop: 4,
   },
-};
+} satisfies Record<string, CSSProperties>;
 
 function TokenTag({ name }: { name: string }): ReactElement {
   return (

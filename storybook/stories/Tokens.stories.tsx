@@ -172,7 +172,7 @@ function getComputedTokenValue(name: string): string {
 // -----------------------------------------------------------------------
 // Composants UI partagés
 
-const S: Record<string, CSSProperties> = {
+const S = {
   page: {
     padding: 24,
     fontFamily: "var(--font-family-primary, system-ui, sans-serif)",
@@ -215,7 +215,7 @@ const S: Record<string, CSSProperties> = {
     borderLeft: "2px solid var(--border-default, #d8dedf)",
     paddingLeft: 8,
   },
-};
+} satisfies Record<string, CSSProperties>;
 
 interface TabProps {
   label: string;
@@ -421,7 +421,7 @@ function SemanticExplorer({ search }: { search: string }): ReactElement {
   }, []);
 
   const [copied, setCopied] = useState<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const timerRef = useRef<number | null>(null);
 
   function handleCopy(name: string): void {
     void navigator.clipboard.writeText(`var(${name})`);
@@ -549,7 +549,7 @@ const PRIMITIVE_LABELS: Record<PrimitiveGroup, string> = {
 function PrimitiveExplorer({ search }: { search: string }): ReactElement {
   const [activeGroup, setActiveGroup] = useState<PrimitiveGroup>("color");
   const [copied, setCopied] = useState<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const timerRef = useRef<number | null>(null);
 
   function handleCopy(name: string): void {
     void navigator.clipboard.writeText(`var(${name})`);

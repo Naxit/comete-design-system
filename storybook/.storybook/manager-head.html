@@ -1,24 +1,31 @@
 <style>
-  /* Hide sidebar type icons (Component, Story, Document, BookmarkHollow)
-     on all levels except root */
-  [data-nodetype]:not([data-nodetype="root"]) svg:first-of-type {
+  /* Hide sidebar type icons on story/document levels — root and component keep their icons */
+  [data-nodetype]:not([data-nodetype="root"]):not([data-nodetype="component"]) svg:first-of-type {
     display: none;
   }
 
-  /* Root nodes: restore the collapse indicator SVG */
-  [data-nodetype="root"] [data-action="collapse-root"] svg {
+  /* Component node: nudge the icon down slightly for visual alignment */
+  [data-nodetype="component"] > button > div {
+    margin-top: 6px;
+  }
+
+  /* Root and component nodes: restore the collapse indicator SVG */
+  [data-nodetype="root"] [data-action="collapse-root"] svg,
+  [data-nodetype="component"] [data-action="collapse-root"] svg {
     display: block;
     transition: transform 0.15s ease-out;
   }
 
-  /* Closed root: rotate 180° → chevron points left */
-  [data-nodetype="root"] [data-action="collapse-root"][aria-expanded="false"] svg {
-    transform: rotateZ(180deg);
+  /* Closed: chevron points right → (SVG is naturally right-pointing, no extra rotation) */
+  [data-nodetype="root"] [data-action="collapse-root"][aria-expanded="false"] svg,
+  [data-nodetype="component"] [data-action="collapse-root"][aria-expanded="false"] svg {
+    transform: rotateZ(0deg);
   }
 
-  /* Open root: CollapseIconWrapper already applies rotateZ(90deg) on the parent div,
+  /* Open: CollapseIconWrapper already applies rotateZ(90deg) on the parent div,
      keep SVG at 0° so the combined result is 90° → arrow points down */
-  [data-nodetype="root"] [data-action="collapse-root"][aria-expanded="true"] svg {
+  [data-nodetype="root"] [data-action="collapse-root"][aria-expanded="true"] svg,
+  [data-nodetype="component"] [data-action="collapse-root"][aria-expanded="true"] svg {
     transform: none;
   }
 </style>

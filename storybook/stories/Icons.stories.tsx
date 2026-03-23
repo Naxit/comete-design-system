@@ -102,7 +102,7 @@ function IconExplorer(): ReactElement {
   const [color, setColor] = useState<IconColor>("default");
   const [size, setSize] = useState(24);
   const [copied, setCopied] = useState<string | null>(null);
-  const timerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
+  const timerRef = useRef<number | null>(null);
 
   useEffect(
     () => () => {
