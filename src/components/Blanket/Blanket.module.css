@@ -1,0 +1,12 @@
+/* ==========================================================================
+   Blanket — Comète Design System
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+.blanket {
+  position: fixed;
+  inset: 0;
+  background-color: var(--blanket-default);
+  z-index: var(--z-index-overlay);
+}
