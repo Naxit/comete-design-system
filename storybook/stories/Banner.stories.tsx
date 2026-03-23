@@ -6,6 +6,8 @@ import type { BannerAppearance } from "@naxit/comete-design-system/components";
 const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
+const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
+
 // -----------------------------------------------------------------------
 // Meta
 
@@ -25,7 +27,7 @@ const meta = {
   },
   args: {
     appearance: "warning",
-    children: "Mettez à jour vos informations de contact avant le 31 mars.",
+    children: LOREM,
   },
 } satisfies Meta<typeof Banner>;
 
@@ -41,58 +43,21 @@ export const Default: Story = {
 
 export const Warning: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4559-5188") } },
-  args: {
-    appearance: "warning",
-    children: "Votre session expire dans 5 minutes. Sauvegardez votre travail.",
-  },
+  args: { appearance: "warning", children: LOREM },
 };
 
 export const Critical: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4559-5336") } },
-  args: {
-    appearance: "critical",
-    children: "Une erreur critique a été détectée. Contactez l'administrateur immédiatement.",
-  },
+  args: { appearance: "critical", children: LOREM },
 };
 
 export const AllAppearances: Story = {
   name: "All appearances",
   parameters: { design: { type: "figma", url: figmaUrl("4559-5335") } },
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-      <Banner appearance="warning">
-        Mettez à jour vos informations de contact avant le 31 mars pour continuer à recevoir
-        les notifications.
-      </Banner>
-      <Banner appearance="critical">
-        Une erreur critique a été détectée sur votre compte. Contactez l&apos;administrateur.
-      </Banner>
-    </div>
-  ),
-};
-
-export const WithRichContent: Story = {
-  name: "With rich content",
-  parameters: { design: { type: "figma", url: figmaUrl("4559-5335") } },
-  render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-      <Banner appearance="warning">
-        <span>
-          Maintenance planifiée le <strong>15 avril de 2h à 4h</strong>. Le service sera
-          temporairement indisponible.{" "}
-          <a href="https://example.com" style={{ color: "inherit" }}>
-            En savoir plus
-          </a>
-        </span>
-      </Banner>
-      <Banner appearance="critical">
-        <span>
-          Votre abonnement a expiré.{" "}
-          <a href="https://example.com" style={{ color: "inherit" }}>
-            Renouveler maintenant
-          </a>
-        </span>
-      </Banner>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <Banner appearance="warning">{LOREM}</Banner>
+      <Banner appearance="critical">{LOREM}</Banner>
     </div>
   ),
 };
