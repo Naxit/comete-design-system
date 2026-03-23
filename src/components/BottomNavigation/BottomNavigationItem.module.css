@@ -45,7 +45,9 @@
 .badge {
   position: absolute;
   top: -8px;
-  right: -8px;
+  left: 16px;
+  /* Anneau du badge = couleur de fond de l'item non sélectionné */
+  --badge-cutout-color: var(--background-surface-default);
 }
 
 /* Label */
@@ -66,11 +68,15 @@
 /* Fond coloré autour du contenu + padding réduit */
 .selected .content {
   background-color: var(--background-selected-subtlest-default);
-  padding: var(--space100) var(--space050); /* 8px 4px */
+}
+
+/* Anneau du badge = couleur de fond de l'item sélectionné */
+.selected .badge {
+  --badge-cutout-color: var(--background-selected-subtlest-default);
 }
 
 /* Label en gras et coloré */
 .selected .label {
-  font-weight: var(--font-weight-bold);
+  /* font-weight: var(--font-weight-bold); */
   color: var(--text-selected);
 }
