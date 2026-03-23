@@ -103,43 +103,74 @@ pnpm test -- --reporter=verbose     # Mode verbose
 
 ## Processus de création d'un composant
 
+> **Déclencheur** : toute demande de création d'un nouveau composant.
+> Exécuter les étapes dans l'ordre, sans sauter d'étape, jusqu'à la PR.
+
+### 0. Branche dédiée
+
+```bash
+git checkout main && git pull origin main
+git checkout -b component-name   # kebab-case du nom du composant
+```
+
 ### 1. Extraction Figma
 
-Récupérer les données du nœud via l'API Figma (fichier `YO9cW75K8aLcM5BbojZAqB`) :
+Le token Figma est dans `.env` sous la clé `FIGMA_ACCESS_TOKEN`. Le fichier du DS est `YO9cW75K8aLcM5BbojZAqB`.
 
 ```bash
-curl -s -H "X-Figma-Token: $FIGMA_TOKEN" \
+curl -s -H "X-Figma-Token: $FIGMA_ACCESS_TOKEN" \
   "https://api.figma.com/v1/files/YO9cW75K8aLcM5BbojZAqB/nodes?ids=NODE_ID" \
-  | python3 -m json.tool > node.json
+  | python3 -m json.tool > /tmp/component_node.json
 ```
 
-Extraire :
-- **Props/variantes** : noms des propriétés et valeurs possibles
-- **Tailles** : dimensions (`absoluteBoundingBox`) et `cornerRadius` par variante
-- **Couleurs** : `fills[].color` (RGB) → matcher dans `comete-tokens.css` pour trouver le bon token
-- **Node IDs** des variantes représentatives (pour les stories Storybook)
+Extraire via des scripts Python inline (`python3 -c "..."`) :
+- **Props/variantes** : structure du COMPONENT_SET (`children[].name`)
+- **Dimensions** : `absoluteBoundingBox`, `cornerRadius`, `paddingTop/Right/Bottom/Left`, `itemSpacing`
+- **Couleurs** : `fills[].color` (RGB 0–1) → convertir en hex → matcher dans `comete-tokens.css`
+- **Typographie** : `style.fontSize`, `fontWeight`, `lineHeightPx`, `letterSpacing`
+- **Node IDs** des variantes représentatives pour les stories
 
-Matcher les couleurs RGB aux tokens :
+Matcher les couleurs RGB aux tokens sémantiques :
 ```bash
-grep "#hexvalue" node_modules/.pnpm/@naxit+comete-design-tokens@*/node_modules/@naxit/comete-design-tokens/build/css/comete-tokens.css
+TOKEN_CSS=$(find node_modules -path "*comete-design-tokens*comete-tokens.css" | head -1)
+# Extraire uniquement les blocs :root (thème clair) pour avoir les bonnes valeurs
+python3 -c "
+import re
+css = open('$TOKEN_CSS').read()
+# Fusionner tous les blocs :root
+roots = []
+for m in re.finditer(r':root\s*\{', css):
+    s = css.index('{', m.start()); depth=0; e=s
+    for i in range(s, len(css)):
+        if css[i]=='{': depth+=1
+        elif css[i]=='}':
+            depth-=1
+            if depth==0: e=i; break
+    roots.append(css[s+1:e])
+root = '\n'.join(roots)
+# Chercher la valeur hex
+for t,v in re.findall(r'(--[\w-]+)\s*:\s*(#[0-9a-fA-F]{6})\s*;', root):
+    if v.lower() == '#HEXVALUE': print(t, v)
+"
 ```
+
+**Priorité tokens** : toujours préférer les tokens sémantiques (`--background-*`, `--text-*`, `--border-*`) aux tokens primitifs (`--porcelain-*`, `--red-*`, etc.).
 
 ### 2. Fichiers à créer
 
 **`src/components/ComponentName/ComponentName.tsx`**
-- `export function ComponentName(props): React.ReactElement` (forwardRef uniquement si ref nécessaire)
-- Utiliser React Aria si le composant est interactif (`Button`, `ToggleButton`, etc.)
+- `export function ComponentName(props): ReactElement` (pas de forwardRef sauf si ref explicitement nécessaire)
+- Utiliser React Aria (`react-aria-components`) uniquement pour les composants interactifs
 - Types exportés : `ComponentNameAppearance`, `ComponentNameSize`, `ComponentNameProps`
 - JSDoc sur la fonction et les props non évidentes
 
 **`src/components/ComponentName/ComponentName.module.css`**
-- En-tête avec le nom du composant
 - Zéro valeur hardcodée — uniquement `var(--token)`
-- Structure : base → états (`[data-hovered]`, `[data-pressed]`, `[data-focus-visible]`, `[data-disabled]`, `[data-selected]`) → tailles → variantes d'apparence
-- Overrides d'apparence sur taille : sélecteurs composés (`.rounded.medium`) plutôt que `!important`
+- Structure : base → dimensions/tailles → apparences × états
+- **Priorité des overrides** : les sélecteurs composés (`.appearance.importance`) ont spécificité `(0,2,0)`. Les états prioritaires (`.disabled`, `.badge.disabled`) doivent être déclarés **en dernier** pour gagner par ordre de source à spécificité égale. Ne jamais utiliser `!important`.
 
 **`src/components/ComponentName/ComponentName.test.tsx`**
-- Couvrir : rendu de base, classes CSS par défaut, chaque prop, états, interactions, accessibilité
+- Couvrir : rendu de base, valeurs par défaut, chaque prop, combinaisons, états (disabled, etc.)
 - Nommage : `"should [comportement] when [condition]"`
 - CSS Modules en test = proxy identité → asserter sur le nom de classe brut (ex: `"medium"` pas `"ComponentName_medium__xxx"`)
 
@@ -156,22 +187,23 @@ export type { ComponentNameProps, ComponentNameAppearance, ComponentNameSize } f
 export * from "./ComponentName";
 ```
 
-### 4. Validation
+### 4. Validation — obligatoire avant tout commit
 
 ```bash
-pnpm build    # TypeScript strict + génère dist/
-pnpm test     # Tests unitaires
-pnpm lint     # Zéro warning (root)
-cd storybook && pnpm lint   # Zéro warning (storybook)
+pnpm build              # TypeScript strict + génère dist/
+pnpm test               # Tous les tests unitaires
+pnpm lint               # Zéro warning (root)
+cd storybook && pnpm lint && npx tsc --noEmit   # Zéro warning + zéro erreur TS (storybook)
 ```
+
+Aucune erreur ni warning toléré. Corriger avant de continuer.
 
 ### 5. Story Storybook
 
 Créer `storybook/stories/ComponentName.stories.tsx` :
-- `meta` avec `argTypes` pour chaque prop contrôlable et `parameters.design` avec le node Figma du composant
-- Chaque story lie son propre node Figma via `parameters.design`
-- Stories couvrant : types de contenu, apparences, tailles, états (selected, disabled), interactif avec `play`
-- Handler interactifs avec `fn()`, assertions avec `expect` dans les blocs `play`
+- `meta` avec `argTypes` pour chaque prop contrôlable et `parameters.design` pointant sur le COMPONENT_SET Figma
+- Chaque story individuelle lie son propre node Figma via `parameters.design`
+- Stories couvrant au minimum : toutes les apparences, tous les états (disabled, etc.), variantes de contenu
 
 ```ts
 // Pattern URL Figma réutilisable dans chaque fichier story
@@ -185,33 +217,37 @@ Les props acceptant une icône (`icon`, `startIcon`, `endIcon`, etc.) ne sont pa
 
 ```ts
 import type { ReactNode } from "react";
-import { Person, SomeOtherIcon } from "@naxit/comete-icons";
+import { Person } from "@naxit/comete-icons";
 
 // REASON: React.ReactNode n'est pas sérialisable dans Storybook args.
 // Storybook résout la clé string en valeur ReactNode avant de passer au composant.
 const ICON_MAPPING: Record<string, ReactNode> = {
   none: undefined,
   Person: <Person spacing="none" variant="filled" />,
-  // Ajouter d'autres icônes de @naxit/comete-icons selon le contexte du composant
 };
 const ICON_OPTIONS = Object.keys(ICON_MAPPING);
 
-// Dans argTypes du meta :
+// Dans argTypes :
 icon: { control: "select", options: ICON_OPTIONS, mapping: ICON_MAPPING },
-
-// Dans args d'une story :
+// Dans args :
 args: { icon: "Person" },
 ```
 
-Toujours inclure au minimum `none` et une icône représentative provenant de `@naxit/comete-icons`.
+Toujours inclure au minimum `none` et une icône représentative de `@naxit/comete-icons`.
 
-### 6. Commit et push
+### 6. Commit, push et PR
 
 ```bash
 git add src/components/ComponentName/ src/components/index.ts storybook/stories/ComponentName.stories.tsx
 git commit -m "feat(component-name): add ComponentName component"
-git push origin main
+git push -u origin component-name
+gh pr create --title "feat(component-name): add ComponentName" --body "..." --base main
 ```
+
+La PR doit inclure dans son body :
+- Résumé des props et variantes implémentées
+- Lien vers le node Figma
+- Test plan (build, tests, lint, Storybook)
 
 ---
 
