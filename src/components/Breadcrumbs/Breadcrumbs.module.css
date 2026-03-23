@@ -1,0 +1,15 @@
+/* ==========================================================================
+   Breadcrumbs — Comète Design System
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+.list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space100); /* 8px entre items */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
