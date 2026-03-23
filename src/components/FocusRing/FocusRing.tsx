@@ -30,15 +30,15 @@ export interface FocusRingProps {
 // Utilitaire
 
 const RADIUS_MAP: Record<FocusRingBorderRadius, string> = {
-  1: "1px",
-  2: "2px",
-  3: "3px",
-  4: "4px",
-  5: "5px",
-  6: "6px",
-  8: "8px",
-  12: "12px",
-  round: "1024px",
+  1: "var(--radius0125)",
+  2: "var(--radius025)",
+  3: "var(--radius0375)",
+  4: "var(--radius050)",
+  5: "var(--radius0625)",
+  6: "var(--radius075)",
+  8: "var(--radius100)",
+  12: "var(--radius150)",
+  round: "var(--radius-round)",
 };
 
 // -----------------------------------------------------------------------

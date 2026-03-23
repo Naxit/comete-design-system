@@ -26,18 +26,18 @@ describe("FocusRing", () => {
     expect(container.querySelector("span")).toHaveClass("inside");
   });
 
-  it("should apply border-radius from borderRadius prop (number)", () => {
+  it("should apply border-radius token from borderRadius prop (number)", () => {
     const { container } = render(<FocusRing borderRadius={4} />);
-    expect(container.querySelector("span")).toHaveStyle({ borderRadius: "4px" });
+    expect(container.querySelector("span")).toHaveStyle({ borderRadius: "var(--radius050)" });
   });
 
-  it("should apply border-radius 1024px when borderRadius is round", () => {
+  it("should apply border-radius round token when borderRadius is round", () => {
     const { container } = render(<FocusRing borderRadius="round" />);
-    expect(container.querySelector("span")).toHaveStyle({ borderRadius: "1024px" });
+    expect(container.querySelector("span")).toHaveStyle({ borderRadius: "var(--radius-round)" });
   });
 
-  it("should default to borderRadius 2px", () => {
+  it("should default to borderRadius token --radius025", () => {
     const { container } = render(<FocusRing />);
-    expect(container.querySelector("span")).toHaveStyle({ borderRadius: "2px" });
+    expect(container.querySelector("span")).toHaveStyle({ borderRadius: "var(--radius025)" });
   });
 });
