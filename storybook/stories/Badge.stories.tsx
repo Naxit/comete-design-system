@@ -1,7 +1,7 @@
 // Badge — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react";
-import { Badge } from "@naxit/comete-design-system/components";
 import type { BadgeAppearance, BadgeImportance } from "@naxit/comete-design-system/components";
+import { Badge } from "@naxit/comete-design-system/components";
 
 const FIGMA_FILE = "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
@@ -70,15 +70,15 @@ export const AllAppearances: Story = {
           "success",
           "warning",
           "accent",
-        ] as BadgeAppearance[]
+        ] as const
       ).map((appearance) => (
         <div key={appearance} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ width: 120, fontSize: 12, color: "var(--text-subtle)", fontFamily: "monospace" }}>
-            {appearance}
-          </span>
           <Badge appearance={appearance} importance="high" label="High" />
           <Badge appearance={appearance} importance="medium" label="Medium" />
           <Badge appearance={appearance} importance="low" />
+          <span style={{ marginLeft: 24, width: 120, fontSize: 12, color: "var(--text-subtle)", fontFamily: "monospace" }}>
+            {appearance}
+          </span>
         </div>
       ))}
     </div>

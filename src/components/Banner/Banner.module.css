@@ -1,0 +1,49 @@
+/* ==========================================================================
+   Banner — Comète Design System
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+/* Base ------------------------------------------------------------------ */
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: var(--space150);     /* 12px */
+  padding: var(--space150); /* 12px */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Zone contenu — hérite de la couleur du banner parent */
+
+.content {
+  flex: 1;
+  min-width: 0; /* empêche le débordement en flex */
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);       /* 14px */
+  font-weight: var(--font-weight-regular); /* 400 */
+  line-height: var(--line-height-ui-xs);   /* 20px */
+}
+
+/* ==========================================================================
+   Apparences — définissent le fond et la couleur héritée par les enfants
+   ========================================================================== */
+
+/* warning : fond jaune, texte sombre */
+.warning {
+  background-color: var(--background-warning-bold-default);
+  color: var(--on-warning);
+}
+
+/* critical : fond rouge, texte inversé (blanc) */
+.critical {
+  background-color: var(--background-critical-bold-default);
+  color: var(--text-inverted);
+}
+
+/* announcement : fond neutre sombre, texte inversé (blanc) */
+.announcement {
+  background-color: var(--background-neutral-bold-default);
+  color: var(--text-inverted);
+}

@@ -68,6 +68,9 @@ export default tseslint.config(
     rules: {
       // REASON: Meta/StoryObj sont des types de @storybook/react, pas de runtime renderer
       "storybook/no-renderer-packages": "off",
+      // REASON: Storybook Meta/StoryObj expose des types internes `any` (argTypes, parameters.design)
+      // qui déclenchent des faux positifs avec le type-checking strict.
+      "@typescript-eslint/no-unsafe-assignment": "off",
     },
   },
 
