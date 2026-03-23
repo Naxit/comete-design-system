@@ -6,7 +6,7 @@ import {
   CalendarMonth,
   Person,
   Notifications,
-  Dashboard,
+  Star,
 } from "@naxit/comete-icons";
 import type { IconProps } from "@naxit/comete-icons";
 import type { ComponentType } from "react";
@@ -27,7 +27,7 @@ const ICON_MAPPING: Record<string, ComponentType<IconProps>> = {
   CalendarMonth,
   Person,
   Notifications,
-  Dashboard,
+  Star,
 };
 const ICON_OPTIONS = Object.keys(ICON_MAPPING);
 
@@ -117,7 +117,7 @@ export const FullNav: Story = {
         badge="5"
       />
       <BottomNavigationItem label="Profil" icon={Person} />
-      <BottomNavigationItem label="Dashboard" icon={Dashboard} />
+      <BottomNavigationItem label="Missions" icon={Star} />
     </BottomNavigation>
   ),
 };
