@@ -1,0 +1,214 @@
+/* ==========================================================================
+   WeekGrid — Comète Design System
+   Sélecteur de semaine : interaction au niveau de la ligne.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+.weekCalendar {
+  /* Hérite des dimensions de .calendar */
+}
+
+/* ==========================================================================
+   En-tête des colonnes (S | LUN | MAR | …)
+   ========================================================================== */
+
+.weekHeaderRow {
+  display: grid;
+  /* Colonne semaine fixe + séparateur + 7 jours flexibles */
+  grid-template-columns: var(--size450) var(--size050) repeat(7, 1fr);
+  align-items: center;
+  padding: var(--space050) 0;
+  margin-bottom: var(--space025);
+}
+
+.weekHeaderNum {
+  text-align: center;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-subtlest);
+  user-select: none;
+}
+
+/* NOTE: .weekHeaderDay surcharge le padding de .headerCell pour s'aligner
+   avec les cellules de la grille — headerCell a un padding vertical non nul. */
+.weekHeaderDay {
+  padding: 0;
+}
+
+/* ==========================================================================
+   Grille des semaines
+   ========================================================================== */
+
+.weekGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space025);
+}
+
+/* ==========================================================================
+   Ligne de semaine — unité d'interaction
+   ========================================================================== */
+
+.weekRow {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--size450) var(--size050) repeat(7, 1fr);
+  align-items: center;
+  height: var(--size400); /* ~32px — même hauteur qu'une cellule de date */
+  border-radius: var(--radius0375);
+  cursor: pointer;
+  outline: none;
+  transition-property: background-color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-default);
+}
+
+/* Hover — aucun état sélectionné */
+.weekRow:not([data-disabled]):not([data-state]):hover {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+
+.weekRow:not([data-disabled]):not([data-state]):active {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+/* Désactivé */
+.weekRow[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
+
+/* ==========================================================================
+   États de sélection (row-level)
+   ========================================================================== */
+
+/* Semaine unique sélectionnée */
+.weekRow[data-state="selected"] {
+  background-color: var(--background-client-subtlest-default);
+}
+
+.weekRow[data-state="selected"] .weekDayText,
+.weekRow[data-state="selected"] .weekNumberCell {
+  color: var(--text-information);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Début de plage */
+.weekRow[data-state="range-start"] {
+  background-color: var(--border-brand);
+}
+
+.weekRow[data-state="range-start"] .weekDayText,
+.weekRow[data-state="range-start"] .weekNumberCell {
+  color: var(--text-inverted);
+}
+
+/* Fin de plage */
+.weekRow[data-state="range-end"] {
+  background-color: var(--border-brand);
+}
+
+.weekRow[data-state="range-end"] .weekDayText,
+.weekRow[data-state="range-end"] .weekNumberCell {
+  color: var(--text-inverted);
+}
+
+/* Milieu de plage */
+.weekRow[data-state="range-part"] {
+  background-color: var(--background-client-subtlest-hovered);
+  border-radius: 0;
+}
+
+.weekRow[data-state="range-part"] .weekDayText,
+.weekRow[data-state="range-part"] .weekNumberCell {
+  color: var(--text-primary);
+}
+
+/* Supprime le border-radius adjacent pour une continuité visuelle */
+.weekRow[data-state="range-start"] {
+  border-radius: var(--radius0375) var(--radius0375) 0 0;
+}
+
+.weekRow[data-state="range-end"] {
+  border-radius: 0 0 var(--radius0375) var(--radius0375);
+}
+
+/* ==========================================================================
+   Numéro de semaine
+   ========================================================================== */
+
+.weekNumberCell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-subtlest);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Séparateur semaine / jours
+   ========================================================================== */
+
+.weekDivider {
+  display: block;
+  width: var(--size050);
+  height: 60%;
+  background-color: var(--border-subtle);
+  border-radius: var(--radius-round);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Cellule de jour
+   ========================================================================== */
+
+.weekDayCell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  pointer-events: none;
+}
+
+.weekDayText {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-subtle);
+  pointer-events: none;
+}
+
+/* Aujourd'hui */
+.weekDayCell[data-today] .weekDayText {
+  color: var(--text-information);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Indicateur point sous le jour actuel */
+.todayDot {
+  position: absolute;
+  bottom: var(--space025);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--size075);
+  height: var(--size050);
+  border-radius: var(--radius-round);
+  background-color: var(--border-focused);
+  pointer-events: none;
+}
+
+/* Hors du mois courant */
+.weekDayCell[data-outside-month] .weekDayText {
+  color: var(--icon-disabled);
+}
