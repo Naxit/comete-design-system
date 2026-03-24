@@ -1,0 +1,246 @@
+/* ==========================================================================
+   Calendar / RangeCalendar — Comète Design System
+   Sélecteur de date basé sur React Aria.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+/* ==========================================================================
+   Conteneur principal
+   ========================================================================== */
+
+.calendar {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space050);
+  padding: var(--space100);
+  width: max-content;
+  outline: none;
+}
+
+/* ==========================================================================
+   Header — navigation mois précédent / suivant
+   ========================================================================== */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space050) 0;
+  margin-bottom: var(--space050);
+}
+
+.heading {
+  flex: 1;
+  text-align: center;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-primary);
+}
+
+/* Boutons de navigation précédent / suivant */
+.navButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size400);
+  height: var(--size400);
+  border-radius: var(--radius0375);
+  border: none;
+  background: transparent;
+  color: var(--icon-default);
+  cursor: pointer;
+  outline: none;
+  transition-property: background-color, opacity;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-default);
+}
+
+.navButton[data-hovered]:not([data-disabled]) {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+
+.navButton[data-pressed]:not([data-disabled]) {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+.navButton[data-disabled] {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+.navButton[data-focus-visible] {
+  outline: 2px solid var(--border-focused);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Grille — table React Aria
+   ========================================================================== */
+
+.grid {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* ==========================================================================
+   En-têtes de colonnes — noms de jours (LUN, MAR…)
+   ========================================================================== */
+
+.headerCell {
+  padding: var(--space050) 0;
+  text-align: center;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-subtlest);
+  user-select: none;
+}
+
+/* ==========================================================================
+   Cellules de date
+   ========================================================================== */
+
+.cell {
+  position: relative;
+  width: var(--size400);  /* 32px */
+  height: var(--size400); /* 32px */
+  padding: 0;
+  text-align: center;
+  border-radius: var(--radius0375);
+  cursor: pointer;
+  outline: none;
+  transition-property: background-color, color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-default);
+}
+
+/* Texte de la cellule (numéro du jour) */
+.cellText {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-subtle);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   États des cellules
+   ========================================================================== */
+
+/* Survol */
+.cell[data-hovered]:not([data-disabled]):not([data-selected]) {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+
+/* Pressé */
+.cell[data-pressed]:not([data-disabled]) {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+/* Aujourd'hui */
+.cell[data-today] .cellText {
+  color: var(--text-information);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Indicateur de point sous la date du jour */
+.cell[data-today]::after {
+  content: "";
+  position: absolute;
+  bottom: var(--space050);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--size050);
+  height: var(--size050);
+  border-radius: var(--radius-round);
+  background-color: var(--border-focused);
+}
+
+/* Sélectionné (date unique) */
+.cell[data-selected]:not([data-selection-start]):not([data-selection-end]) .cellText {
+  color: var(--text-information);
+  font-weight: var(--font-weight-regular);
+}
+
+.cell[data-selected]:not([data-selection-start]):not([data-selection-end]):not([data-today]) {
+  background-color: var(--background-client-subtlest-default);
+  border-radius: var(--radius0375);
+}
+
+/* Range part (sélectionné entre start et end) */
+.cell[data-selected]:not([data-selection-start]):not([data-selection-end]):is([data-selection-start], [data-selection-end], [data-selected]) {
+  /* Géré par les règles ci-dessous */
+}
+
+/* Range start */
+.cell[data-selection-start] {
+  background-color: var(--border-brand);
+  border-radius: var(--radius0375) 0 0 var(--radius0375);
+}
+
+.cell[data-selection-start] .cellText {
+  color: var(--text-inverted);
+}
+
+/* Range end */
+.cell[data-selection-end] {
+  background-color: var(--border-brand);
+  border-radius: 0 var(--radius0375) var(--radius0375) 0;
+}
+
+.cell[data-selection-end] .cellText {
+  color: var(--text-inverted);
+}
+
+/* Range part (milieu d'une plage) */
+.cell[data-selected]:not([data-selection-start]):not([data-selection-end]) {
+  background-color: var(--background-client-subtlest-hovered);
+  border-radius: 0;
+}
+
+.cell[data-selected]:not([data-selection-start]):not([data-selection-end]) .cellText {
+  color: var(--text-primary);
+}
+
+/* Sélection start et end simultanés (plage d'un seul jour) */
+.cell[data-selection-start][data-selection-end] {
+  background-color: var(--border-brand);
+  border-radius: var(--radius0375);
+}
+
+/* Focus clavier — géré par FocusRing (voir Calendar.tsx) */
+.cell[data-focus-visible] {
+  outline: none;
+}
+
+/* Désactivé */
+.cell[data-disabled] {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.cell[data-disabled] .cellText {
+  color: var(--icon-disabled);
+}
+
+/* Indisponible (hors min/max) */
+.cell[data-unavailable] .cellText {
+  color: var(--icon-disabled);
+  text-decoration: line-through;
+}
+
+/* Hors du mois courant — caché */
+.cell[data-outside-month] {
+  visibility: hidden;
+  pointer-events: none;
+}
