@@ -7,6 +7,7 @@ import type { RangeValue } from "react-aria-components";
 import {
   Calendar,
   RangeCalendar,
+  type CalendarAppearance,
 } from "@naxit/comete-design-system/components";
 
 const FIGMA_FILE =
@@ -24,10 +25,51 @@ const meta = {
     layout: "padded",
     design: { type: "figma", url: figmaUrl("3223:8583") },
   },
+  argTypes: {
+    appearance: {
+      control: "select",
+      options: ["date", "week", "month", "year"] satisfies CalendarAppearance[],
+      description: "Mode de sélection du calendrier.",
+      table: { defaultValue: { summary: "date" } },
+    },
+    calendars: {
+      control: "select",
+      options: [1, 2],
+      description: "Nombre de calendriers affichés côte à côte.",
+      table: { defaultValue: { summary: "1" } },
+    },
+    isDisabled: {
+      control: "boolean",
+      description: "Désactive le composant.",
+      table: { defaultValue: { summary: "false" } },
+    },
+  },
+  args: {
+    appearance: "date",
+    calendars: 1,
+    isDisabled: false,
+  },
 } satisfies Meta<typeof Calendar>;
 
 export default meta;
 type Story = StoryObj<typeof Calendar>;
+
+// -----------------------------------------------------------------------
+// Playground — expose appearance + calendars comme contrôles
+
+export const Playground: Story = {
+  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
+  // REASON: CalendarProps est une union discriminée — le render function
+  // délègue à Calendar sans props value/onChange pour rester agnostique.
+  render: ({ appearance, calendars, isDisabled }) => (
+    <Calendar
+      appearance={appearance}
+      calendars={calendars}
+      isDisabled={isDisabled}
+      aria-label="Calendrier"
+    />
+  ),
+};
 
 // -----------------------------------------------------------------------
 // appearance="date" (défaut)
