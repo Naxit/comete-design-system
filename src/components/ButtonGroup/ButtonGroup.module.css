@@ -1,0 +1,12 @@
+/* ==========================================================================
+   ButtonGroup — Comète Design System
+   Conteneur horizontal pour un ensemble de boutons liés.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodée.
+   ========================================================================== */
+
+.group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space100); /* 8px — itemSpacing Figma */
+}

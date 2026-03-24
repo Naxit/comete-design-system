@@ -6,3 +6,4 @@ export * from "./Blanket";
 export * from "./BottomNavigation";
 export * from "./Breadcrumbs";
 export * from "./FocusRing";
+export * from "./ButtonGroup";
