@@ -1,0 +1,75 @@
+/* ==========================================================================
+   MonthCalendar — Comète Design System
+   Grille 3 × 4 pour la sélection de mois.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+.monthCalendar {
+  /* Hérite des styles de .calendar (largeur, padding, gap, outline) */
+}
+
+/* Grille 3 colonnes */
+.monthGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space050);
+}
+
+.monthRow {
+  display: flex;
+  gap: var(--space050);
+}
+
+/* Cellule mois — 104×66px (Figma) */
+.monthCell {
+  position: relative;
+  flex: 1;
+  height: var(--size1600);  /* ~64px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius0375);
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  transition-property: background-color, color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-default);
+}
+
+.monthCellText {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-subtle);
+  pointer-events: none;
+}
+
+/* États */
+.monthCell:hover:not([data-disabled]) {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+
+.monthCell:active:not([data-disabled]) {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+.monthCell[data-today] .monthCellText {
+  color: var(--text-information);
+  font-weight: var(--font-weight-medium);
+}
+
+.monthCell[data-selected] {
+  background-color: var(--background-client-subtlest-default);
+}
+
+.monthCell[data-selected] .monthCellText {
+  color: var(--text-information);
+}
+
+.monthCell[data-disabled] {
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
