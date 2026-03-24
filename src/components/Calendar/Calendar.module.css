@@ -244,3 +244,13 @@
   visibility: hidden;
   pointer-events: none;
 }
+
+/* ==========================================================================
+   Double calendrier (calendars=2)
+   ========================================================================== */
+
+.dualCalendar {
+  display: inline-flex;
+  gap: var(--space200);
+  align-items: flex-start;
+}
