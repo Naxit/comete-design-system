@@ -4,6 +4,7 @@ import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
 } from "react-aria-components";
+import { FocusRing, type FocusRingBorderRadius } from "../FocusRing/index.js";
 import styles from "./Avatar.module.css";
 
 // ----------------------------------------------------------------------
@@ -42,6 +43,18 @@ export interface AvatarProps {
   /** Additional CSS class names. */
   className?: string;
 }
+
+// ----------------------------------------------------------------------
+
+/** Maps each avatar size to its matching FocusRingBorderRadius token. */
+const SIZE_RADIUS_MAP: Record<AvatarSize, FocusRingBorderRadius> = {
+  xsmall: 2,
+  small: 3,
+  medium: 4,
+  large: 6,
+  xlarge: 8,
+  xxlarge: 12,
+};
 
 // ----------------------------------------------------------------------
 
@@ -126,6 +139,10 @@ export function Avatar({
   // Accessible label for the container (only needed when there's no <img> with alt)
   const ariaLabel = src ? undefined : (alt ?? initials);
 
+  // Radius token matching the current size/appearance — used by FocusRing
+  const focusRadius: FocusRingBorderRadius =
+    appearance === "rounded" ? "round" : SIZE_RADIUS_MAP[size];
+
   // Interactive mode — React Aria Button handles hover/pressed/focus/disabled states
   if (onPress !== undefined) {
     return (
@@ -136,7 +153,12 @@ export function Avatar({
         data-selected={isSelected || undefined}
         aria-label={ariaLabel}
       >
-        {content}
+        {({ isFocusVisible }) => (
+          <>
+            {content}
+            {isFocusVisible && <FocusRing borderRadius={focusRadius} position="inside" />}
+          </>
+        )}
       </AriaButton>
     );
   }
