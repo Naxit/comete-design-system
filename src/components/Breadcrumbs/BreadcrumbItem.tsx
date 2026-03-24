@@ -1,5 +1,6 @@
 // BreadcrumbItem — élément individuel du fil d'Ariane
-import type { ReactElement, ReactNode } from "react";
+import { useState, type FocusEvent, type ReactElement, type ReactNode } from "react";
+import { FocusRing } from "../FocusRing/index.js";
 import styles from "./BreadcrumbItem.module.css";
 
 // -----------------------------------------------------------------------
@@ -22,6 +23,54 @@ export interface BreadcrumbItemProps {
   iconAfter?: ReactNode;
   /** Marque cet item comme la page courante (aria-current="page", non cliquable). */
   isCurrent?: boolean;
+}
+
+// -----------------------------------------------------------------------
+// Hook interne — détecte le focus clavier via :focus-visible
+
+function useFocusVisible() {
+  const [isFocusVisible, setIsFocusVisible] = useState(false);
+
+  const handleFocus = (e: FocusEvent<HTMLElement>) => {
+    setIsFocusVisible(e.currentTarget.matches(":focus-visible"));
+  };
+
+  const handleBlur = () => {
+    setIsFocusVisible(false);
+  };
+
+  return { isFocusVisible, onFocus: handleFocus, onBlur: handleBlur };
+}
+
+// -----------------------------------------------------------------------
+// Composant interne — élément interactif avec FocusRing
+
+function InteractiveItem({
+  href,
+  onClick,
+  children,
+}: {
+  href?: string;
+  onClick?: () => void;
+  children: ReactNode;
+}) {
+  const { isFocusVisible, onFocus, onBlur } = useFocusVisible();
+  const focusRing = isFocusVisible ? <FocusRing borderRadius={2} /> : null;
+
+  if (href !== undefined) {
+    return (
+      <a className={styles.link} href={href} onClick={onClick} onFocus={onFocus} onBlur={onBlur}>
+        {children}
+        {focusRing}
+      </a>
+    );
+  }
+  return (
+    <button type="button" className={styles.link} onClick={onClick} onFocus={onFocus} onBlur={onBlur}>
+      {children}
+      {focusRing}
+    </button>
+  );
 }
 
 // -----------------------------------------------------------------------
@@ -59,14 +108,10 @@ export function BreadcrumbItem({
   return (
     <li className={styles.item}>
       <span className={styles.separator} aria-hidden="true">/</span>
-      {isInteractive && href !== undefined ? (
-        <a className={styles.link} href={href} onClick={onClick}>
+      {isInteractive ? (
+        <InteractiveItem href={href} onClick={onClick}>
           {content}
-        </a>
-      ) : isInteractive ? (
-        <button type="button" className={styles.link} onClick={onClick}>
-          {content}
-        </button>
+        </InteractiveItem>
       ) : (
         <span
           className={`${styles.link} ${isCurrent ? styles.current : ""}`}

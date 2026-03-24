@@ -47,11 +47,6 @@
   background-color: var(--background-neutral-subtler-pressed);
 }
 
-.avatar[data-focus-visible] {
-  outline: 2px solid var(--border-focus);
-  outline-offset: 2px;
-}
-
 /* Disabled ----------------------------------------------------------------- */
 
 .avatar[data-disabled] {
