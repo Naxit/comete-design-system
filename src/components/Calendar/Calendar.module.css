@@ -150,17 +150,18 @@
 /* Aujourd'hui */
 .cell[data-today] .cellText {
   color: var(--text-information);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
+  /* text-decoration: underline; */
 }
 
 /* Indicateur de point sous la date du jour */
 .cell[data-today]::after {
   content: "";
   position: absolute;
-  bottom: var(--space050);
+  bottom: var(--space075);
   left: 50%;
   transform: translateX(-50%);
-  width: var(--size050);
+  width: 60%;
   height: var(--size050);
   border-radius: var(--radius-round);
   background-color: var(--border-focused);
@@ -174,7 +175,6 @@
 
 .cell[data-selected]:not([data-selection-start]):not([data-selection-end]):not([data-today]) {
   background-color: var(--background-client-subtlest-default);
-  border-radius: var(--radius0375);
 }
 
 /* Range part (sélectionné entre start et end) */

@@ -1,9 +1,15 @@
-// Calendar / RangeCalendar — stories Storybook
+// Calendar / RangeCalendar / WeekCalendar / MonthCalendar / YearCalendar — stories Storybook
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { CalendarDate } from "@internationalized/date";
 import type { DateValue } from "react-aria-components";
-import { Calendar, RangeCalendar } from "@naxit/comete-design-system/components";
+import {
+  Calendar,
+  RangeCalendar,
+  WeekCalendar,
+  MonthCalendar,
+  YearCalendar,
+} from "@naxit/comete-design-system/components";
 import type { RangeValue } from "react-aria-components";
 
 const FIGMA_FILE =
@@ -126,4 +132,138 @@ export const RangeControlled: StoryObj<typeof RangeCalendar> = {
       </div>
     );
   },
+};
+
+// -----------------------------------------------------------------------
+// Stories — WeekCalendar
+
+export const Week: StoryObj<typeof WeekCalendar> = {
+  name: "Semaine",
+  parameters: { design: { type: "figma", url: figmaUrl("3209:32376") } },
+  render: () => (
+    <WeekCalendar
+      defaultValue={{
+        start: new CalendarDate(2026, 3, 9),
+        end: new CalendarDate(2026, 3, 15),
+      }}
+    />
+  ),
+};
+
+export const WeekControlled: StoryObj<typeof WeekCalendar> = {
+  name: "Semaine contrôlée",
+  parameters: { design: { type: "figma", url: figmaUrl("3209:32376") } },
+  render: () => {
+    const [range, setRange] = useState<RangeValue<CalendarDate>>({
+      start: new CalendarDate(2026, 3, 9),
+      end: new CalendarDate(2026, 3, 15),
+    });
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <WeekCalendar value={range} onChange={setRange} />
+        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+          {range.start.toString()} → {range.end.toString()}
+        </p>
+      </div>
+    );
+  },
+};
+
+export const WeekPeriod: StoryObj<typeof WeekCalendar> = {
+  name: "Période de semaines",
+  parameters: { design: { type: "figma", url: figmaUrl("3209:32376") } },
+  render: () => {
+    const [range, setRange] = useState<RangeValue<CalendarDate>>({
+      start: new CalendarDate(2026, 3, 2),
+      end: new CalendarDate(2026, 3, 22),
+    });
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <WeekCalendar value={range} onChange={setRange} />
+        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+          {range.start.toString()} → {range.end.toString()}
+        </p>
+      </div>
+    );
+  },
+};
+
+// -----------------------------------------------------------------------
+// Stories — MonthCalendar
+
+export const Month: StoryObj<typeof MonthCalendar> = {
+  name: "Mois",
+  parameters: { design: { type: "figma", url: figmaUrl("3209:32376") } },
+  render: () => (
+    <MonthCalendar defaultValue={new CalendarDate(2026, 3, 1)} />
+  ),
+};
+
+export const MonthControlled: StoryObj<typeof MonthCalendar> = {
+  name: "Mois contrôlé",
+  parameters: { design: { type: "figma", url: figmaUrl("3209:32376") } },
+  render: () => {
+    const [value, setValue] = useState<CalendarDate>(
+      new CalendarDate(2026, 3, 1)
+    );
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <MonthCalendar value={value} onChange={setValue} />
+        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+          Sélectionné : {value.year}/{String(value.month).padStart(2, "0")}
+        </p>
+      </div>
+    );
+  },
+};
+
+export const MonthDisabled: StoryObj<typeof MonthCalendar> = {
+  name: "Mois désactivé",
+  parameters: { design: { type: "figma", url: figmaUrl("3209:32376") } },
+  render: () => (
+    <MonthCalendar
+      defaultValue={new CalendarDate(2026, 3, 1)}
+      isDisabled
+    />
+  ),
+};
+
+// -----------------------------------------------------------------------
+// Stories — YearCalendar
+
+export const Year: StoryObj<typeof YearCalendar> = {
+  name: "Année",
+  parameters: { design: { type: "figma", url: figmaUrl("3209:32376") } },
+  render: () => (
+    <YearCalendar defaultValue={new CalendarDate(2026, 1, 1)} />
+  ),
+};
+
+export const YearControlled: StoryObj<typeof YearCalendar> = {
+  name: "Année contrôlée",
+  parameters: { design: { type: "figma", url: figmaUrl("3209:32376") } },
+  render: () => {
+    const [value, setValue] = useState<CalendarDate>(
+      new CalendarDate(2026, 1, 1)
+    );
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <YearCalendar value={value} onChange={setValue} />
+        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+          Sélectionné : {value.year}
+        </p>
+      </div>
+    );
+  },
+};
+
+export const YearDisabled: StoryObj<typeof YearCalendar> = {
+  name: "Année désactivée",
+  parameters: { design: { type: "figma", url: figmaUrl("3209:32376") } },
+  render: () => (
+    <YearCalendar
+      defaultValue={new CalendarDate(2026, 1, 1)}
+      isDisabled
+    />
+  ),
 };
