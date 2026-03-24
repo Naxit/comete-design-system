@@ -223,6 +223,8 @@ export function WeekGrid({
       {/* En-têtes des colonnes */}
       <div className={styles.weekHeaderRow} aria-hidden="true">
         <span className={styles.weekHeaderNum}>S</span>
+        {/* NOTE: spacer pour aligner avec la colonne divider des lignes de données */}
+        <span aria-hidden="true" />
         {dayLabels.map((label) => (
           <span key={label} className={[calStyles.headerCell, styles.weekHeaderDay].join(" ")}>
             {label}

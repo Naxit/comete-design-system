@@ -15,7 +15,7 @@
 .weekHeaderRow {
   display: grid;
   /* Colonne semaine fixe + séparateur + 7 jours flexibles */
-  grid-template-columns: var(--size450) var(--size050) repeat(7, 1fr);
+  grid-template-columns: var(--size500) var(--size0625) repeat(7, 1fr);
   align-items: center;
   padding: var(--space050) 0;
   margin-bottom: var(--space025);
@@ -54,7 +54,7 @@
 .weekRow {
   position: relative;
   display: grid;
-  grid-template-columns: var(--size450) var(--size050) repeat(7, 1fr);
+  grid-template-columns: var(--size500) var(--size0625) repeat(7, 1fr);
   align-items: center;
   height: var(--size400); /* ~32px — même hauteur qu'une cellule de date */
   border-radius: var(--radius0375);
