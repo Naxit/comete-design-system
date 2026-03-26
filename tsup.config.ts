@@ -15,5 +15,5 @@ export default defineConfig({
   treeshake: true,
   minify: false,
   keepNames: true,
-  external: ["react", "react-dom", "react-aria-components"],
+  external: ["react", "react-dom", "react-aria-components", "@naxit/comete-icons"],
 });

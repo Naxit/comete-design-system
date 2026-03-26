@@ -1,6 +1,6 @@
 // Token Explorer — parcourir les tokens de @naxit/comete-design-tokens
 import tokensRaw from "@naxit/comete-design-tokens/css?raw";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CSSProperties, ReactElement } from "react";
 import { useEffect, useRef, useState } from "react";
 

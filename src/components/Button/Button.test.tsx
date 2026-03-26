@@ -80,19 +80,21 @@ describe("Button", () => {
 
   describe("icônes", () => {
     it("should render iconBefore inside a span before children", () => {
-      render(<Button iconBefore={<svg data-testid="icon-before" />}>Label</Button>);
-      const icon = screen.getByTestId("icon-before");
-      expect(icon.closest("span")).toHaveClass("icon");
+      render(<Button iconBefore="Check">Label</Button>);
       const button = screen.getByRole("button");
-      expect(button.firstElementChild).toBe(icon.closest("span"));
+      const iconSpan = button.firstElementChild;
+      expect(iconSpan?.tagName).toBe("SPAN");
+      expect(iconSpan).toHaveClass("icon");
+      expect(iconSpan?.querySelector("svg")).toBeInTheDocument();
     });
 
     it("should render iconAfter inside a span after children", () => {
-      render(<Button iconAfter={<svg data-testid="icon-after" />}>Label</Button>);
-      const icon = screen.getByTestId("icon-after");
-      expect(icon.closest("span")).toHaveClass("icon");
+      render(<Button iconAfter="ChevronRight">Label</Button>);
       const button = screen.getByRole("button");
-      expect(button.lastElementChild).toBe(icon.closest("span"));
+      const iconSpan = button.lastElementChild;
+      expect(iconSpan?.tagName).toBe("SPAN");
+      expect(iconSpan).toHaveClass("icon");
+      expect(iconSpan?.querySelector("svg")).toBeInTheDocument();
     });
 
     it("should not render icon spans when no icon props are given", () => {

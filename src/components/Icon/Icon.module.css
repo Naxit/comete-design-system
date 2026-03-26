@@ -1,0 +1,8 @@
+/* Icon wrapper — inline display for seamless flow with text and buttons */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 0;
+}

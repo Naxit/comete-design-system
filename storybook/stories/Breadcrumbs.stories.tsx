@@ -1,6 +1,5 @@
 // Breadcrumbs — stories Storybook
-import type { Meta, StoryObj } from "@storybook/react";
-import { Home, KeyboardArrowDown } from "@naxit/comete-icons";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Breadcrumbs,
   BreadcrumbItem,
@@ -48,7 +47,7 @@ export const WithIcons: Story = {
       <BreadcrumbItem
         label="Accueil"
         href="/"
-        iconBefore={<Home size={20} color="subtle" />}
+        iconBefore="Home"
       />
       <BreadcrumbItem label="Clients" href="/clients" />
       <BreadcrumbItem label="Fiche client" isCurrent />
@@ -64,12 +63,12 @@ export const WithChevronSeparator: Story = {
       <BreadcrumbItem
         label="Accueil"
         href="/"
-        iconAfter={<KeyboardArrowDown size={16} spacing="none" color="default" />}
+        iconAfter="KeyboardArrowDown"
       />
       <BreadcrumbItem
         label="Clients"
         href="/clients"
-        iconAfter={<KeyboardArrowDown size={16} spacing="none" color="default" />}
+        iconAfter="KeyboardArrowDown"
       />
       <BreadcrumbItem label="Fiche client" isCurrent />
     </Breadcrumbs>

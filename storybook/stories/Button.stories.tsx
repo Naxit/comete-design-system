@@ -1,54 +1,7 @@
 import { Button } from "@naxit/comete-design-system";
 import type { ButtonProps } from "@naxit/comete-design-system";
-import {
-  ArrowDropDown,
-  ChevronRight,
-  Download,
-  Image,
-  Lock,
-  type IconProps,
-} from "@naxit/comete-icons";
-import type { Meta, StoryObj } from "@storybook/react";
-import React from "react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
-
-// ----------------------------------------------------------------------
-// Icon registries — separate allowed sets per slot
-
-const ICON_BEFORE_MAP: Record<string, React.ComponentType<IconProps>> = {
-  Image: Image as React.ComponentType<IconProps>,
-  Lock: Lock as React.ComponentType<IconProps>,
-  Download: Download as React.ComponentType<IconProps>,
-};
-
-const ICON_AFTER_MAP: Record<string, React.ComponentType<IconProps>> = {
-  Image: Image as React.ComponentType<IconProps>,
-  ChevronRight: ChevronRight as React.ComponentType<IconProps>,
-  ArrowDropDown: ArrowDropDown as React.ComponentType<IconProps>,
-};
-
-// ----------------------------------------------------------------------
-
-type StoryArgs = ButtonProps & {
-  /** Name of the icon to display before the label */
-  iconBeforeName?: string;
-  /** Name of the icon to display after the label */
-  iconAfterName?: string;
-  /** Visual variant applied to both icons */
-  iconVariant?: "filled" | "outlined";
-};
-
-/** Resolves an icon component from the given map and wraps it with the correct props. */
-function resolveIconByName(
-  name: string | undefined,
-  map: Record<string, React.ComponentType<IconProps>>,
-  variant: "filled" | "outlined"
-): React.ReactNode {
-  if (!name || name === "none") return undefined;
-  const Icon = map[name];
-  if (!Icon) return undefined;
-  return <Icon spacing="default" variant={variant} />;
-}
 
 // ----------------------------------------------------------------------
 // Figma design URLs — public file, addon-designs embeds
@@ -60,7 +13,7 @@ const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":"
 
 // ----------------------------------------------------------------------
 
-const meta: Meta<StoryArgs> = {
+const meta: Meta<ButtonProps> = {
   title: "Components/Button",
   component: Button,
   tags: ["autodocs"],
@@ -80,30 +33,18 @@ const meta: Meta<StoryArgs> = {
     isDisabled: {
       control: "boolean",
     },
-    iconBeforeName: {
+    iconBefore: {
       control: "select",
-      options: ["none", ...Object.keys(ICON_BEFORE_MAP)],
-      name: "iconBefore",
-      description: "Icon before the label — color auto-resolved from variant + color",
+      options: ["none", "Image", "Lock", "Download", "Check"],
+      description: "Icon before the label",
       table: { category: "Icons" },
     },
-    iconAfterName: {
+    iconAfter: {
       control: "select",
-      options: ["none", ...Object.keys(ICON_AFTER_MAP)],
-      name: "iconAfter",
-      description: "Icon after the label — color auto-resolved from variant + color",
+      options: ["none", "ChevronRight", "ArrowDropDown", "Image"],
+      description: "Icon after the label",
       table: { category: "Icons" },
     },
-    iconVariant: {
-      control: "select",
-      options: ["filled", "outlined"],
-      name: "icon variant",
-      description: "Visual style applied to both icons (spacing=default)",
-      table: { category: "Icons" },
-    },
-    // Hide raw ReactNode props from controls — managed via iconBeforeName / iconAfterName
-    iconBefore: { table: { disable: true } },
-    iconAfter: { table: { disable: true } },
   },
   args: {
     children: "Button",
@@ -111,7 +52,6 @@ const meta: Meta<StoryArgs> = {
     color: "default",
     size: "medium",
     onPress: fn(),
-    iconVariant: "outlined",
   },
   parameters: {
     design: {
@@ -119,15 +59,10 @@ const meta: Meta<StoryArgs> = {
       url: figmaUrl("213:725"),
     },
   },
-  render: ({ iconBeforeName, iconAfterName, iconVariant = "outlined", ...args }) => {
-    const iconBefore = resolveIconByName(iconBeforeName, ICON_BEFORE_MAP, iconVariant);
-    const iconAfter = resolveIconByName(iconAfterName, ICON_AFTER_MAP, iconVariant);
-    return <Button {...args} iconBefore={iconBefore} iconAfter={iconAfter} />;
-  },
 };
 
 export default meta;
-type Story = StoryObj<StoryArgs>;
+type Story = StoryObj<ButtonProps>;
 
 // ----------------------------------------------------------------------
 
@@ -278,27 +213,25 @@ export const KeyboardNavigation: Story = {
 
 // ----------------------------------------------------------------------
 
-/** Icône outlined avant le label — couleur auto-résolue selon variant + color */
+/** Icône avant le label */
 export const WithIconBefore: Story = {
   args: {
     color: "brand",
     children: "Enregistrer",
-    iconBeforeName: "Lock",
-    iconVariant: "outlined",
+    iconBefore: "Lock",
   },
 };
 
-/** Icône outlined après le label */
+/** Icône après le label */
 export const WithIconAfter: Story = {
   args: {
     color: "brand",
     children: "Continuer",
-    iconAfterName: "ChevronRight",
-    iconVariant: "outlined",
+    iconAfter: "ChevronRight",
   },
 };
 
-/** Icône + label sur toutes les couleurs contained — vérifie l'inversion automatique */
+/** Icône + label sur toutes les couleurs contained */
 export const IconAllColors: Story = {
   render: (args) => (
     <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -316,7 +249,7 @@ export const IconAllColors: Story = {
           key={color}
           color={color}
           variant={args.variant}
-          iconBefore={<Image spacing="default" variant={args.iconVariant ?? "outlined"} />}
+          iconBefore="Image"
         >
           {color}
         </Button>

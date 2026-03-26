@@ -1,8 +1,6 @@
 import { Avatar } from "@naxit/comete-design-system";
 import type { AvatarProps } from "@naxit/comete-design-system";
-import { Person } from "@naxit/comete-icons";
-import type { Meta, StoryObj } from "@storybook/react";
-import type { ReactNode } from "react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, userEvent, within } from "storybook/test";
 
 // ----------------------------------------------------------------------
@@ -14,14 +12,6 @@ const FIGMA_FILE =
 /** Builds a Figma URL with a specific node ID for the addon-designs panel */
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
-
-// REASON: React.ReactNode props are not serializable in Storybook args.
-// Map string keys to ReactNode values; Storybook resolves the key before passing to the component.
-const ICON_MAPPING: Record<string, ReactNode> = {
-  none: undefined,
-  Person: <Person spacing="none" variant="filled" />,
-};
-const ICON_OPTIONS = Object.keys(ICON_MAPPING);
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +33,7 @@ const meta: Meta<AvatarProps> = {
     src: { control: "text" },
     alt: { control: "text" },
     initials: { control: "text" },
-    icon: { control: "select", options: ICON_OPTIONS, mapping: ICON_MAPPING },
+    icon: { control: "select", options: ["none", "Person", "Home", "Star"] },
   },
   args: {
     appearance: "square",

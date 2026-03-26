@@ -1,6 +1,7 @@
 // BottomNavigationItem — item individuel de la BottomNavigation
-import type { ComponentType, ReactElement } from "react";
-import type { IconProps } from "@naxit/comete-icons";
+import type { ReactElement } from "react";
+import type { IconName } from "@naxit/comete-icons";
+import { Icon } from "../Icon/index.js";
 import { Badge } from "../Badge/index.js";
 import styles from "./BottomNavigationItem.module.css";
 
@@ -10,8 +11,8 @@ import styles from "./BottomNavigationItem.module.css";
 export interface BottomNavigationItemProps {
   /** Libellé affiché sous l'icône. */
   label: string;
-  /** Composant icône issu de @naxit/comete-icons. La variante (filled/outlined) et la couleur sont gérées automatiquement selon isSelected. */
-  icon: ComponentType<IconProps>;
+  /** Nom de l'icône issu de @naxit/comete-icons. La variante (filled/outlined) et la couleur sont gérées automatiquement selon isSelected. */
+  icon: IconName;
   /** Indique si cet item est l'élément de navigation actif. Par défaut false. */
   isSelected?: boolean;
   /** Badge affiché en surimpression de l'icône (ex : nombre de notifications). */
@@ -35,7 +36,7 @@ export interface BottomNavigationItemProps {
  */
 export function BottomNavigationItem({
   label,
-  icon: Icon,
+  icon,
   isSelected = false,
   badge,
   onClick,
@@ -50,6 +51,7 @@ export function BottomNavigationItem({
       <span className={styles.content}>
         <span className={styles.iconWrapper}>
           <Icon
+            icon={icon}
             size={24}
             spacing="none"
             variant={isSelected ? "filled" : "outlined"}

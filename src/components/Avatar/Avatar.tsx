@@ -4,6 +4,8 @@ import {
   Button as AriaButton,
   type ButtonProps as AriaButtonProps,
 } from "react-aria-components";
+import type { IconName } from "@naxit/comete-icons";
+import { Icon } from "../Icon/index.js";
 import { FocusRing, type FocusRingBorderRadius } from "../FocusRing/index.js";
 import styles from "./Avatar.module.css";
 
@@ -29,8 +31,8 @@ export interface AvatarProps {
   alt?: string;
   /** 1–2 letters shown when no photo is provided. */
   initials?: string;
-  /** Icon shown when no photo and no initials. */
-  icon?: React.ReactNode;
+  /** Icon name shown when no photo and no initials. Must match an export from @naxit/comete-icons. */
+  icon?: IconName;
   /** Disabled state. */
   isDisabled?: boolean;
   /** Selected/highlighted state. */
@@ -72,7 +74,7 @@ function resolveContent(
   src: string | undefined,
   alt: string | undefined,
   initials: string | undefined,
-  icon: React.ReactNode | undefined
+  icon: IconName | undefined
 ): React.ReactNode {
   if (src) {
     return <img src={src} alt={alt ?? ""} className={styles.photo} />;
@@ -85,7 +87,11 @@ function resolveContent(
     );
   }
   if (icon) {
-    return <span className={styles.iconSlot}>{icon}</span>;
+    return (
+      <span className={styles.iconSlot}>
+        <Icon icon={icon} variant="filled" spacing="none" />
+      </span>
+    );
   }
   return null;
 }

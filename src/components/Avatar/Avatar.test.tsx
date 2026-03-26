@@ -88,11 +88,11 @@ describe("Avatar", () => {
   describe("contenu — icône", () => {
     it("should render icon inside iconSlot when provided", () => {
       const { container } = render(
-        <Avatar icon={<svg data-testid="test-icon" />} />
+        <Avatar icon="Person" />
       );
       const slot = container.querySelector(`.iconSlot`);
       expect(slot).toBeInTheDocument();
-      expect(slot?.querySelector("[data-testid='test-icon']")).toBeInTheDocument();
+      expect(slot?.querySelector("svg")).toBeInTheDocument();
     });
   });
 

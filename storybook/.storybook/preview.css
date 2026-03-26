@@ -4,4 +4,5 @@
 
 body {
   background-color: var(--background-default-default) !important;
+  font-family: var(--font-family-primary, "Poppins", sans-serif);
 }
