@@ -1,5 +1,5 @@
 // Badge — stories Storybook
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { BadgeAppearance, BadgeImportance } from "@naxit/comete-design-system/components";
 import { Badge } from "@naxit/comete-design-system/components";
 

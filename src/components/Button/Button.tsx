@@ -1,7 +1,8 @@
 import React from "react";
 import { Button as AriaButton, type ButtonProps as AriaButtonProps } from "react-aria-components";
 import { forwardRef } from "react";
-import type { IconColor } from "@naxit/comete-icons";
+import type { IconColor, IconName } from "@naxit/comete-icons";
+import { Icon } from "../Icon/index.js";
 import styles from "./Button.module.css";
 
 // ----------------------------------------------------------------------
@@ -17,10 +18,10 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
   color?: ButtonColor;
   /** Size. @default "medium" */
   size?: ButtonSize;
-  /** Icon displayed before the label. Color is automatically resolved from variant + color. */
-  iconBefore?: React.ReactNode;
-  /** Icon displayed after the label. Color is automatically resolved from variant + color. */
-  iconAfter?: React.ReactNode;
+  /** Icon name displayed before the label. Color is automatically resolved from variant + color. */
+  iconBefore?: IconName;
+  /** Icon name displayed after the label. Color is automatically resolved from variant + color. */
+  iconAfter?: IconName;
   /** Additional CSS class names. */
   className?: string;
   children: React.ReactNode;
@@ -58,22 +59,6 @@ function resolveIconColor(variant: ButtonVariant, color: ButtonColor): IconColor
     information: "information",
   };
   return semanticColorMap[color];
-}
-
-/**
- * Clones the icon element and injects the resolved color prop if not already
- * explicitly set by the consumer.
- *
- * @param icon  - The icon React node
- * @param color - The resolved icon color to inject
- * @returns The icon node with the color prop injected
- */
-function injectIconColor(icon: React.ReactNode, color: IconColor): React.ReactNode {
-  if (!React.isValidElement(icon)) return icon;
-  const existingColor = (icon.props as Record<string, unknown>)["color"];
-  // Respect explicit color overrides
-  if (existingColor !== undefined) return icon;
-  return React.cloneElement(icon as React.ReactElement<{ color: IconColor }>, { color });
 }
 
 // ----------------------------------------------------------------------
@@ -147,11 +132,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <AriaButton ref={ref} className={classNames} {...ariaProps}>
         {iconBefore && (
-          <span className={styles.icon}>{injectIconColor(iconBefore, iconColor)}</span>
+          <Icon icon={iconBefore} color={iconColor} className={styles.icon} />
         )}
         {children}
         {iconAfter && (
-          <span className={styles.icon}>{injectIconColor(iconAfter, iconColor)}</span>
+          <Icon icon={iconAfter} color={iconColor} className={styles.icon} />
         )}
       </AriaButton>
     );

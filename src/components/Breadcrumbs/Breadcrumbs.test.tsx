@@ -2,7 +2,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
-import { Home } from "@naxit/comete-icons";
 import { Breadcrumbs } from "./Breadcrumbs";
 import { BreadcrumbItem } from "./BreadcrumbItem";
 
@@ -122,29 +121,29 @@ describe("BreadcrumbItem", () => {
   });
 
   it("should render iconBefore when provided", () => {
-    render(
+    const { container } = render(
       <Breadcrumbs>
         <BreadcrumbItem
           label="Accueil"
           href="/"
-          iconBefore={<Home size={16} spacing="none" data-testid="icon-before" />}
+          iconBefore="Home"
         />
       </Breadcrumbs>
     );
-    expect(screen.getByTestId("icon-before")).toBeInTheDocument();
+    expect(container.querySelector("svg")).toBeInTheDocument();
   });
 
   it("should render iconAfter when provided", () => {
-    render(
+    const { container } = render(
       <Breadcrumbs>
         <BreadcrumbItem
           label="Accueil"
           href="/"
-          iconAfter={<Home size={16} spacing="none" data-testid="icon-after" />}
+          iconAfter="Home"
         />
       </Breadcrumbs>
     );
-    expect(screen.getByTestId("icon-after")).toBeInTheDocument();
+    expect(container.querySelector("svg")).toBeInTheDocument();
   });
 
   it("should not render isCurrent item as link even if href is provided", () => {

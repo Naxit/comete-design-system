@@ -1,5 +1,5 @@
 // ButtonGroup — stories Storybook
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { ButtonGroup } from "@naxit/comete-design-system/components";
 import { Button } from "@naxit/comete-design-system/components";
 

@@ -1,6 +1,6 @@
 // Banner — barre de notification pleine largeur (warning, critical, announcement)
 import type { ReactElement, ReactNode } from "react";
-import { Warning } from "@naxit/comete-icons";
+import { Icon } from "../Icon/index.js";
 import styles from "./Banner.module.css";
 
 // -----------------------------------------------------------------------
@@ -32,7 +32,8 @@ export function Banner({ appearance, children }: BannerProps): ReactElement {
       className={`${styles.banner} ${styles[appearance]}`}
       role="alert"
     >
-      <Warning
+      <Icon
+        icon="Warning"
         size={24}
         spacing="none"
         variant="filled"

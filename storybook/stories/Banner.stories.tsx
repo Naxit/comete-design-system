@@ -1,5 +1,5 @@
 // Banner — stories Storybook
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Banner } from "@naxit/comete-design-system/components";
 import type { BannerAppearance } from "@naxit/comete-design-system/components";
 

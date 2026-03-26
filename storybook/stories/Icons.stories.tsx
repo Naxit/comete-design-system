@@ -1,7 +1,7 @@
 // Icon Explorer — parcourir et copier toutes les icônes de @naxit/comete-icons
 import * as Icons from "@naxit/comete-icons";
 import type { IconColor, IconProps, IconVariant } from "@naxit/comete-icons";
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CSSProperties, ComponentType, ReactElement } from "react";
 import { useEffect, useRef, useState } from "react";
 

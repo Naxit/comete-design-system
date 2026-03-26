@@ -1,5 +1,7 @@
 // BreadcrumbItem — élément individuel du fil d'Ariane
 import { useState, type FocusEvent, type ReactElement, type ReactNode } from "react";
+import type { IconName } from "@naxit/comete-icons";
+import { Icon } from "../Icon/index.js";
 import { FocusRing } from "../FocusRing/index.js";
 import styles from "./BreadcrumbItem.module.css";
 
@@ -13,14 +15,14 @@ export interface BreadcrumbItemProps {
   href?: string;
   /** Handler de clic (alternatif à href pour la navigation programmatique). */
   onClick?: () => void;
-  /** Icône affichée avant le libellé. */
-  iconBefore?: ReactNode;
+  /** Nom de l'icône affichée avant le libellé. Must match an export from @naxit/comete-icons. */
+  iconBefore?: IconName;
   /**
-   * Icône affichée après le libellé.
-   * Utilisée typiquement pour un séparateur visuel (ex : ChevronRight)
+   * Nom de l'icône affichée après le libellé.
+   * Utilisée typiquement pour un séparateur visuel (ex : "ChevronRight")
    * dans la variante "Breadcrumbs + Icon".
    */
-  iconAfter?: ReactNode;
+  iconAfter?: IconName;
   /** Marque cet item comme la page courante (aria-current="page", non cliquable). */
   isCurrent?: boolean;
 }
@@ -99,9 +101,17 @@ export function BreadcrumbItem({
 
   const content = (
     <>
-      {iconBefore && <span className={styles.iconBefore}>{iconBefore}</span>}
+      {iconBefore && (
+        <span className={styles.iconBefore}>
+          <Icon icon={iconBefore} size={20} spacing="none" color="subtle" />
+        </span>
+      )}
       <span>{label}</span>
-      {iconAfter && <span className={styles.iconAfter}>{iconAfter}</span>}
+      {iconAfter && (
+        <span className={styles.iconAfter}>
+          <Icon icon={iconAfter} size={16} spacing="none" color="default" />
+        </span>
+      )}
     </>
   );
 

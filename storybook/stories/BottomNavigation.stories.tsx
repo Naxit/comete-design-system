@@ -1,15 +1,6 @@
 // BottomNavigation — stories Storybook
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ReactNode } from "react";
-import {
-  Home,
-  CalendarMonth,
-  Person,
-  Notifications,
-  Star,
-} from "@naxit/comete-icons";
-import type { IconProps } from "@naxit/comete-icons";
-import type { ComponentType } from "react";
 import {
   BottomNavigation,
   BottomNavigationItem,
@@ -19,17 +10,6 @@ const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
-
-// REASON: React.ComponentType<IconProps> n'est pas sérialisable dans Storybook args.
-// On passe une clé string résolue via mapping avant rendu.
-const ICON_MAPPING: Record<string, ComponentType<IconProps>> = {
-  Home,
-  CalendarMonth,
-  Person,
-  Notifications,
-  Star,
-};
-const ICON_OPTIONS = Object.keys(ICON_MAPPING);
 
 // -----------------------------------------------------------------------
 // Meta — on documente l'item individuel pour le contrôle interactif
@@ -53,8 +33,7 @@ const meta = {
   argTypes: {
     icon: {
       control: "select",
-      options: ICON_OPTIONS,
-      mapping: ICON_MAPPING,
+      options: ["Home", "CalendarMonth", "Person", "Notifications", "Star"],
     },
     isSelected: { control: "boolean" },
     badge: { control: "text" },
@@ -62,8 +41,7 @@ const meta = {
   },
   args: {
     label: "Accueil",
-    // REASON: mapping Storybook résout la clé string en ComponentType avant rendu — cast nécessaire pour TS.
-    icon: "Home" as unknown as ComponentType<IconProps>,
+    icon: "Home",
     isSelected: false,
   },
 } satisfies Meta<typeof BottomNavigationItem>;
@@ -96,7 +74,7 @@ export const Selected: Story = {
 export const WithBadge: Story = {
   name: "With badge",
   parameters: { design: { type: "figma", url: figmaUrl("14:1031") } },
-  args: { label: "Notifications", icon: "Notifications" as unknown as ComponentType<IconProps>, badge: "3" },
+  args: { label: "Notifications", icon: "Notifications", badge: "3" },
   render: (args) => (
     <BottomNavigation>
       <BottomNavigationItem {...args} />
@@ -109,15 +87,15 @@ export const FullNav: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("2524:18591") } },
   render: () => (
     <BottomNavigation>
-      <BottomNavigationItem label="Accueil" icon={Home} isSelected />
-      <BottomNavigationItem label="Agenda" icon={CalendarMonth} />
+      <BottomNavigationItem label="Accueil" icon="Home" isSelected />
+      <BottomNavigationItem label="Agenda" icon="CalendarMonth" />
       <BottomNavigationItem
         label="Notifications"
-        icon={Notifications}
+        icon="Notifications"
         badge="5"
       />
-      <BottomNavigationItem label="Profil" icon={Person} />
-      <BottomNavigationItem label="Missions" icon={Star} />
+      <BottomNavigationItem label="Profil" icon="Person" />
+      <BottomNavigationItem label="Missions" icon="Star" />
     </BottomNavigation>
   ),
 };
