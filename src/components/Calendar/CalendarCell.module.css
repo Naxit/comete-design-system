@@ -178,5 +178,5 @@ button.cell:disabled {
    ========================================================================== */
 
 .cell[data-outside-month] .cellText {
-  color: var(--text-subtlest);
+  color: var(--text-disabled);
 }
