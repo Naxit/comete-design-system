@@ -53,7 +53,6 @@ export function BottomNavigationItem({
           <Icon
             icon={icon}
             size={24}
-            spacing="none"
             variant={isSelected ? "filled" : "outlined"}
             color={isSelected ? "selected" : "subtle"}
           />

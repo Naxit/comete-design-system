@@ -106,11 +106,11 @@ function RangeCalendarHeader() {
   return (
     <header className={styles.header}>
       <AriaButton slot="previous" className={styles.navButton}>
-        <Icon icon="ChevronLeft" size={20} spacing="none" variant="filled" />
+        <Icon icon="ChevronLeft" size={20} variant="filled" />
       </AriaButton>
       <Heading className={styles.heading} />
       <AriaButton slot="next" className={styles.navButton}>
-        <Icon icon="ChevronRight" size={20} spacing="none" variant="filled" />
+        <Icon icon="ChevronRight" size={20} variant="filled" />
       </AriaButton>
     </header>
   );

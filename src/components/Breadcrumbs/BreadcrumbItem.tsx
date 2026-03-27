@@ -103,13 +103,13 @@ export function BreadcrumbItem({
     <>
       {iconBefore && (
         <span className={styles.iconBefore}>
-          <Icon icon={iconBefore} size={20} spacing="none" color="subtle" />
+          <Icon icon={iconBefore} size={20} color="subtle" />
         </span>
       )}
       <span>{label}</span>
       {iconAfter && (
         <span className={styles.iconAfter}>
-          <Icon icon={iconAfter} size={16} spacing="none" color="default" />
+          <Icon icon={iconAfter} size={16} color="default" />
         </span>
       )}
     </>

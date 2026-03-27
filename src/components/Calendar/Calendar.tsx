@@ -435,7 +435,7 @@ function DualDateCalendar({
       className={[styles.dualLinkedCalendar, className].filter(Boolean).join(" ")}
     >
       <AriaButton slot="previous" className={[styles.navButton, styles.dualNavPrev].join(" ")}>
-        <Icon icon="ChevronLeft" size={20} spacing="none" variant="filled" />
+        <Icon icon="ChevronLeft" size={20} variant="filled" />
       </AriaButton>
       <DualPanelHeadingButton
         offset={0}
@@ -450,7 +450,7 @@ function DualDateCalendar({
         isDisabled={isDisabled}
       />
       <AriaButton slot="next" className={[styles.navButton, styles.dualNavNext].join(" ")}>
-        <Icon icon="ChevronRight" size={20} spacing="none" variant="filled" />
+        <Icon icon="ChevronRight" size={20} variant="filled" />
       </AriaButton>
       <CalendarGrid className={[styles.grid, styles.dualGrid1].join(" ")}>
         <CalendarGridContent calendarDisabled={isDisabled ?? false} />

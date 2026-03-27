@@ -89,7 +89,7 @@ function resolveContent(
   if (icon) {
     return (
       <span className={styles.iconSlot}>
-        <Icon icon={icon} variant="filled" spacing="none" />
+        <Icon icon={icon} variant="filled" />
       </span>
     );
   }
