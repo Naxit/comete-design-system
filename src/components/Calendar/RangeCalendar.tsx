@@ -11,7 +11,7 @@ import {
   Button as AriaButton,
   type DateValue,
 } from "react-aria-components";
-import { ChevronLeft, ChevronRight } from "@naxit/comete-icons";
+import { Icon } from "../Icon/index.js";
 import { CalendarCell as CometeCalendarCell } from "./CalendarCell.js";
 import styles from "./Calendar.module.css";
 
@@ -106,11 +106,11 @@ function RangeCalendarHeader() {
   return (
     <header className={styles.header}>
       <AriaButton slot="previous" className={styles.navButton}>
-        <ChevronLeft size={20} spacing="none" variant="filled" />
+        <Icon icon="ChevronLeft" size={20} spacing="none" variant="filled" />
       </AriaButton>
       <Heading className={styles.heading} />
       <AriaButton slot="next" className={styles.navButton}>
-        <ChevronRight size={20} spacing="none" variant="filled" />
+        <Icon icon="ChevronRight" size={20} spacing="none" variant="filled" />
       </AriaButton>
     </header>
   );

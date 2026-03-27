@@ -8,7 +8,7 @@
 // pour tout AriaButton enfant d'un AriaCalendar / AriaRangeCalendar).
 import type { ReactElement } from "react";
 import { Button as AriaButton } from "react-aria-components";
-import { ChevronLeft, ChevronRight, ArrowDropDown } from "@naxit/comete-icons";
+import { Icon } from "../Icon/index.js";
 import styles from "./Calendar.module.css";
 
 // -----------------------------------------------------------------------
@@ -107,7 +107,7 @@ export function MainHeader({
       isDisabled={isDisabled}
       aria-label="Précédent"
     >
-      <ChevronLeft size={20} spacing="none" variant="filled" />
+      <Icon icon="ChevronLeft" size={20} spacing="none" variant="filled" />
     </AriaButton>
   ) : (
     <AriaButton
@@ -116,7 +116,7 @@ export function MainHeader({
       isDisabled={isDisabled}
       aria-label="Précédent"
     >
-      <ChevronLeft size={20} spacing="none" variant="filled" />
+      <Icon icon="ChevronLeft" size={20} spacing="none" variant="filled" />
     </AriaButton>
   );
 
@@ -130,7 +130,7 @@ export function MainHeader({
       isDisabled={isDisabled}
       aria-label="Suivant"
     >
-      <ChevronRight size={20} spacing="none" variant="filled" />
+      <Icon icon="ChevronRight" size={20} spacing="none" variant="filled" />
     </AriaButton>
   ) : (
     <AriaButton
@@ -139,7 +139,7 @@ export function MainHeader({
       isDisabled={isDisabled}
       aria-label="Suivant"
     >
-      <ChevronRight size={20} spacing="none" variant="filled" />
+      <Icon icon="ChevronRight" size={20} spacing="none" variant="filled" />
     </AriaButton>
   );
 
@@ -155,7 +155,7 @@ export function MainHeader({
       aria-label={`Niveau supérieur — ${label}`}
     >
       <span>{label}</span>
-      <ArrowDropDown size={16} spacing="none" variant="filled" />
+      <Icon icon="ArrowDropDown" size={16} spacing="none" variant="filled" />
     </button>
   ) : (
     <span className={styles.heading}>{label}</span>

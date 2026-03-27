@@ -17,7 +17,7 @@ import {
 } from "react-aria-components";
 import type { RangeValue } from "react-aria-components";
 import { type CalendarDate } from "@internationalized/date";
-import { ChevronLeft, ChevronRight } from "@naxit/comete-icons";
+import { Icon } from "../Icon/index.js";
 import { CalendarCell as CometeCalendarCell } from "./CalendarCell.js";
 import { MainHeader } from "./MainHeader.js";
 import { WeekGrid, DualWeekGrid } from "./WeekGrid.js";
@@ -457,7 +457,7 @@ function DualDateCalendar({
       className={[styles.dualLinkedCalendar, className].filter(Boolean).join(" ")}
     >
       <AriaButton slot="previous" className={[styles.navButton, styles.dualNavPrev].join(" ")}>
-        <ChevronLeft size={20} spacing="none" variant="filled" />
+        <Icon icon="ChevronLeft" size={20} spacing="none" variant="filled" />
       </AriaButton>
       <DualPanelHeadingButton
         offset={0}
@@ -472,7 +472,7 @@ function DualDateCalendar({
         isDisabled={isDisabled}
       />
       <AriaButton slot="next" className={[styles.navButton, styles.dualNavNext].join(" ")}>
-        <ChevronRight size={20} spacing="none" variant="filled" />
+        <Icon icon="ChevronRight" size={20} spacing="none" variant="filled" />
       </AriaButton>
       <CalendarGrid className={[styles.grid, styles.dualGrid1].join(" ")}>
         <CalendarGridContent />
