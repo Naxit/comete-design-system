@@ -107,7 +107,7 @@ export function MainHeader({
       isDisabled={isDisabled}
       aria-label="Précédent"
     >
-      <Icon icon="ChevronLeft" size={20} spacing="none" variant="filled" />
+      <Icon icon="ChevronLeft" />
     </AriaButton>
   ) : (
     <AriaButton
@@ -116,7 +116,7 @@ export function MainHeader({
       isDisabled={isDisabled}
       aria-label="Précédent"
     >
-      <Icon icon="ChevronLeft" size={20} spacing="none" variant="filled" />
+      <Icon icon="ChevronLeft" />
     </AriaButton>
   );
 
@@ -130,7 +130,7 @@ export function MainHeader({
       isDisabled={isDisabled}
       aria-label="Suivant"
     >
-      <Icon icon="ChevronRight" size={20} spacing="none" variant="filled" />
+      <Icon icon="ChevronRight" />
     </AriaButton>
   ) : (
     <AriaButton
@@ -139,7 +139,7 @@ export function MainHeader({
       isDisabled={isDisabled}
       aria-label="Suivant"
     >
-      <Icon icon="ChevronRight" size={20} spacing="none" variant="filled" />
+      <Icon icon="ChevronRight" />
     </AriaButton>
   );
 
@@ -155,7 +155,7 @@ export function MainHeader({
       aria-label={`Niveau supérieur — ${label}`}
     >
       <span>{label}</span>
-      <Icon icon="ArrowDropDown" size={16} spacing="none" variant="filled" />
+      <Icon icon="ArrowDropDown" size={16} variant="filled" />
     </button>
   ) : (
     <span className={styles.heading}>{label}</span>

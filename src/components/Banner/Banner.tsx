@@ -35,7 +35,6 @@ export function Banner({ appearance, children }: BannerProps): ReactElement {
       <Icon
         icon="Warning"
         size={24}
-        spacing="none"
         variant="filled"
         color={appearance === "warning" ? "on-warning" : "inverted"}
       />
