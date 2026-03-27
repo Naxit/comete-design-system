@@ -40,45 +40,14 @@
   color: var(--text-primary);
 }
 
-/* Bouton heading interactif — drill-up vers le niveau supérieur */
+/* Bouton heading interactif — drill-up vers le niveau supérieur.
+   Les états hover/pressed/focus/disabled sont gérés par Button.module.css via data-attributes.
+   Seuls les overrides de layout sont définis ici. */
 .headingButton {
   flex: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   gap: var(--space025);
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xs);
-  font-weight: var(--font-weight-medium);
-  line-height: var(--line-height-ui-xs);
   color: var(--text-primary);
-  background: transparent;
-  border: none;
-  border-radius: var(--radius0375);
-  cursor: pointer;
   padding: var(--space025) var(--space050);
-  outline: none;
-  transition-property: background-color;
-  transition-duration: var(--duration-fast);
-  transition-timing-function: var(--easing-default);
-}
-
-.headingButton:hover:not(:disabled) {
-  background-color: var(--background-neutral-subtler-hovered);
-}
-
-.headingButton:active:not(:disabled) {
-  background-color: var(--background-neutral-subtler-pressed);
-}
-
-.headingButton:disabled {
-  opacity: var(--opacity-disabled);
-  cursor: not-allowed;
-}
-
-.headingButton:focus-visible {
-  outline: 2px solid var(--border-focused);
-  outline-offset: 2px;
 }
 
 /* Boutons de navigation précédent / suivant */

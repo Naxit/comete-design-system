@@ -12,11 +12,13 @@ import {
   CalendarGridHeader,
   CalendarHeaderCell,
   Button as AriaButton,
+  ButtonContext,
   type DateValue,
   useLocale,
 } from "react-aria-components";
 import type { RangeValue } from "react-aria-components";
 import { type CalendarDate } from "@internationalized/date";
+import { Button } from "../Button/index.js";
 import { Icon } from "../Icon/index.js";
 import { CalendarCell as CometeCalendarCell } from "./CalendarCell.js";
 import { MainHeader } from "./MainHeader.js";
@@ -272,19 +274,21 @@ function DualPanelHeadingButton({
   const panel: "left" | "right" = offset === 0 ? "left" : "right";
   const label = formatVisibleMonth(date, locale);
 
-  // NOTE: Utilise <button> natif (pas AriaButton) pour éviter le conflit
-  // avec le système de slots React Aria (AriaRangeCalendar exige slot="previous"/"next").
   if (onDrillUp) {
     return (
-      <button
-        type="button"
-        className={[styles.headingButton, className].filter(Boolean).join(" ")}
-        onClick={() => onDrillUp(date, panel)}
-        disabled={isDisabled}
-        aria-label={`Niveau supérieur — ${label}`}
-      >
-        <span>{label}</span>
-      </button>
+      // WORKAROUND: ButtonContext.Provider value={{}} efface le contexte de slots
+      // d'AriaRangeCalendar qui exigerait slot="previous"/"next" sur tout AriaButton enfant.
+      <ButtonContext.Provider value={{}}>
+        <Button
+          className={[styles.headingButton, className].filter(Boolean).join(" ")}
+          onPress={() => onDrillUp(date, panel)}
+          isDisabled={isDisabled}
+          aria-label={`Niveau supérieur — ${label}`}
+          variant="subtle"
+        >
+          <span>{label}</span>
+        </Button>
+      </ButtonContext.Provider>
     );
   }
 
