@@ -352,29 +352,7 @@ function DateGrid({
             </CalendarHeaderCell>
           )}
         </CalendarGridHeader>
-        <CalendarGridBody>
-          {(date) => (
-            <AriaCalendarCell date={date} className={styles.ariaDateCell}>
-              {({ formattedDate, isFocusVisible, isHovered, isPressed, isSelected, isSelectionStart, isSelectionEnd, isToday, isDisabled: cellDisabled, isUnavailable, isOutsideMonth }) => (
-                <CometeCalendarCell
-                  interactive={false}
-                  isSelected={isSelected}
-                  isSelectionStart={isSelectionStart}
-                  isSelectionEnd={isSelectionEnd}
-                  isToday={isToday}
-                  isHovered={isHovered}
-                  isPressed={isPressed}
-                  isDisabled={cellDisabled}
-                  isUnavailable={isUnavailable}
-                  isOutsideMonth={isOutsideMonth}
-                  isFocusVisible={isFocusVisible}
-                >
-                  {formattedDate}
-                </CometeCalendarCell>
-              )}
-            </AriaCalendarCell>
-          )}
-        </CalendarGridBody>
+        <SingleCalendarGridBody calendarDisabled={isDisabled ?? false} />
       </CalendarGrid>
     </AriaCalendar>
   );
@@ -475,13 +453,13 @@ function DualDateCalendar({
         <ChevronRight size={20} spacing="none" variant="filled" />
       </AriaButton>
       <CalendarGrid className={[styles.grid, styles.dualGrid1].join(" ")}>
-        <CalendarGridContent />
+        <CalendarGridContent calendarDisabled={isDisabled ?? false} />
       </CalendarGrid>
       <CalendarGrid
         offset={{ months: 1 }}
         className={[styles.grid, styles.dualGrid2].join(" ")}
       >
-        <CalendarGridContent />
+        <CalendarGridContent calendarDisabled={isDisabled ?? false} />
       </CalendarGrid>
     </AriaRangeCalendar>
   );
@@ -490,8 +468,62 @@ function DualDateCalendar({
 // -----------------------------------------------------------------------
 // Contenu de grille réutilisable (interne)
 
-/** Header + body d'un CalendarGrid — factorisé pour éviter la duplication dans DualDateCalendar. */
-function CalendarGridContent() {
+/**
+ * Grille date pour AriaCalendar (single).
+ * Les cellules hors-mois sont rendues en <button> interactif et appellent
+ * state.setFocusedDate pour naviguer vers le mois cliqué.
+ * NOTE: React Aria marque les cellules hors visible range comme isDisabled,
+ * bloquant les clics. On bypass en rendant la cellule comme button indépendant.
+ */
+function SingleCalendarGridBody({ calendarDisabled }: { calendarDisabled: boolean }) {
+  const state = useContext(CalendarStateContext);
+  return (
+    <CalendarGridBody>
+      {(date) => (
+        <AriaCalendarCell date={date} className={styles.ariaDateCell}>
+          {({ formattedDate, isFocusVisible, isHovered, isPressed, isSelected, isSelectionStart, isSelectionEnd, isToday, isDisabled: cellDisabled, isUnavailable, isOutsideMonth }) => {
+            if (isOutsideMonth) {
+              return (
+                <CometeCalendarCell
+                  interactive={true}
+                  isOutsideMonth={true}
+                  isToday={isToday}
+                  isDisabled={calendarDisabled}
+                  onClick={() => state?.setFocusedDate(date)}
+                >
+                  {formattedDate}
+                </CometeCalendarCell>
+              );
+            }
+            return (
+              <CometeCalendarCell
+                interactive={false}
+                isSelected={isSelected}
+                isSelectionStart={isSelectionStart}
+                isSelectionEnd={isSelectionEnd}
+                isToday={isToday}
+                isHovered={isHovered}
+                isPressed={isPressed}
+                isDisabled={cellDisabled}
+                isUnavailable={isUnavailable}
+                isFocusVisible={isFocusVisible}
+              >
+                {formattedDate}
+              </CometeCalendarCell>
+            );
+          }}
+        </AriaCalendarCell>
+      )}
+    </CalendarGridBody>
+  );
+}
+
+/**
+ * Header + body d'un CalendarGrid pour AriaRangeCalendar (dual).
+ * Même logique de bypass pour les cellules hors-mois.
+ */
+function CalendarGridContent({ calendarDisabled }: { calendarDisabled: boolean }) {
+  const state = useContext(RangeCalendarStateContext);
   return (
     <>
       <CalendarGridHeader>
@@ -502,24 +534,38 @@ function CalendarGridContent() {
       <CalendarGridBody>
         {(date) => (
           <AriaCalendarCell date={date} className={styles.ariaDateCell}>
-            {({ formattedDate, isFocusVisible, isHovered, isPressed, isSelected, isSelectionStart, isSelectionEnd, isToday, isDisabled, isUnavailable, isOutsideMonth }) => (
-              <CometeCalendarCell
-                interactive={false}
-                isSelected={isSelected}
-                isSelectionStart={isSelectionStart}
-                isSelectionEnd={isSelectionEnd}
-                isRangePart={isSelected && !isSelectionStart && !isSelectionEnd}
-                isToday={isToday}
-                isHovered={isHovered}
-                isPressed={isPressed}
-                isDisabled={isDisabled}
-                isUnavailable={isUnavailable}
-                isOutsideMonth={isOutsideMonth}
-                isFocusVisible={isFocusVisible}
-              >
-                {formattedDate}
-              </CometeCalendarCell>
-            )}
+            {({ formattedDate, isFocusVisible, isHovered, isPressed, isSelected, isSelectionStart, isSelectionEnd, isToday, isDisabled: cellDisabled, isUnavailable, isOutsideMonth }) => {
+              if (isOutsideMonth) {
+                return (
+                  <CometeCalendarCell
+                    interactive={true}
+                    isOutsideMonth={true}
+                    isToday={isToday}
+                    isDisabled={calendarDisabled}
+                    onClick={() => state?.setFocusedDate(date)}
+                  >
+                    {formattedDate}
+                  </CometeCalendarCell>
+                );
+              }
+              return (
+                <CometeCalendarCell
+                  interactive={false}
+                  isSelected={isSelected}
+                  isSelectionStart={isSelectionStart}
+                  isSelectionEnd={isSelectionEnd}
+                  isRangePart={isSelected && !isSelectionStart && !isSelectionEnd}
+                  isToday={isToday}
+                  isHovered={isHovered}
+                  isPressed={isPressed}
+                  isDisabled={cellDisabled}
+                  isUnavailable={isUnavailable}
+                  isFocusVisible={isFocusVisible}
+                >
+                  {formattedDate}
+                </CometeCalendarCell>
+              );
+            }}
           </AriaCalendarCell>
         )}
       </CalendarGridBody>
