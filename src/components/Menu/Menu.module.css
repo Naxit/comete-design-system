@@ -1,0 +1,229 @@
+/* Menu — Comète Design System */
+
+/* ------------------------------------------------------------------ */
+/* Popover container                                                   */
+
+.popover {
+  background: var(--background-neutral-default-default);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius100);
+  box-shadow: var(--shadow-overflow);
+  outline: none;
+  overflow: hidden;
+
+  /* React Aria popover enter/exit animation */
+  &[data-entering] {
+    animation: popover-fade-in 150ms ease-out;
+  }
+
+  &[data-exiting] {
+    animation: popover-fade-out 100ms ease-in;
+  }
+}
+
+@keyframes popover-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popover-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Menu list                                                           */
+
+.menu {
+  outline: none;
+  padding: var(--space075) 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* MenuItem                                                            */
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  outline: none;
+  cursor: pointer;
+
+  /* Background states (via React Aria data-attributes) */
+  &[data-hovered] .itemContainer {
+    background: var(--background-neutral-subtler-hovered);
+  }
+
+  &[data-pressed] .itemContainer {
+    background: var(--background-neutral-subtler-pressed);
+  }
+
+  &[data-disabled] {
+    cursor: default;
+  }
+
+  &[data-disabled] .itemContainer {
+    background: var(--background-disabled-default);
+  }
+
+  /* Selected states */
+  &[data-selected] .itemContainer {
+    background: var(--background-selected-subtlest-default);
+    box-shadow: inset 2px 0 0 0 var(--border-selected);
+  }
+
+  &[data-selected][data-hovered] .itemContainer {
+    background: var(--background-selected-subtlest-hovered);
+  }
+
+  &[data-selected][data-pressed] .itemContainer {
+    background: var(--background-selected-subtlest-pressed);
+  }
+
+  &[data-selected][data-disabled] .itemContainer {
+    background: var(--background-disabled-default);
+    box-shadow: none;
+  }
+}
+
+/* Height variants */
+.withDescription {
+  min-height: 56px;
+}
+
+.compact {
+  min-height: 36px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Item container (inner layout)                                       */
+
+.itemContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--space150);
+  width: 100%;
+  padding: var(--space100) var(--space200);
+  transition: background-color 100ms ease;
+}
+
+/* ------------------------------------------------------------------ */
+/* Content (title + description)                                       */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space050);
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-s);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* Selected */
+  [data-selected] > & {
+    color: var(--text-selected);
+  }
+
+  /* Disabled */
+  [data-disabled] > & {
+    color: var(--text-disabled);
+  }
+}
+
+.description {
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xxs);
+  color: var(--text-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* Disabled */
+  [data-disabled] > & {
+    color: var(--text-disabled);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Icons                                                               */
+
+.iconBefore,
+.iconAfter {
+  flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Slot after (custom trailing content)                                */
+
+.slotAfter {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-ui-xxs);
+  color: var(--text-subtle);
+
+  [data-disabled] > & {
+    color: var(--text-disabled);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Section                                                             */
+
+.section {
+  /* Separator between sections (not on the first one) */
+  &:not(:first-child)::before {
+    content: "";
+    display: block;
+    height: 1px;
+    margin: var(--space075) 0;
+    background: var(--border-default);
+  }
+}
+
+.sectionHeading {
+  padding: var(--space200) var(--space200) var(--space075);
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-ui-xxs);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui-xxs);
+  color: var(--text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ------------------------------------------------------------------ */
+/* Divider                                                             */
+
+.divider {
+  height: 1px;
+  margin: var(--space075) 0;
+  background: var(--border-default);
+  border: none;
+}
