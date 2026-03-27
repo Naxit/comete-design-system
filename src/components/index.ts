@@ -9,3 +9,4 @@ export * from "./FocusRing";
 export * from "./ButtonGroup";
 export * from "./Calendar";
 export * from "./Icon";
+export * from "./Menu";
