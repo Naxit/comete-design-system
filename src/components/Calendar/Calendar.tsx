@@ -1,24 +1,30 @@
 // Calendar — Comète Design System
 // Composant unifié : appearance=date|week|month|year, calendars=1|2, isOpen.
-import { type ReactElement } from "react";
+import { useContext, useState, type ReactElement } from "react";
 import {
   Calendar as AriaCalendar,
-  CalendarCell,
+  RangeCalendar as AriaRangeCalendar,
+  RangeCalendarStateContext,
+  CalendarStateContext,
+  CalendarCell as AriaCalendarCell,
   CalendarGrid,
   CalendarGridBody,
   CalendarGridHeader,
   CalendarHeaderCell,
-  Heading,
   Button as AriaButton,
   type DateValue,
+  useLocale,
 } from "react-aria-components";
 import type { RangeValue } from "react-aria-components";
 import { type CalendarDate } from "@internationalized/date";
 import { ChevronLeft, ChevronRight } from "@naxit/comete-icons";
-import { FocusRing } from "../FocusRing/index.js";
-import { WeekGrid } from "./WeekGrid.js";
+import { CalendarCell as CometeCalendarCell } from "./CalendarCell.js";
+import { MainHeader } from "./MainHeader.js";
+import { WeekGrid, DualWeekGrid } from "./WeekGrid.js";
 import { MonthCalendar } from "./MonthCalendar.js";
+import { DualMonthCalendar } from "./DualMonthCalendar.js";
 import { YearCalendar } from "./YearCalendar.js";
+import { DualYearCalendar } from "./DualYearCalendar.js";
 import styles from "./Calendar.module.css";
 
 // -----------------------------------------------------------------------
@@ -68,12 +74,19 @@ export interface WeekCalendarProps extends CalendarBaseProps {
   minValue?: DateValue;
   maxValue?: DateValue;
   locale?: string;
+  /**
+   * Mode de sélection :
+   * - "week"   : un clic sélectionne une semaine unique (défaut)
+   * - "period" : premier clic = semaine de début, deuxième clic = semaine de fin
+   */
+  mode?: "week" | "period";
   "aria-label"?: string;
 }
 
-/** Props pour appearance="month" (sélection d'un mois). */
+/** Props pour appearance="month", 1 calendrier (sélection d'un mois unique). */
 export interface MonthCalendarProps extends CalendarBaseProps {
   appearance: "month";
+  calendars?: 1;
   value?: CalendarDate;
   defaultValue?: CalendarDate;
   onChange?: (date: CalendarDate) => void;
@@ -81,12 +94,34 @@ export interface MonthCalendarProps extends CalendarBaseProps {
   locale?: string;
 }
 
-/** Props pour appearance="year" (sélection d'une année). */
+/** Props pour appearance="month", 2 calendriers (sélection d'une plage de mois). */
+export interface MonthCalendarDualProps extends CalendarBaseProps {
+  appearance: "month";
+  calendars: 2;
+  value?: RangeValue<CalendarDate>;
+  defaultValue?: RangeValue<CalendarDate>;
+  onChange?: (range: RangeValue<CalendarDate>) => void;
+  isDisabled?: boolean;
+  locale?: string;
+}
+
+/** Props pour appearance="year", 1 calendrier (sélection d'une année unique). */
 export interface YearCalendarProps extends CalendarBaseProps {
   appearance: "year";
+  calendars?: 1;
   value?: CalendarDate;
   defaultValue?: CalendarDate;
   onChange?: (date: CalendarDate) => void;
+  isDisabled?: boolean;
+}
+
+/** Props pour appearance="year", 2 calendriers (sélection d'une plage d'années). */
+export interface YearCalendarDualProps extends CalendarBaseProps {
+  appearance: "year";
+  calendars: 2;
+  value?: RangeValue<CalendarDate>;
+  defaultValue?: RangeValue<CalendarDate>;
+  onChange?: (range: RangeValue<CalendarDate>) => void;
   isDisabled?: boolean;
 }
 
@@ -94,7 +129,9 @@ export type CalendarProps =
   | DateCalendarProps
   | WeekCalendarProps
   | MonthCalendarProps
-  | YearCalendarProps;
+  | MonthCalendarDualProps
+  | YearCalendarProps
+  | YearCalendarDualProps;
 
 // -----------------------------------------------------------------------
 // Composant unifié
@@ -125,35 +162,29 @@ export function Calendar(props: CalendarProps): ReactElement {
   // au composant DatePicker qui wrappera Calendar dans un popover.
 
   if (props.appearance === "week") {
-    const {
-      appearance: _a,
-      calendars: _c,
-      isOpen: _o,
-      ...weekProps
-    } = props;
+    if (props.calendars === 2) {
+      const { appearance: _a, isOpen: _o, calendars: _c, ...dualProps } = props;
+      return <DualWeekGrid {...dualProps} />;
+    }
+    const { appearance: _a, isOpen: _o, calendars: _c, ...weekProps } = props;
     return <WeekGrid {...weekProps} />;
   }
 
   if (props.appearance === "month") {
-    const {
-      appearance: _a,
-      isOpen: _o,
-      calendars = 1,
-      ...monthProps
-    } = props;
-    if (calendars === 2) {
-      return <DualMonthCalendar {...monthProps} />;
+    if (props.calendars === 2) {
+      const { appearance: _a, isOpen: _o, calendars: _c, ...dualProps } = props;
+      return <DualMonthCalendar {...dualProps} />;
     }
+    const { appearance: _a, isOpen: _o, calendars: _c, ...monthProps } = props;
     return <MonthCalendar {...monthProps} />;
   }
 
   if (props.appearance === "year") {
-    const {
-      appearance: _a,
-      calendars: _c,
-      isOpen: _o,
-      ...yearProps
-    } = props;
+    if (props.calendars === 2) {
+      const { appearance: _a, isOpen: _o, calendars: _c, ...dualProps } = props;
+      return <DualYearCalendar {...dualProps} />;
+    }
+    const { appearance: _a, isOpen: _o, calendars: _c, ...yearProps } = props;
     return <YearCalendar {...yearProps} />;
   }
 
@@ -171,26 +202,148 @@ export function Calendar(props: CalendarProps): ReactElement {
 }
 
 // -----------------------------------------------------------------------
+// Utilitaire — formatage du mois visible (interne)
+
+function formatVisibleMonth(date: CalendarDate, locale: string): string {
+  return new Intl.DateTimeFormat(locale, {
+    month: "long",
+    year: "numeric",
+  }).format(new Date(date.year, date.month - 1, 1));
+}
+
+// -----------------------------------------------------------------------
+// Header interne pour AriaCalendar (lit CalendarStateContext)
+
+/**
+ * Lit le mois visible depuis CalendarStateContext et rend un MainHeader slot-based.
+ * Doit être placé à l'intérieur d'un AriaCalendar.
+ */
+function CalendarDateHeader({
+  onDrillUp,
+  isDisabled,
+}: {
+  onDrillUp: (date: CalendarDate) => void;
+  isDisabled?: boolean;
+}): ReactElement | null {
+  const state = useContext(CalendarStateContext);
+  const { locale } = useLocale();
+
+  if (!state) return null;
+
+  const visibleDate = state.visibleRange.start;
+  const label = formatVisibleMonth(visibleDate, locale);
+
+  return (
+    <MainHeader
+      label={label}
+      slotNav
+      onHeadingPress={() => onDrillUp(visibleDate)}
+      isDisabled={isDisabled}
+    />
+  );
+}
+
+// -----------------------------------------------------------------------
+// Heading mensuel pour le double calendrier lié (interne)
+
+/**
+ * Affiche le nom du mois/année correspondant à l'offset donné depuis le début de la plage visible.
+ * Rend un bouton interactif (drill-up) ou un span non interactif selon onDrillUp.
+ * Passe la date du panel cliqué et le côté ("left" | "right") au callback.
+ */
+function DualPanelHeadingButton({
+  offset,
+  className,
+  onDrillUp,
+  isDisabled,
+}: {
+  offset: number;
+  className?: string;
+  onDrillUp?: (date: CalendarDate, panel: "left" | "right") => void;
+  isDisabled?: boolean;
+}): ReactElement | null {
+  const state = useContext(RangeCalendarStateContext);
+  const { locale } = useLocale();
+
+  if (!state) return null;
+
+  const leftDate = state.visibleRange.start;
+  const date = leftDate.add({ months: offset });
+  const panel: "left" | "right" = offset === 0 ? "left" : "right";
+  const label = formatVisibleMonth(date, locale);
+
+  // NOTE: Utilise <button> natif (pas AriaButton) pour éviter le conflit
+  // avec le système de slots React Aria (AriaRangeCalendar exige slot="previous"/"next").
+  if (onDrillUp) {
+    return (
+      <button
+        type="button"
+        className={[styles.headingButton, className].filter(Boolean).join(" ")}
+        onClick={() => onDrillUp(date, panel)}
+        disabled={isDisabled}
+        aria-label={`Niveau supérieur — ${label}`}
+      >
+        <span>{label}</span>
+      </button>
+    );
+  }
+
+  return (
+    <span className={[styles.heading, className].filter(Boolean).join(" ")}>
+      {label}
+    </span>
+  );
+}
+
+// -----------------------------------------------------------------------
 // Grille date simple (interne)
 
 function DateGrid({
   className,
+  isDisabled,
   ...props
 }: Omit<DateCalendarProps, "appearance" | "calendars" | "isOpen">) {
+  // Niveau d'affichage : "date" = grille date React Aria, "month" = MonthCalendar drill-up.
+  const [drillLevel, setDrillLevel] = useState<"date" | "month">("date");
+  // Date pivot capturée lors du drill-up — initialise MonthCalendar au bon mois.
+  const [pivotDate, setPivotDate] = useState<CalendarDate | undefined>(undefined);
+  // Clé de remontage d'AriaCalendar après drill-down (force defaultFocusedValue).
+  const [calendarKey, setCalendarKey] = useState(0);
+
+  const handleDrillUp = (visibleDate: CalendarDate) => {
+    setPivotDate(visibleDate);
+    setDrillLevel("month");
+  };
+
+  const handleMonthSelect = (month: CalendarDate) => {
+    // Drill-down : revenir à la grille date en centrant sur le mois sélectionné.
+    setPivotDate(month);
+    setCalendarKey((k) => k + 1);
+    setDrillLevel("date");
+  };
+
+  if (drillLevel === "month") {
+    return (
+      <MonthCalendar
+        defaultValue={pivotDate}
+        isDisabled={isDisabled}
+        className={className}
+        onChange={handleMonthSelect}
+      />
+    );
+  }
+
   return (
     <AriaCalendar
+      key={calendarKey}
       {...props}
+      isDisabled={isDisabled}
+      // NOTE: defaultFocusedValue initialise le mois affiché après un drill-down.
+      // Quand value est fourni, React Aria l'utilise prioritairement pour le focus initial.
+      defaultFocusedValue={pivotDate ?? props.defaultValue ?? props.value}
       className={[styles.calendar, className].filter(Boolean).join(" ")}
     >
-      <header className={styles.header}>
-        <AriaButton slot="previous" className={styles.navButton}>
-          <ChevronLeft size={20} spacing="none" variant="filled" />
-        </AriaButton>
-        <Heading className={styles.heading} />
-        <AriaButton slot="next" className={styles.navButton}>
-          <ChevronRight size={20} spacing="none" variant="filled" />
-        </AriaButton>
-      </header>
+      <CalendarDateHeader onDrillUp={handleDrillUp} isDisabled={isDisabled} />
       <CalendarGrid className={styles.grid}>
         <CalendarGridHeader>
           {(day) => (
@@ -201,16 +354,25 @@ function DateGrid({
         </CalendarGridHeader>
         <CalendarGridBody>
           {(date) => (
-            <CalendarCell date={date} className={styles.cell}>
-              {({ formattedDate, isFocusVisible }) => (
-                <>
-                  <span className={styles.cellText}>{formattedDate}</span>
-                  {isFocusVisible && (
-                    <FocusRing borderRadius={3} position="inside" />
-                  )}
-                </>
+            <AriaCalendarCell date={date} className={styles.ariaDateCell}>
+              {({ formattedDate, isFocusVisible, isHovered, isPressed, isSelected, isSelectionStart, isSelectionEnd, isToday, isDisabled: cellDisabled, isUnavailable, isOutsideMonth }) => (
+                <CometeCalendarCell
+                  interactive={false}
+                  isSelected={isSelected}
+                  isSelectionStart={isSelectionStart}
+                  isSelectionEnd={isSelectionEnd}
+                  isToday={isToday}
+                  isHovered={isHovered}
+                  isPressed={isPressed}
+                  isDisabled={cellDisabled}
+                  isUnavailable={isUnavailable}
+                  isOutsideMonth={isOutsideMonth}
+                  isFocusVisible={isFocusVisible}
+                >
+                  {formattedDate}
+                </CometeCalendarCell>
               )}
-            </CalendarCell>
+            </AriaCalendarCell>
           )}
         </CalendarGridBody>
       </CalendarGrid>
@@ -219,35 +381,148 @@ function DateGrid({
 }
 
 // -----------------------------------------------------------------------
-// Double grille date (calendars=2)
+// Double grille date liée (calendars=2)
 
 /**
- * Affiche deux DateGrid côte à côte, naviguant indépendamment.
- * La valeur sélectionnée est partagée entre les deux calendriers.
+ * Affiche deux mois liés côte à côte avec navigation synchronisée et sélection de plage.
+ *
+ * NOTE: Utilise AriaRangeCalendar avec visibleDuration={{ months: 2 }} pour lier les deux
+ * calendriers. La navigation prev/next fait défiler les deux mois simultanément.
+ * Les flèches internes (droite du calendrier gauche, gauche du calendrier droit) n'existent
+ * pas — un seul bouton prev et un seul bouton next couvrent l'ensemble.
  */
 function DualDateCalendar({
   className,
-  ...props
-}: Omit<DateCalendarProps, "appearance" | "calendars" | "isOpen">) {
+  defaultValue,
+  value,
+  minValue,
+  maxValue,
+  isDisabled,
+  isReadOnly,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledby,
+}: Omit<DateCalendarProps, "appearance" | "calendars" | "isOpen" | "onChange" | "autoFocus">) {
+  // NOTE: value/defaultValue proviennent de DateCalendarProps (DateValue unique).
+  // On les utilise uniquement pour initialiser le mois visible via defaultFocusedValue.
+  // REASON: focusedValue (contrôlé) sans onFocusChange bloque la gestion interne du focus
+  // par React Aria et provoque une sélection de plage immédiate au premier clic.
+  // defaultFocusedValue initialise sans contrôler — React Aria gère ensuite librement.
+  const initialFocus = value ?? defaultValue;
+
+  // Niveau d'affichage : "date" = double grille React Aria, "month" = MonthCalendar drill-up (simple).
+  const [drillLevel, setDrillLevel] = useState<"date" | "month">("date");
+  // Date du panel cliqué (pivot pour initialiser le MonthCalendar).
+  const [pivotDate, setPivotDate] = useState<CalendarDate | undefined>(undefined);
+  // Panel ayant déclenché le drill-up : détermine quel panel est mis à jour au retour.
+  const [drilledPanel, setDrilledPanel] = useState<"left" | "right">("left");
+
+  const handleDrillUp = (date: CalendarDate, panel: "left" | "right") => {
+    setPivotDate(date);
+    setDrilledPanel(panel);
+    setDrillLevel("month");
+  };
+
+  // Drill-down depuis le sélecteur de mois simple :
+  // - panel gauche → left = sélection, right = sélection + 1 (defaultFocusedValue = sélection)
+  // - panel droit  → right = sélection, left = sélection - 1 (defaultFocusedValue = sélection - 1)
+  const handleMonthSelect = (month: CalendarDate) => {
+    const newPivot = drilledPanel === "right"
+      ? month.subtract({ months: 1 })
+      : month;
+    setPivotDate(newPivot);
+    setDrillLevel("date");
+  };
+
+  if (drillLevel === "month") {
+    return (
+      <MonthCalendar
+        defaultValue={pivotDate}
+        isDisabled={isDisabled}
+        className={className}
+        onChange={handleMonthSelect}
+      />
+    );
+  }
+
   return (
-    <div className={[styles.dualCalendar, className].filter(Boolean).join(" ")}>
-      <DateGrid {...props} />
-      <DateGrid {...props} />
-    </div>
+    <AriaRangeCalendar
+      visibleDuration={{ months: 2 }}
+      defaultFocusedValue={initialFocus}
+      minValue={minValue}
+      maxValue={maxValue}
+      isDisabled={isDisabled}
+      isReadOnly={isReadOnly}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledby}
+      className={[styles.dualLinkedCalendar, className].filter(Boolean).join(" ")}
+    >
+      <AriaButton slot="previous" className={[styles.navButton, styles.dualNavPrev].join(" ")}>
+        <ChevronLeft size={20} spacing="none" variant="filled" />
+      </AriaButton>
+      <DualPanelHeadingButton
+        offset={0}
+        className={styles.dualHeadingLeft}
+        onDrillUp={handleDrillUp}
+        isDisabled={isDisabled}
+      />
+      <DualPanelHeadingButton
+        offset={1}
+        className={styles.dualHeadingRight}
+        onDrillUp={handleDrillUp}
+        isDisabled={isDisabled}
+      />
+      <AriaButton slot="next" className={[styles.navButton, styles.dualNavNext].join(" ")}>
+        <ChevronRight size={20} spacing="none" variant="filled" />
+      </AriaButton>
+      <CalendarGrid className={[styles.grid, styles.dualGrid1].join(" ")}>
+        <CalendarGridContent />
+      </CalendarGrid>
+      <CalendarGrid
+        offset={{ months: 1 }}
+        className={[styles.grid, styles.dualGrid2].join(" ")}
+      >
+        <CalendarGridContent />
+      </CalendarGrid>
+    </AriaRangeCalendar>
   );
 }
 
 // -----------------------------------------------------------------------
-// Double grille mois (calendars=2)
+// Contenu de grille réutilisable (interne)
 
-function DualMonthCalendar({
-  className,
-  ...props
-}: Omit<MonthCalendarProps, "appearance" | "calendars" | "isOpen">) {
+/** Header + body d'un CalendarGrid — factorisé pour éviter la duplication dans DualDateCalendar. */
+function CalendarGridContent() {
   return (
-    <div className={[styles.dualCalendar, className].filter(Boolean).join(" ")}>
-      <MonthCalendar {...props} />
-      <MonthCalendar {...props} />
-    </div>
+    <>
+      <CalendarGridHeader>
+        {(day) => (
+          <CalendarHeaderCell className={styles.headerCell}>{day}</CalendarHeaderCell>
+        )}
+      </CalendarGridHeader>
+      <CalendarGridBody>
+        {(date) => (
+          <AriaCalendarCell date={date} className={styles.ariaDateCell}>
+            {({ formattedDate, isFocusVisible, isHovered, isPressed, isSelected, isSelectionStart, isSelectionEnd, isToday, isDisabled, isUnavailable, isOutsideMonth }) => (
+              <CometeCalendarCell
+                interactive={false}
+                isSelected={isSelected}
+                isSelectionStart={isSelectionStart}
+                isSelectionEnd={isSelectionEnd}
+                isRangePart={isSelected && !isSelectionStart && !isSelectionEnd}
+                isToday={isToday}
+                isHovered={isHovered}
+                isPressed={isPressed}
+                isDisabled={isDisabled}
+                isUnavailable={isUnavailable}
+                isOutsideMonth={isOutsideMonth}
+                isFocusVisible={isFocusVisible}
+              >
+                {formattedDate}
+              </CometeCalendarCell>
+            )}
+          </AriaCalendarCell>
+        )}
+      </CalendarGridBody>
+    </>
   );
 }

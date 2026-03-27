@@ -1,7 +1,6 @@
 declare const styles: {
+  readonly "dualYearRow": string;
   readonly "yearCalendar": string;
-  readonly "yearCell": string;
-  readonly "yearCellText": string;
   readonly "yearGrid": string;
   readonly "yearRow": string;
 };

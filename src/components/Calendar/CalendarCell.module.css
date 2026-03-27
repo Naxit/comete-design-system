@@ -1,0 +1,181 @@
+/* ==========================================================================
+   CalendarCell — Comète Design System
+   Cellule partagée entre tous les calendriers (date, mois, année).
+   Taille sm = 32 × 32 px (grille date) | lg = 48 px × flex (mois / année).
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+/* Base */
+.cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius0375);
+  border: none;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+  transition-property: background-color, color, opacity;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-default);
+}
+
+/* sm — date grid (32 × 32 px) */
+.cell[data-size="sm"] {
+  width: var(--size400);
+  height: var(--size400);
+}
+
+/* lg — mois / année (48 px, largeur flexible) */
+.cell[data-size="lg"] {
+  flex: 1;
+  height: var(--size600);
+}
+
+/* Span non-interactif (rendu à l'intérieur de AriaCalendarCell) */
+span.cell {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Texte
+   ========================================================================== */
+
+.cellText {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-subtle);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ==========================================================================
+   Indicateur "aujourd'hui"
+   ========================================================================== */
+
+.todayDot {
+  position: absolute;
+  bottom: var(--space050);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: var(--size050);
+  border-radius: var(--radius-round);
+  background-color: var(--border-focused);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   États interactifs (hover / pressed) — sur button uniquement
+   ========================================================================== */
+
+button.cell:hover:not([data-disabled]):not([data-selected]):not([data-selection-start]):not([data-selection-end]) {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+
+button.cell:active:not([data-disabled]) {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+/* Hover fourni explicitement par React Aria (date grid) */
+.cell[data-hovered]:not([data-disabled]):not([data-selected]):not([data-selection-start]):not([data-selection-end]) {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+
+.cell[data-pressed]:not([data-disabled]) {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+/* ==========================================================================
+   Aujourd'hui
+   ========================================================================== */
+
+.cell[data-today] .cellText {
+  color: var(--text-information);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ==========================================================================
+   Sélectionné (date unique ou plage)
+   ========================================================================== */
+
+/* Sélection unique — pas une extrémité de plage */
+.cell[data-selected]:not([data-selection-start]):not([data-selection-end]) {
+  background-color: var(--background-client-subtlest-default);
+}
+
+.cell[data-selected]:not([data-selection-start]):not([data-selection-end]) .cellText {
+  color: var(--text-information);
+}
+
+/* Plage — début */
+.cell[data-selection-start]:not([data-selection-end]) {
+  background-color: var(--border-brand);
+  border-radius: var(--radius0375) 0 0 var(--radius0375);
+}
+
+.cell[data-selection-start]:not([data-selection-end]) .cellText {
+  color: var(--text-inverted);
+}
+
+/* Plage — fin */
+.cell[data-selection-end]:not([data-selection-start]) {
+  background-color: var(--border-brand);
+  border-radius: 0 var(--radius0375) var(--radius0375) 0;
+}
+
+.cell[data-selection-end]:not([data-selection-start]) .cellText {
+  color: var(--text-inverted);
+}
+
+/* Plage — unique (start = end) */
+.cell[data-selection-start][data-selection-end] {
+  background-color: var(--border-brand);
+  border-radius: var(--radius0375);
+}
+
+.cell[data-selection-start][data-selection-end] .cellText {
+  color: var(--text-inverted);
+}
+
+/* Plage — milieu (selected, ni start ni end) — RangeCalendar uniquement */
+.cell[data-range-part] {
+  background-color: var(--background-client-subtlest-hovered);
+  border-radius: 0;
+}
+
+.cell[data-range-part] .cellText {
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Désactivé
+   ========================================================================== */
+
+.cell[data-disabled],
+button.cell:disabled {
+  cursor: not-allowed;
+  opacity: var(--opacity-disabled);
+}
+
+/* ==========================================================================
+   Indisponible
+   ========================================================================== */
+
+.cell[data-unavailable] .cellText {
+  color: var(--icon-disabled);
+  text-decoration: line-through;
+}
+
+/* ==========================================================================
+   Hors du mois courant
+   ========================================================================== */
+
+.cell[data-outside-month] {
+  visibility: hidden;
+  pointer-events: none;
+}

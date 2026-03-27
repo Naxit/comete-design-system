@@ -1,9 +1,9 @@
 // MonthCalendar — Comète Design System
 import { useState } from "react";
-import { Button as AriaButton } from "react-aria-components";
 import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date";
-import { ChevronLeft, ChevronRight } from "@naxit/comete-icons";
-import { FocusRing } from "../FocusRing/index.js";
+import { CalendarCell } from "./CalendarCell.js";
+import { MainHeader } from "./MainHeader.js";
+import { YearCalendar } from "./YearCalendar.js";
 import styles from "./MonthCalendar.module.css";
 import calStyles from "./Calendar.module.css";
 
@@ -37,7 +37,7 @@ export interface MonthCalendarProps {
 // -----------------------------------------------------------------------
 // Utilitaire — noms de mois localisés (ex : "janv.", "févr."…)
 
-function getMonthLabels(locale: string): string[] {
+export function getMonthLabels(locale: string): string[] {
   return Array.from({ length: 12 }, (_, i) =>
     new Intl.DateTimeFormat(locale, { month: "short" }).format(
       new Date(2000, i, 1)
@@ -53,6 +53,7 @@ function getMonthLabels(locale: string): string[] {
  *
  * Sélecteur de mois : grille 3 × 4 affichant les 12 mois de l'année.
  * Navigation par année (boutons précédent / suivant).
+ * Le bouton heading permet de remonter au sélecteur d'année (drill-up).
  *
  * ```tsx
  * import { CalendarDate } from "@internationalized/date";
@@ -81,6 +82,8 @@ export function MonthCalendar({
   const initialYear = (value ?? defaultValue)?.year ?? todayDate.year;
 
   const [displayYear, setDisplayYear] = useState(initialYear);
+  // Niveau d'affichage : "month" = grille de mois, "year" = sélecteur d'année (drill-up).
+  const [drillLevel, setDrillLevel] = useState<"month" | "year">("month");
 
   const controlled = value !== undefined;
   const selectedYear = controlled ? value?.year : undefined;
@@ -105,6 +108,27 @@ export function MonthCalendar({
   const handlePrev = () => setDisplayYear((y) => y - 1);
   const handleNext = () => setDisplayYear((y) => y + 1);
 
+  // Drill-up vers la sélection d'année — on conserve displayYear comme pivot.
+  const handleDrillUp = () => setDrillLevel("year");
+
+  // Drill-down depuis la sélection d'année : on met à jour displayYear et on revient.
+  const handleYearSelect = (date: CalendarDate) => {
+    setDisplayYear(date.year);
+    setDrillLevel("month");
+  };
+
+  // En mode drill-up : afficher le sélecteur d'année à la place de la grille de mois.
+  if (drillLevel === "year") {
+    return (
+      <YearCalendar
+        defaultValue={new CalendarDate(displayYear, 1, 1)}
+        isDisabled={isDisabled}
+        className={className}
+        onChange={handleYearSelect}
+      />
+    );
+  }
+
   return (
     <div
       role="group"
@@ -114,26 +138,13 @@ export function MonthCalendar({
         .join(" ")}
       data-disabled={isDisabled || undefined}
     >
-      {/* Header — navigation par année */}
-      <header className={calStyles.header}>
-        <AriaButton
-          className={calStyles.navButton}
-          onPress={handlePrev}
-          isDisabled={isDisabled}
-          aria-label="Année précédente"
-        >
-          <ChevronLeft size={20} spacing="none" variant="filled" />
-        </AriaButton>
-        <span className={calStyles.heading}>{displayYear}</span>
-        <AriaButton
-          className={calStyles.navButton}
-          onPress={handleNext}
-          isDisabled={isDisabled}
-          aria-label="Année suivante"
-        >
-          <ChevronRight size={20} spacing="none" variant="filled" />
-        </AriaButton>
-      </header>
+      <MainHeader
+        label={String(displayYear)}
+        onPrev={handlePrev}
+        onNext={handleNext}
+        onHeadingPress={handleDrillUp}
+        isDisabled={isDisabled}
+      />
 
       {/* Grille 3 × 4 */}
       <div className={styles.monthGrid} role="grid">
@@ -148,64 +159,23 @@ export function MonthCalendar({
                 todayDate.year === displayYear && todayDate.month === month;
 
               return (
-                <MonthCell
+                <CalendarCell
                   key={month}
-                  label={monthLabels[month - 1] ?? ""}
-                  month={month}
+                  size="lg"
                   isSelected={isSelected}
                   isToday={isToday}
                   isDisabled={isDisabled}
-                  onSelect={handleSelect}
-                />
+                  aria-label={`Mois ${month}`}
+                  aria-selected={isSelected}
+                  onClick={() => handleSelect(month)}
+                >
+                  {monthLabels[month - 1] ?? ""}
+                </CalendarCell>
               );
             })}
           </div>
         ))}
       </div>
     </div>
-  );
-}
-
-// -----------------------------------------------------------------------
-// Cellule interne
-
-function MonthCell({
-  label,
-  month,
-  isSelected,
-  isToday,
-  isDisabled,
-  onSelect,
-}: {
-  label: string;
-  month: number;
-  isSelected: boolean;
-  isToday: boolean;
-  isDisabled: boolean;
-  onSelect: (month: number) => void;
-}) {
-  const [isFocusVisible, setIsFocusVisible] = useState(false);
-
-  const handleFocus = (e: React.FocusEvent<HTMLButtonElement>) => {
-    setIsFocusVisible(e.currentTarget.matches(":focus-visible"));
-  };
-
-  return (
-    <button
-      role="gridcell"
-      className={styles.monthCell}
-      aria-selected={isSelected}
-      aria-label={`Mois ${month}`}
-      data-selected={isSelected || undefined}
-      data-today={isToday || undefined}
-      data-disabled={isDisabled || undefined}
-      disabled={isDisabled}
-      onClick={() => onSelect(month)}
-      onFocus={handleFocus}
-      onBlur={() => setIsFocusVisible(false)}
-    >
-      <span className={styles.monthCellText}>{label}</span>
-      {isFocusVisible && <FocusRing borderRadius={3} position="inside" />}
-    </button>
   );
 }

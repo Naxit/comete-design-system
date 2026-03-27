@@ -7,7 +7,11 @@
 
 <style>
   /* Hide sidebar type icons on story/document levels — root and component keep their icons */
-  [data-nodetype]:not([data-nodetype="root"]):not([data-nodetype="component"]) svg:first-of-type {
+  /* [data-nodetype]:not([data-nodetype="root"]):not([data-nodetype="component"]):not([data-nodetype="group"]) svg:first-of-type {
+    display: none;
+  } */
+  [data-nodetype="group"] svg:first-of-type,
+  [data-nodetype="component"] svg:first-of-type {
     display: none;
   }
 
@@ -17,9 +21,9 @@
   }
 
   /* Component node: hide the component type icon */
-  [type="component"] {
+  /* [type="component"] {
     display: none;
-  }
+  } */
 
   /* Root and component nodes: restore the collapse indicator SVG */
   [data-nodetype="root"] [data-action="collapse-root"] svg,

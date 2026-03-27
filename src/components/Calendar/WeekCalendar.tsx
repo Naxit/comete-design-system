@@ -2,7 +2,7 @@
 import { useState } from "react";
 import {
   RangeCalendar as AriaRangeCalendar,
-  CalendarCell,
+  CalendarCell as AriaCalendarCell,
   CalendarGrid,
   CalendarGridBody,
   CalendarGridHeader,
@@ -15,7 +15,7 @@ import type { RangeValue } from "react-aria-components";
 import { startOfWeek, endOfWeek } from "@internationalized/date";
 import { type CalendarDate } from "@internationalized/date";
 import { ChevronLeft, ChevronRight } from "@naxit/comete-icons";
-import { FocusRing } from "../FocusRing/index.js";
+import { CalendarCell as CometeCalendarCell } from "./CalendarCell.js";
 import styles from "./Calendar.module.css";
 
 // -----------------------------------------------------------------------
@@ -139,16 +139,26 @@ export function WeekCalendar({
         </CalendarGridHeader>
         <CalendarGridBody>
           {(date) => (
-            <CalendarCell date={date} className={styles.cell}>
-              {({ formattedDate, isFocusVisible }) => (
-                <>
-                  <span className={styles.cellText}>{formattedDate}</span>
-                  {isFocusVisible && (
-                    <FocusRing borderRadius={3} position="inside" />
-                  )}
-                </>
+            <AriaCalendarCell date={date} className={styles.ariaDateCell}>
+              {({ formattedDate, isFocusVisible, isHovered, isPressed, isSelected, isSelectionStart, isSelectionEnd, isToday, isDisabled, isUnavailable, isOutsideMonth }) => (
+                <CometeCalendarCell
+                  interactive={false}
+                  isSelected={isSelected}
+                  isSelectionStart={isSelectionStart}
+                  isSelectionEnd={isSelectionEnd}
+                  isRangePart={isSelected && !isSelectionStart && !isSelectionEnd}
+                  isToday={isToday}
+                  isHovered={isHovered}
+                  isPressed={isPressed}
+                  isDisabled={isDisabled}
+                  isUnavailable={isUnavailable}
+                  isOutsideMonth={isOutsideMonth}
+                  isFocusVisible={isFocusVisible}
+                >
+                  {formattedDate}
+                </CometeCalendarCell>
               )}
-            </CalendarCell>
+            </AriaCalendarCell>
           )}
         </CalendarGridBody>
       </CalendarGrid>
