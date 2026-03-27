@@ -172,10 +172,11 @@ button.cell:disabled {
 }
 
 /* ==========================================================================
-   Hors du mois courant
+   Hors du mois courant — visibles en subtlest, navigables au clic
+   NOTE: pointer-events sur la cellule interne est inutile ici car le <td>
+   React Aria (ariaDateCell) gère le clic et navigue vers le mois du jour cliqué.
    ========================================================================== */
 
-.cell[data-outside-month] {
-  visibility: hidden;
-  pointer-events: none;
+.cell[data-outside-month] .cellText {
+  color: var(--text-subtlest);
 }
