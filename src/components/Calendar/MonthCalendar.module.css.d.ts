@@ -1,7 +1,6 @@
 declare const styles: {
+  readonly "dualMonthRow": string;
   readonly "monthCalendar": string;
-  readonly "monthCell": string;
-  readonly "monthCellText": string;
   readonly "monthGrid": string;
   readonly "monthRow": string;
 };

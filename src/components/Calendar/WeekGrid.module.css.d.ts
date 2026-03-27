@@ -1,5 +1,5 @@
 declare const styles: {
-  readonly "todayDot": string;
+  readonly "todayIndicator": string;
   readonly "weekCalendar": string;
   readonly "weekDayCell": string;
   readonly "weekDayText": string;

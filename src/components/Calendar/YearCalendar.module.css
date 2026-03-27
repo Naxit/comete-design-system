@@ -20,56 +20,8 @@
   gap: var(--space050);
 }
 
-/* Cellule année — 78×52px (Figma) */
-.yearCell {
-  position: relative;
-  flex: 1;
-  height: var(--size1200);  /* ~48px */
+/* Ligne sans espacement — utilisée dans DualYearCalendar pour la continuité de la plage. */
+.dualYearRow {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  border-radius: var(--radius0375);
-  background: transparent;
-  cursor: pointer;
-  outline: none;
-  transition-property: background-color, color;
-  transition-duration: var(--duration-fast);
-  transition-timing-function: var(--easing-default);
 }
 
-.yearCellText {
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xs);
-  font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-ui-xs);
-  color: var(--text-subtle);
-  pointer-events: none;
-}
-
-/* États */
-.yearCell:hover:not([data-disabled]) {
-  background-color: var(--background-neutral-subtler-hovered);
-}
-
-.yearCell:active:not([data-disabled]) {
-  background-color: var(--background-neutral-subtler-pressed);
-}
-
-.yearCell[data-today] .yearCellText {
-  color: var(--text-information);
-  font-weight: var(--font-weight-medium);
-}
-
-.yearCell[data-selected] {
-  background-color: var(--background-client-subtlest-default);
-}
-
-.yearCell[data-selected] .yearCellText {
-  color: var(--text-information);
-}
-
-.yearCell[data-disabled] {
-  cursor: not-allowed;
-  opacity: var(--opacity-disabled);
-}

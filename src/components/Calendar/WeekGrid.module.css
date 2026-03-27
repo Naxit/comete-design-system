@@ -196,12 +196,12 @@
 }
 
 /* Indicateur point sous le jour actuel */
-.todayDot {
+.todayIndicator {
   position: absolute;
   bottom: var(--space025);
   left: 50%;
   transform: translateX(-50%);
-  width: var(--size075);
+  width: 60%;
   height: var(--size050);
   border-radius: var(--radius-round);
   background-color: var(--border-focused);

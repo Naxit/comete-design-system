@@ -75,7 +75,7 @@ export const Playground: Story = {
 // appearance="date" (défaut)
 
 export const Default: Story = {
-  name: "Date — défaut",
+  name: "Date",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: () => (
     <Calendar
@@ -108,6 +108,19 @@ export const Controlled: Story = {
   },
 };
 
+export const WithMinMax: Story = {
+  name: "Date — min/max",
+  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
+  render: () => (
+    <Calendar
+    aria-label="Choisir une date"
+    defaultValue={new CalendarDate(2026, 3, 15)}
+    minValue={new CalendarDate(2026, 3, 10)}
+    maxValue={new CalendarDate(2026, 3, 25)}
+    />
+  ),
+};
+
 export const Disabled: Story = {
   name: "Date — désactivé",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
@@ -120,21 +133,48 @@ export const Disabled: Story = {
   ),
 };
 
-export const WithMinMax: Story = {
-  name: "Date — min/max",
+// -----------------------------------------------------------------------
+// RangeCalendar (plage de dates jour-à-jour)
+
+export const Range: StoryObj<typeof RangeCalendar> = {
+  name: "Date — période",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: () => (
-    <Calendar
-      aria-label="Choisir une date"
-      defaultValue={new CalendarDate(2026, 3, 15)}
-      minValue={new CalendarDate(2026, 3, 10)}
-      maxValue={new CalendarDate(2026, 3, 25)}
+    <RangeCalendar
+      aria-label="Choisir une plage"
+      defaultValue={{
+        start: new CalendarDate(2026, 3, 10),
+        end: new CalendarDate(2026, 3, 20),
+      }}
     />
   ),
 };
 
+export const RangeControlled: StoryObj<typeof RangeCalendar> = {
+  name: "Date — période contrôlée",
+  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
+  render: () => {
+    const [range, setRange] = useState<RangeValue<DateValue>>({
+      start: new CalendarDate(2026, 3, 10),
+      end: new CalendarDate(2026, 3, 20),
+    });
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <RangeCalendar
+          aria-label="Choisir une plage"
+          value={range}
+          onChange={setRange}
+        />
+        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+          {range.start.toString()} → {range.end.toString()}
+        </p>
+      </div>
+    );
+  },
+};
+
 export const DualDate: Story = {
-  name: "Date — deux calendriers",
+  name: "Date — deux calendriers (plage)",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: () => (
     <Calendar
@@ -181,25 +221,6 @@ export const WeekControlled: Story = {
   },
 };
 
-export const WeekPeriod: Story = {
-  name: "Semaine — période multi-semaines",
-  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => {
-    const [range, setRange] = useState<RangeValue<CalendarDate>>({
-      start: new CalendarDate(2026, 3, 2),
-      end: new CalendarDate(2026, 3, 22),
-    });
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <Calendar appearance="week" value={range} onChange={setRange} />
-        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
-          {range.start.toString()} → {range.end.toString()}
-        </p>
-      </div>
-    );
-  },
-};
-
 export const WeekDisabled: Story = {
   name: "Semaine — désactivé",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
@@ -213,6 +234,52 @@ export const WeekDisabled: Story = {
       isDisabled
     />
   ),
+};
+
+export const WeekPeriod: Story = {
+  name: "Semaine — période simple",
+  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
+  render: () => {
+    const [range, setRange] = useState<RangeValue<CalendarDate>>({
+      start: new CalendarDate(2026, 3, 2),
+      end: new CalendarDate(2026, 3, 22),
+    });
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <Calendar appearance="week" mode="period" value={range} onChange={setRange} />
+        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+          {range.start.toString()} → {range.end.toString()}
+        </p>
+      </div>
+    );
+  },
+};
+
+// -----------------------------------------------------------------------
+// appearance="week", calendars=2
+
+export const WeekPeriodDual: Story = {
+  name: "Semaine — deux calendriers (plage)",
+  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
+  render: () => {
+    const [range, setRange] = useState<RangeValue<CalendarDate>>({
+      start: new CalendarDate(2026, 3, 2),
+      end: new CalendarDate(2026, 4, 19),
+    });
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <Calendar
+          appearance="week"
+          calendars={2}
+          value={range}
+          onChange={setRange}
+        />
+        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+          {range.start.toString()} → {range.end.toString()}
+        </p>
+      </div>
+    );
+  },
 };
 
 // -----------------------------------------------------------------------
@@ -247,18 +314,6 @@ export const MonthControlled: Story = {
   },
 };
 
-export const DualMonth: Story = {
-  name: "Mois — deux calendriers",
-  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => (
-    <Calendar
-      appearance="month"
-      calendars={2}
-      defaultValue={new CalendarDate(2026, 3, 1)}
-    />
-  ),
-};
-
 export const MonthDisabled: Story = {
   name: "Mois — désactivé",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
@@ -269,6 +324,32 @@ export const MonthDisabled: Story = {
       isDisabled
     />
   ),
+};
+
+export const DualMonth: Story = {
+  name: "Mois — deux calendriers (plage)",
+  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
+  render: () => {
+    const [range, setRange] = useState<RangeValue<CalendarDate> | undefined>({
+      start: new CalendarDate(2026, 3, 1),
+      end: new CalendarDate(2026, 8, 1),
+    });
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <Calendar
+          appearance="month"
+          calendars={2}
+          value={range}
+          onChange={setRange}
+        />
+        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+          {range
+            ? `${range.start.year}/${String(range.start.month).padStart(2, "0")} → ${range.end.year}/${String(range.end.month).padStart(2, "0")}`
+            : "–"}
+        </p>
+      </div>
+    );
+  },
 };
 
 // -----------------------------------------------------------------------
@@ -313,39 +394,26 @@ export const YearDisabled: Story = {
 };
 
 // -----------------------------------------------------------------------
-// RangeCalendar (plage de dates jour-à-jour)
+// appearance="year", calendars=2
 
-export const Range: StoryObj<typeof RangeCalendar> = {
-  name: "Plage de dates",
-  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => (
-    <RangeCalendar
-      aria-label="Choisir une plage"
-      defaultValue={{
-        start: new CalendarDate(2026, 3, 10),
-        end: new CalendarDate(2026, 3, 20),
-      }}
-    />
-  ),
-};
-
-export const RangeControlled: StoryObj<typeof RangeCalendar> = {
-  name: "Plage contrôlée",
+export const DualYear: Story = {
+  name: "Année — deux calendriers (plage)",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: () => {
-    const [range, setRange] = useState<RangeValue<DateValue>>({
-      start: new CalendarDate(2026, 3, 10),
-      end: new CalendarDate(2026, 3, 20),
+    const [range, setRange] = useState<RangeValue<CalendarDate> | undefined>({
+      start: new CalendarDate(2024, 1, 1),
+      end: new CalendarDate(2031, 1, 1),
     });
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <RangeCalendar
-          aria-label="Choisir une plage"
+        <Calendar
+          appearance="year"
+          calendars={2}
           value={range}
           onChange={setRange}
         />
         <p style={{ fontFamily: "monospace", fontSize: 13 }}>
-          {range.start.toString()} → {range.end.toString()}
+          {range ? `${range.start.year} → ${range.end.year}` : "–"}
         </p>
       </div>
     );

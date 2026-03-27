@@ -1,9 +1,8 @@
 // YearCalendar — Comète Design System
 import { useState } from "react";
-import { Button as AriaButton } from "react-aria-components";
 import { CalendarDate, today, getLocalTimeZone } from "@internationalized/date";
-import { ChevronLeft, ChevronRight } from "@naxit/comete-icons";
-import { FocusRing } from "../FocusRing/index.js";
+import { CalendarCell } from "./CalendarCell.js";
+import { MainHeader } from "./MainHeader.js";
 import styles from "./YearCalendar.module.css";
 import calStyles from "./Calendar.module.css";
 
@@ -31,9 +30,9 @@ export interface YearCalendarProps {
 
 // NOTE: La grille affiche 20 ans (4 colonnes × 5 lignes), centrée sur une
 // décennie de 20 ans : 2020–2039, 2040–2059, etc.
-const GRID_SIZE = 20;
+export const GRID_SIZE = 20;
 
-function decadeStart(year: number): number {
+export function decadeStart(year: number): number {
   return Math.floor(year / GRID_SIZE) * GRID_SIZE;
 }
 
@@ -45,6 +44,7 @@ function decadeStart(year: number): number {
  *
  * Sélecteur d'année : grille 4 × 5 affichant 20 années consécutives.
  * Navigation par plage de 20 ans (boutons précédent / suivant).
+ * Niveau max de drill-up — le bouton heading n'est pas interactif.
  *
  * ```tsx
  * import { CalendarDate } from "@internationalized/date";
@@ -98,28 +98,13 @@ export function YearCalendar({
         .join(" ")}
       data-disabled={isDisabled || undefined}
     >
-      {/* Header — navigation par plage de 20 ans */}
-      <header className={calStyles.header}>
-        <AriaButton
-          className={calStyles.navButton}
-          onPress={handlePrev}
-          isDisabled={isDisabled}
-          aria-label="Plage précédente"
-        >
-          <ChevronLeft size={20} spacing="none" variant="filled" />
-        </AriaButton>
-        <span className={calStyles.heading}>
-          {rangeStart}–{rangeEnd}
-        </span>
-        <AriaButton
-          className={calStyles.navButton}
-          onPress={handleNext}
-          isDisabled={isDisabled}
-          aria-label="Plage suivante"
-        >
-          <ChevronRight size={20} spacing="none" variant="filled" />
-        </AriaButton>
-      </header>
+      {/* NOTE: YearCalendar est le niveau max — heading non interactif (pas de onHeadingPress). */}
+      <MainHeader
+        label={`${rangeStart}–${rangeEnd}`}
+        onPrev={handlePrev}
+        onNext={handleNext}
+        isDisabled={isDisabled}
+      />
 
       {/* Grille 4 × 5 */}
       <div className={styles.yearGrid} role="grid">
@@ -131,61 +116,23 @@ export function YearCalendar({
               const isToday = todayDate.year === year;
 
               return (
-                <YearCell
+                <CalendarCell
                   key={year}
-                  year={year}
+                  size="lg"
                   isSelected={isSelected}
                   isToday={isToday}
                   isDisabled={isDisabled}
-                  onSelect={handleSelect}
-                />
+                  aria-label={String(year)}
+                  aria-selected={isSelected}
+                  onClick={() => handleSelect(year)}
+                >
+                  {year}
+                </CalendarCell>
               );
             })}
           </div>
         ))}
       </div>
     </div>
-  );
-}
-
-// -----------------------------------------------------------------------
-// Cellule interne
-
-function YearCell({
-  year,
-  isSelected,
-  isToday,
-  isDisabled,
-  onSelect,
-}: {
-  year: number;
-  isSelected: boolean;
-  isToday: boolean;
-  isDisabled: boolean;
-  onSelect: (year: number) => void;
-}) {
-  const [isFocusVisible, setIsFocusVisible] = useState(false);
-
-  const handleFocus = (e: React.FocusEvent<HTMLButtonElement>) => {
-    setIsFocusVisible(e.currentTarget.matches(":focus-visible"));
-  };
-
-  return (
-    <button
-      role="gridcell"
-      className={styles.yearCell}
-      aria-selected={isSelected}
-      aria-label={String(year)}
-      data-selected={isSelected || undefined}
-      data-today={isToday || undefined}
-      data-disabled={isDisabled || undefined}
-      disabled={isDisabled}
-      onClick={() => onSelect(year)}
-      onFocus={handleFocus}
-      onBlur={() => setIsFocusVisible(false)}
-    >
-      <span className={styles.yearCellText}>{year}</span>
-      {isFocusVisible && <FocusRing borderRadius={3} position="inside" />}
-    </button>
   );
 }

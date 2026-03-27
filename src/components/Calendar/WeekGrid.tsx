@@ -1,7 +1,6 @@
 // WeekGrid — Comète Design System (interne)
 // Grille de sélection de semaine : interaction hover/focus/sélection au niveau de la ligne.
 import { useState, type ReactElement } from "react";
-import { Button as AriaButton } from "react-aria-components";
 import type { RangeValue, DateValue } from "react-aria-components";
 import {
   type CalendarDate,
@@ -12,8 +11,9 @@ import {
   today,
   getLocalTimeZone,
 } from "@internationalized/date";
-import { ChevronLeft, ChevronRight } from "@naxit/comete-icons";
 import { FocusRing } from "../FocusRing/index.js";
+import { MainHeader } from "./MainHeader.js";
+import { MonthCalendar } from "./MonthCalendar.js";
 import styles from "./WeekGrid.module.css";
 import calStyles from "./Calendar.module.css";
 
@@ -135,6 +135,12 @@ export interface WeekGridProps {
   minValue?: DateValue;
   /** Valeur maximale. */
   maxValue?: DateValue;
+  /**
+   * Mode de sélection :
+   * - "week"   : un clic sélectionne une semaine unique (défaut)
+   * - "period" : premier clic = semaine de début, deuxième clic = semaine de fin
+   */
+  mode?: "week" | "period";
   /** Classe CSS additionnelle. */
   className?: string;
   /** Label accessible. */
@@ -149,6 +155,7 @@ export interface WeekGridProps {
  *
  * Affiche une grille par mois avec numéro de semaine et interaction
  * hover/focus/sélection au niveau de la ligne entière.
+ * Le bouton heading permet de remonter au sélecteur de mois (drill-up).
  */
 export function WeekGrid({
   value,
@@ -156,6 +163,7 @@ export function WeekGrid({
   onChange,
   locale = "fr-FR",
   isDisabled = false,
+  mode = "week",
   className,
   "aria-label": ariaLabel,
 }: WeekGridProps): ReactElement {
@@ -166,25 +174,106 @@ export function WeekGrid({
     startOfMonth(initialMonth) as unknown as CalendarDate
   );
 
+  // Niveau d'affichage : "week" = grille de semaines, "month" = MonthCalendar drill-up.
+  const [drillLevel, setDrillLevel] = useState<"week" | "month">("week");
+
   // État interne pour le mode non contrôlé
   const [internalValue, setInternalValue] = useState<
     RangeValue<CalendarDate> | undefined
   >(defaultValue);
 
+  // État de sélection en cours pour mode="period"
+  // Première semaine cliquée en attente du deuxième clic.
+  const [pending, setPending] = useState<RangeValue<CalendarDate> | undefined>(
+    undefined
+  );
+  // Semaine survolée pendant la sélection d'une période.
+  const [hovered, setHovered] = useState<RangeValue<CalendarDate> | undefined>(
+    undefined
+  );
+
   const controlled = value !== undefined;
   const resolvedValue = controlled ? value : internalValue;
 
+  // Valeur affichée : en mode "period" avec une sélection en cours,
+  // on affiche la prévisualisation (pending + hover) plutôt que la valeur confirmée.
+  const displayValue = ((): RangeValue<CalendarDate> | undefined => {
+    if (mode !== "period" || !pending) return resolvedValue;
+    if (!hovered) return pending;
+    // Prévisualisation : de la semaine la plus tôt à la semaine la plus tard.
+    const start =
+      pending.start.compare(hovered.start) <= 0 ? pending.start : hovered.start;
+    const end =
+      pending.end.compare(hovered.end) >= 0 ? pending.end : hovered.end;
+    return { start, end };
+  })();
+
   const handleSelect = (weekStart: CalendarDate, weekEnd: CalendarDate) => {
     if (isDisabled) return;
+
+    if (mode === "period") {
+      if (!pending) {
+        // Premier clic — mémoriser la semaine de début.
+        setPending({ start: weekStart, end: weekEnd });
+        setHovered(undefined);
+      } else {
+        // Deuxième clic — confirmer la plage finale.
+        const start =
+          pending.start.compare(weekStart) <= 0 ? pending.start : weekStart;
+        const end =
+          pending.end.compare(weekEnd) >= 0 ? pending.end : weekEnd;
+        const range: RangeValue<CalendarDate> = { start, end };
+        setPending(undefined);
+        setHovered(undefined);
+        if (!controlled) setInternalValue(range);
+        onChange?.(range);
+      }
+      return;
+    }
+
+    // mode="week" — sélection directe d'une semaine unique.
     const range: RangeValue<CalendarDate> = { start: weekStart, end: weekEnd };
     if (!controlled) setInternalValue(range);
     onChange?.(range);
+  };
+
+  const handleHover = (weekStart: CalendarDate, weekEnd: CalendarDate) => {
+    if (mode === "period" && pending) {
+      setHovered({ start: weekStart, end: weekEnd });
+    }
+  };
+
+  const handleHoverLeave = () => {
+    if (mode === "period" && pending) {
+      setHovered(undefined);
+    }
   };
 
   const handlePrev = () =>
     setDisplayedMonth((m) => m.subtract({ months: 1 }));
   const handleNext = () =>
     setDisplayedMonth((m) => m.add({ months: 1 }));
+
+  // Drill-up vers le sélecteur de mois.
+  const handleDrillUp = () => setDrillLevel("month");
+
+  // Drill-down depuis le sélecteur de mois.
+  const handleMonthSelect = (month: CalendarDate) => {
+    setDisplayedMonth(startOfMonth(month) as unknown as CalendarDate);
+    setDrillLevel("week");
+  };
+
+  // En mode drill-up : afficher le sélecteur de mois.
+  if (drillLevel === "month") {
+    return (
+      <MonthCalendar
+        defaultValue={displayedMonth}
+        isDisabled={isDisabled}
+        className={className}
+        onChange={handleMonthSelect}
+      />
+    );
+  }
 
   const weeks = getWeeksForMonth(displayedMonth, locale);
   const dayLabels = getDayLabels(locale);
@@ -198,28 +287,56 @@ export function WeekGrid({
         .filter(Boolean)
         .join(" ")}
       data-disabled={isDisabled || undefined}
+      // NOTE: data-selecting indique qu'un premier clic a été fait en mode période.
+      // Permet d'afficher un curseur "crosshair" ou autre feedback visuel CSS.
+      data-selecting={mode === "period" && pending ? true : undefined}
     >
-      {/* Navigation mois */}
-      <header className={calStyles.header}>
-        <AriaButton
-          className={calStyles.navButton}
-          onPress={handlePrev}
-          isDisabled={isDisabled}
-          aria-label="Mois précédent"
-        >
-          <ChevronLeft size={20} spacing="none" variant="filled" />
-        </AriaButton>
-        <span className={calStyles.heading}>{heading}</span>
-        <AriaButton
-          className={calStyles.navButton}
-          onPress={handleNext}
-          isDisabled={isDisabled}
-          aria-label="Mois suivant"
-        >
-          <ChevronRight size={20} spacing="none" variant="filled" />
-        </AriaButton>
-      </header>
+      <MainHeader
+        label={heading}
+        onPrev={handlePrev}
+        onNext={handleNext}
+        onHeadingPress={handleDrillUp}
+        isDisabled={isDisabled}
+      />
 
+      <WeekPanel
+        weeks={weeks}
+        dayLabels={dayLabels}
+        value={displayValue}
+        isDisabled={isDisabled}
+        onSelect={handleSelect}
+        onHover={handleHover}
+        onHoverLeave={handleHoverLeave}
+        todayDate={todayDate}
+      />
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------
+// Panel de grille (interne) — en-têtes de colonnes + lignes de semaines
+
+function WeekPanel({
+  weeks,
+  dayLabels,
+  value,
+  isDisabled,
+  onSelect,
+  onHover,
+  onHoverLeave,
+  todayDate,
+}: {
+  weeks: WeekData[];
+  dayLabels: string[];
+  value?: RangeValue<CalendarDate>;
+  isDisabled: boolean;
+  onSelect: (start: CalendarDate, end: CalendarDate) => void;
+  onHover: (start: CalendarDate, end: CalendarDate) => void;
+  onHoverLeave: () => void;
+  todayDate: CalendarDate;
+}) {
+  return (
+    <>
       {/* En-têtes des colonnes */}
       <div className={styles.weekHeaderRow} aria-hidden="true">
         <span className={styles.weekHeaderNum}>S</span>
@@ -238,14 +355,16 @@ export function WeekGrid({
           <WeekRow
             key={`${week.weekNumber}-${week.weekStart.toString()}`}
             week={week}
-            value={resolvedValue}
+            value={value}
             isDisabled={isDisabled}
-            onSelect={handleSelect}
+            onSelect={onSelect}
+            onHover={onHover}
+            onHoverLeave={onHoverLeave}
             todayDate={todayDate}
           />
         ))}
       </div>
-    </div>
+    </>
   );
 }
 
@@ -257,12 +376,16 @@ function WeekRow({
   value,
   isDisabled,
   onSelect,
+  onHover,
+  onHoverLeave,
   todayDate,
 }: {
   week: WeekData;
   value?: RangeValue<CalendarDate>;
   isDisabled: boolean;
   onSelect: (start: CalendarDate, end: CalendarDate) => void;
+  onHover: (start: CalendarDate, end: CalendarDate) => void;
+  onHoverLeave: () => void;
   todayDate: CalendarDate;
 }) {
   const [isFocusVisible, setIsFocusVisible] = useState(false);
@@ -300,6 +423,10 @@ function WeekRow({
       onKeyDown={handleKeyDown}
       onFocus={handleFocus}
       onBlur={() => setIsFocusVisible(false)}
+      onMouseEnter={() => {
+        if (!rowDisabled) onHover(week.weekStart, week.weekEnd);
+      }}
+      onMouseLeave={onHoverLeave}
     >
       {/* Numéro de semaine */}
       <span
@@ -331,7 +458,7 @@ function WeekRow({
           >
             <span className={styles.weekDayText}>{day.day}</span>
             {isToday && (
-              <span className={styles.todayDot} aria-hidden="true" />
+              <span className={styles.todayIndicator} aria-hidden="true" />
             )}
           </span>
         );
@@ -339,6 +466,172 @@ function WeekRow({
 
       {/* FocusRing sur la ligne entière */}
       {isFocusVisible && <FocusRing borderRadius={6} position="inside" />}
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------
+// Double grille de semaines liée (calendars=2) — interne
+
+/**
+ * DualWeekGrid — deux mois consécutifs côte à côte, sélection de plage en deux clics.
+ *
+ * Navigation : ← seul à gauche, → seul à droite.
+ * Sélection : premier clic = semaine de début, deuxième clic = semaine de fin.
+ * Prévisualisation : hover entre les deux clics.
+ * Le bouton heading permet de remonter au sélecteur de mois (drill-up).
+ */
+export function DualWeekGrid({
+  value,
+  defaultValue,
+  onChange,
+  locale = "fr-FR",
+  isDisabled = false,
+  className,
+  "aria-label": ariaLabel,
+  // NOTE: mode est ignoré — DualWeekGrid est toujours en mode "period".
+  mode: _mode,
+}: WeekGridProps): ReactElement {
+  const todayDate = today(getLocalTimeZone()) as unknown as CalendarDate;
+  const initialMonth = value?.start ?? defaultValue?.start ?? todayDate;
+
+  const [leftMonth, setLeftMonth] = useState<CalendarDate>(
+    startOfMonth(initialMonth) as unknown as CalendarDate
+  );
+  // Le panel droit affiche toujours le mois suivant le panel gauche.
+  const rightMonth = leftMonth.add({ months: 1 }) as unknown as CalendarDate;
+
+  // Niveau d'affichage : "week" = grilles de semaines, "month" = MonthCalendar drill-up (simple).
+  const [drillLevel, setDrillLevel] = useState<"week" | "month">("week");
+  // Panel ayant déclenché le drill-up : détermine quel panel est mis à jour au retour.
+  const [drilledPanel, setDrilledPanel] = useState<"left" | "right">("left");
+
+  const [internalValue, setInternalValue] = useState<
+    RangeValue<CalendarDate> | undefined
+  >(defaultValue);
+  const [pending, setPending] = useState<RangeValue<CalendarDate> | undefined>(
+    undefined
+  );
+  const [hovered, setHovered] = useState<RangeValue<CalendarDate> | undefined>(
+    undefined
+  );
+
+  const controlled = value !== undefined;
+  const resolvedValue = controlled ? value : internalValue;
+
+  const displayValue = ((): RangeValue<CalendarDate> | undefined => {
+    if (!pending) return resolvedValue;
+    if (!hovered) return pending;
+    const start =
+      pending.start.compare(hovered.start) <= 0 ? pending.start : hovered.start;
+    const end =
+      pending.end.compare(hovered.end) >= 0 ? pending.end : hovered.end;
+    return { start, end };
+  })();
+
+  const handleSelect = (weekStart: CalendarDate, weekEnd: CalendarDate) => {
+    if (isDisabled) return;
+    if (!pending) {
+      setPending({ start: weekStart, end: weekEnd });
+      setHovered(undefined);
+    } else {
+      const start =
+        pending.start.compare(weekStart) <= 0 ? pending.start : weekStart;
+      const end =
+        pending.end.compare(weekEnd) >= 0 ? pending.end : weekEnd;
+      const range: RangeValue<CalendarDate> = { start, end };
+      setPending(undefined);
+      setHovered(undefined);
+      if (!controlled) setInternalValue(range);
+      onChange?.(range);
+    }
+  };
+
+  const handleHover = (weekStart: CalendarDate, weekEnd: CalendarDate) => {
+    if (pending) setHovered({ start: weekStart, end: weekEnd });
+  };
+
+  const handleHoverLeave = () => {
+    if (pending) setHovered(undefined);
+  };
+
+  // Drill-up vers un sélecteur de mois simple (1 clic).
+  // Le panel cliqué détermine quel panel est mis à jour au retour.
+  const handleDrillUp = (panel: "left" | "right") => {
+    setDrilledPanel(panel);
+    setDrillLevel("month");
+  };
+
+  // Drill-down depuis le sélecteur de mois simple :
+  // - panel gauche → leftMonth = sélection, rightMonth = sélection + 1 (automatique)
+  // - panel droit  → rightMonth = sélection, leftMonth = sélection - 1
+  const handleMonthSelect = (month: CalendarDate) => {
+    const newLeft = drilledPanel === "right"
+      ? startOfMonth(month.subtract({ months: 1 })) as unknown as CalendarDate
+      : startOfMonth(month) as unknown as CalendarDate;
+    setLeftMonth(newLeft);
+    setDrillLevel("week");
+  };
+
+  // En mode drill-up : afficher un sélecteur de mois simple.
+  // Initialisé sur le mois du panel ayant déclenché le drill-up.
+  if (drillLevel === "month") {
+    const pivotMonth = drilledPanel === "right" ? rightMonth : leftMonth;
+    return (
+      <MonthCalendar
+        defaultValue={pivotMonth}
+        isDisabled={isDisabled}
+        className={className}
+        onChange={handleMonthSelect}
+      />
+    );
+  }
+
+  const leftWeeks = getWeeksForMonth(leftMonth, locale);
+  const rightWeeks = getWeeksForMonth(rightMonth, locale);
+  const dayLabels = getDayLabels(locale);
+
+  const sharedPanel = {
+    dayLabels,
+    value: displayValue,
+    isDisabled,
+    onSelect: handleSelect,
+    onHover: handleHover,
+    onHoverLeave: handleHoverLeave,
+    todayDate,
+  };
+
+  return (
+    <div
+      role="group"
+      aria-label={ariaLabel ?? "Choisir une période de semaines"}
+      className={[calStyles.dualCalendar, className].filter(Boolean).join(" ")}
+      data-disabled={isDisabled || undefined}
+      data-selecting={pending ? true : undefined}
+    >
+      {/* Panel gauche */}
+      <div className={[calStyles.calendar, styles.weekCalendar].join(" ")}>
+        <MainHeader
+          label={formatMonthYear(leftMonth, locale)}
+          onPrev={() => setLeftMonth((m) => m.subtract({ months: 1 }))}
+          hideNext
+          onHeadingPress={() => handleDrillUp("left")}
+          isDisabled={isDisabled}
+        />
+        <WeekPanel weeks={leftWeeks} {...sharedPanel} />
+      </div>
+
+      {/* Panel droit */}
+      <div className={[calStyles.calendar, styles.weekCalendar].join(" ")}>
+        <MainHeader
+          label={formatMonthYear(rightMonth, locale)}
+          hidePrev
+          onNext={() => setLeftMonth((m) => m.add({ months: 1 }))}
+          onHeadingPress={() => handleDrillUp("right")}
+          isDisabled={isDisabled}
+        />
+        <WeekPanel weeks={rightWeeks} {...sharedPanel} />
+      </div>
     </div>
   );
 }

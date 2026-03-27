@@ -109,7 +109,7 @@ describe("Calendar", () => {
       );
       const headingBefore = screen.getByRole("heading").textContent;
       const [prevButton] = screen.getAllByRole("button");
-      await userEvent.click(prevButton);
+      await userEvent.click(prevButton!);
       expect(screen.getByRole("heading").textContent).not.toBe(headingBefore);
     });
 
@@ -122,7 +122,7 @@ describe("Calendar", () => {
       );
       const headingBefore = screen.getByRole("heading").textContent;
       const buttons = screen.getAllByRole("button");
-      await userEvent.click(buttons[buttons.length - 1]);
+      await userEvent.click(buttons[buttons.length - 1]!);
       expect(screen.getByRole("heading").textContent).not.toBe(headingBefore);
     });
   });

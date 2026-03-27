@@ -40,6 +40,47 @@
   color: var(--text-primary);
 }
 
+/* Bouton heading interactif — drill-up vers le niveau supérieur */
+.headingButton {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space025);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius0375);
+  cursor: pointer;
+  padding: var(--space025) var(--space050);
+  outline: none;
+  transition-property: background-color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-default);
+}
+
+.headingButton:hover:not(:disabled) {
+  background-color: var(--background-neutral-subtler-hovered);
+}
+
+.headingButton:active:not(:disabled) {
+  background-color: var(--background-neutral-subtler-pressed);
+}
+
+.headingButton:disabled {
+  opacity: var(--opacity-disabled);
+  cursor: not-allowed;
+}
+
+.headingButton:focus-visible {
+  outline: 2px solid var(--border-focused);
+  outline-offset: 2px;
+}
+
 /* Boutons de navigation précédent / suivant */
 .navButton {
   display: inline-flex;
@@ -101,156 +142,93 @@
 }
 
 /* ==========================================================================
-   Cellules de date
+   Cellule de date — wrapper <td> React Aria (AriaCalendarCell)
+   Le style visuel est délégué à CalendarCell (CalendarCell.module.css).
    ========================================================================== */
 
-.cell {
-  position: relative;
-  width: var(--size400);  /* 32px */
-  height: var(--size400); /* 32px */
+.ariaDateCell {
   padding: 0;
-  text-align: center;
-  border-radius: var(--radius0375);
-  cursor: pointer;
-  outline: none;
-  transition-property: background-color, color;
-  transition-duration: var(--duration-fast);
-  transition-timing-function: var(--easing-default);
-}
-
-/* Texte de la cellule (numéro du jour) */
-.cellText {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xs);
-  font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-ui-xs);
-  color: var(--text-subtle);
-  pointer-events: none;
-}
-
-/* ==========================================================================
-   États des cellules
-   ========================================================================== */
-
-/* Survol */
-.cell[data-hovered]:not([data-disabled]):not([data-selected]) {
-  background-color: var(--background-neutral-subtler-hovered);
-}
-
-/* Pressé */
-.cell[data-pressed]:not([data-disabled]) {
-  background-color: var(--background-neutral-subtler-pressed);
-}
-
-/* Aujourd'hui */
-.cell[data-today] .cellText {
-  color: var(--text-information);
-  font-weight: var(--font-weight-semibold);
-  /* text-decoration: underline; */
-}
-
-/* Indicateur de point sous la date du jour */
-.cell[data-today]::after {
-  content: "";
-  position: absolute;
-  bottom: var(--space075);
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: var(--size050);
-  border-radius: var(--radius-round);
-  background-color: var(--border-focused);
-}
-
-/* Sélectionné (date unique) */
-.cell[data-selected]:not([data-selection-start]):not([data-selection-end]) .cellText {
-  color: var(--text-information);
-  font-weight: var(--font-weight-regular);
-}
-
-.cell[data-selected]:not([data-selection-start]):not([data-selection-end]):not([data-today]) {
-  background-color: var(--background-client-subtlest-default);
-}
-
-/* Range part (sélectionné entre start et end) */
-.cell[data-selected]:not([data-selection-start]):not([data-selection-end]):is([data-selection-start], [data-selection-end], [data-selected]) {
-  /* Géré par les règles ci-dessous */
-}
-
-/* Range start */
-.cell[data-selection-start] {
-  background-color: var(--border-brand);
-  border-radius: var(--radius0375) 0 0 var(--radius0375);
-}
-
-.cell[data-selection-start] .cellText {
-  color: var(--text-inverted);
-}
-
-/* Range end */
-.cell[data-selection-end] {
-  background-color: var(--border-brand);
-  border-radius: 0 var(--radius0375) var(--radius0375) 0;
-}
-
-.cell[data-selection-end] .cellText {
-  color: var(--text-inverted);
-}
-
-/* Range part (milieu d'une plage) */
-.cell[data-selected]:not([data-selection-start]):not([data-selection-end]) {
-  background-color: var(--background-client-subtlest-hovered);
-  border-radius: 0;
-}
-
-.cell[data-selected]:not([data-selection-start]):not([data-selection-end]) .cellText {
-  color: var(--text-primary);
-}
-
-/* Sélection start et end simultanés (plage d'un seul jour) */
-.cell[data-selection-start][data-selection-end] {
-  background-color: var(--border-brand);
-  border-radius: var(--radius0375);
-}
-
-/* Focus clavier — géré par FocusRing (voir Calendar.tsx) */
-.cell[data-focus-visible] {
   outline: none;
 }
 
-/* Désactivé */
-.cell[data-disabled] {
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-.cell[data-disabled] .cellText {
-  color: var(--icon-disabled);
-}
-
-/* Indisponible (hors min/max) */
-.cell[data-unavailable] .cellText {
-  color: var(--icon-disabled);
-  text-decoration: line-through;
-}
-
-/* Hors du mois courant — caché */
-.cell[data-outside-month] {
-  visibility: hidden;
-  pointer-events: none;
-}
-
 /* ==========================================================================
-   Double calendrier (calendars=2)
+   Double calendrier indépendant (DualMonthCalendar — calendars=2, appearance=month)
    ========================================================================== */
 
 .dualCalendar {
   display: inline-flex;
   gap: var(--space200);
   align-items: flex-start;
+}
+
+/* ==========================================================================
+   Double calendrier lié (DualDateCalendar — calendars=2, appearance=date)
+
+   Layout CSS Grid sur 5 colonnes :
+     col 1 : bouton précédent (var(--size400))
+     col 2 : grille du mois gauche + son titre (auto — taille par contenu)
+     col 3 : espacement entre les deux calendriers (var(--space200))
+     col 4 : grille du mois droit + son titre (auto)
+     col 5 : bouton suivant (var(--size400))
+
+   Ligne 1 : boutons nav + titres des mois
+   Ligne 2 : les deux CalendarGrid
+   ========================================================================== */
+
+.dualLinkedCalendar {
+  display: inline-grid;
+  grid-template-columns: var(--size400) auto var(--space200) auto var(--size400);
+  row-gap: var(--space050);
+  padding: var(--space100);
+  outline: none;
+}
+
+/* Ligne 1 — navigation + titres */
+.dualNavPrev {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+}
+
+.dualHeadingLeft {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  margin-bottom: var(--space050);
+}
+
+/* col 3 est vide (espace entre les deux panels) */
+
+.dualHeadingRight {
+  grid-column: 4;
+  grid-row: 1;
+  align-self: center;
+  margin-bottom: var(--space050);
+}
+
+.dualNavNext {
+  grid-column: 5;
+  grid-row: 1;
+  align-self: center;
+}
+
+/* Ligne 2 — grilles */
+.dualGrid1 {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.dualGrid2 {
+  grid-column: 4;
+  grid-row: 2;
+}
+
+/* ==========================================================================
+   Spacer — remplace le bouton de navigation absent dans les panels internes
+   ========================================================================== */
+
+.navSpacer {
+  width: var(--size400);
+  height: var(--size400);
+  flex-shrink: 0;
 }
