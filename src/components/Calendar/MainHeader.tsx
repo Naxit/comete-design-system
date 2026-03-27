@@ -7,7 +7,8 @@
 // le conflit avec le système de slots React Aria (slot="previous"/"next" requis
 // pour tout AriaButton enfant d'un AriaCalendar / AriaRangeCalendar).
 import type { ReactElement } from "react";
-import { Button as AriaButton } from "react-aria-components";
+import { ButtonContext } from "react-aria-components";
+import { Button } from "../Button/index.js";
 import { Icon } from "../Icon/index.js";
 import styles from "./Calendar.module.css";
 
@@ -101,62 +102,67 @@ export function MainHeader({
   const prevButton: ReactElement = hidePrev ? (
     <span className={styles.navSpacer} aria-hidden="true" />
   ) : slotNav ? (
-    <AriaButton
+    <Button
       slot="previous"
       className={styles.navButton}
       isDisabled={isDisabled}
       aria-label="Précédent"
+      variant="subtle"
     >
       <Icon icon="ChevronLeft" />
-    </AriaButton>
+    </Button>
   ) : (
-    <AriaButton
+    <Button
       className={styles.navButton}
       onPress={onPrev}
       isDisabled={isDisabled}
       aria-label="Précédent"
+      variant="subtle"
     >
       <Icon icon="ChevronLeft" />
-    </AriaButton>
+    </Button>
   );
 
   // Bouton droit : spacer | slot | callback
   const nextButton: ReactElement = hideNext ? (
     <span className={styles.navSpacer} aria-hidden="true" />
   ) : slotNav ? (
-    <AriaButton
+    <Button
       slot="next"
       className={styles.navButton}
       isDisabled={isDisabled}
       aria-label="Suivant"
+      variant="subtle"
     >
       <Icon icon="ChevronRight" />
-    </AriaButton>
+    </Button>
   ) : (
-    <AriaButton
+    <Button
       className={styles.navButton}
       onPress={onNext}
       isDisabled={isDisabled}
       aria-label="Suivant"
+      variant="subtle"
     >
       <Icon icon="ChevronRight" />
-    </AriaButton>
+    </Button>
   );
 
-  // NOTE: Le heading utilise <button> natif (pas AriaButton) pour éviter le conflit
-  // avec le système de slots React Aria à l'intérieur d'un AriaCalendar/RangeCalendar.
-  // Les styles :hover/:active/:focus-visible du CSS natif remplacent les data-attributes.
+  // WORKAROUND: ButtonContext.Provider value={{}} efface le contexte de slots
+  // d'AriaCalendar/AriaRangeCalendar qui exigerait slot="previous"/"next" sur tout AriaButton enfant.
   const heading: ReactElement = onHeadingPress ? (
-    <button
-      type="button"
-      className={styles.headingButton}
-      onClick={onHeadingPress}
-      disabled={isDisabled}
-      aria-label={`Niveau supérieur — ${label}`}
-    >
-      <span>{label}</span>
-      <Icon icon="ArrowDropDown" size={16} variant="filled" />
-    </button>
+    <ButtonContext.Provider value={{}}>
+      <Button
+        className={styles.headingButton}
+        onPress={onHeadingPress}
+        isDisabled={isDisabled}
+        aria-label={`Niveau supérieur — ${label}`}
+        variant="subtle"
+      >
+        <span>{label}</span>
+        <Icon icon="ArrowDropDown" size={16} />
+      </Button>
+    </ButtonContext.Provider>
   ) : (
     <span className={styles.heading}>{label}</span>
   );
