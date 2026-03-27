@@ -118,7 +118,6 @@ export const WithLabel: Story = {
 // Showcase : all colors for a single icon
 
 export const AllColors: Story = {
-  name: "All Colors",
   render: (args) => (
     <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
       {COLORS.map((c) => (
@@ -152,7 +151,6 @@ export const AllColors: Story = {
 // Showcase : all variants for a single icon
 
 export const AllVariants: Story = {
-  name: "All Variants",
   render: (args) => (
     <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
       {VARIANTS.map((v) => (

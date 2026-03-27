@@ -1,7 +1,7 @@
 // CalendarCell — états visuels (story de référence design)
 // Chaque état est rendu en isolation via des styles inline utilisant les design tokens.
 // Aucun contexte Calendar requis — correspond à la vue "Parts" du fichier Figma.
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { CSSProperties } from "react";
 
 // -----------------------------------------------------------------------
