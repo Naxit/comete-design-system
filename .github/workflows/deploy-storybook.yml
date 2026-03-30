@@ -43,13 +43,13 @@ jobs:
       - name: Install root dependencies
         run: pnpm install --frozen-lockfile
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.PKG_READ_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.PKG_READ_TOKEN }}
 
       - name: Install Storybook dependencies
         working-directory: storybook
         run: pnpm install --frozen-lockfile
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.PKG_READ_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.PKG_READ_TOKEN }}
 
       - name: Build Storybook
         working-directory: storybook
