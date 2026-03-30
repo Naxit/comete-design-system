@@ -1,0 +1,156 @@
+/* ==========================================================================
+   Card — Comète Design System
+   Conteneur de surface interactif pour grouper du contenu connexe.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+/* Base */
+.card {
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  border-radius: var(--radius050);
+}
+
+/* ==========================================================================
+   Variantes
+   ========================================================================== */
+
+/* Fond blanc + bordure standard */
+.outlined {
+  background-color: var(--background-surface-elevation-raise-default);
+  border: 1px solid var(--border-default);
+  /* border-radius: var(--radius050); */
+}
+
+/* Fond grisé, sans bordure */
+.neutral {
+  background-color: var(--background-surface-elevation-sunken-default);
+  /* border-radius: var(--radius100); */
+}
+
+/* ==========================================================================
+   Layout drag
+   ========================================================================== */
+
+/* Poignée en haut → colonne */
+.dragTop {
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Poignée à gauche → ligne */
+.dragLeft {
+  flex-direction: row;
+  align-items: center;
+}
+
+/* ==========================================================================
+   Drag area (poignée)
+   ========================================================================== */
+
+.dragArea {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: grab;
+}
+
+.dragArea:active {
+  cursor: grabbing;
+}
+
+/* Poignée horizontale (top) */
+.dragTop > .dragArea {
+  width: 100%;
+}
+
+/* Poignée verticale (left) */
+.dragLeft > .dragArea {
+  align-self: stretch;
+}
+
+/* Rotation de l'icône pour le placement top */
+.dragIconRotated {
+  transform: rotate(-90deg);
+}
+
+/* ==========================================================================
+   Content wrapper (quand un drag handle est présent)
+   ========================================================================== */
+
+.content {
+  flex: 1 1 0%;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* ==========================================================================
+   Interactive states (quand onPress est fourni)
+   ========================================================================== */
+
+.card[data-interactive] {
+  cursor: pointer;
+  user-select: none;
+  transition-property: background-color, box-shadow, opacity;
+  transition-duration: 150ms;
+  transition-timing-function: ease-in-out;
+}
+
+/* Hover */
+.card[data-interactive]:not([data-dragging]):hover {
+  box-shadow: var(--elevation-medium);
+}
+
+.neutral[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-surface-elevation-sunken-hovered);
+}
+
+.outlined[data-interactive]:not([data-dragging]):hover {
+  background-color: var(--background-surface-elevation-sunken-default);
+}
+
+/* Pressed */
+.neutral[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-surface-elevation-sunken-pressed);
+  box-shadow: none;
+}
+
+.outlined[data-interactive]:not([data-dragging]):active {
+  background-color: var(--background-surface-elevation-sunken-hovered);
+  box-shadow: none;
+}
+
+/* Focus visible — géré par le composant FocusRing */
+.card[data-interactive]:focus-visible {
+  outline: none;
+}
+
+/* ==========================================================================
+   Dragging state
+   ========================================================================== */
+
+.card[data-dragging] {
+  opacity: 0.6;
+}
+
+/* Drag preview — mini-carte vide utilisée comme ghost image */
+.dragPreview {
+  position: absolute;
+  left: -9999px;
+  width: 160px;
+  height: 70px;
+  border-radius: var(--radius050);
+  box-shadow: var(--elevation-medium);
+  opacity: 0.96;
+}
+
+.dragPreview.outlined {
+  background-color: var(--background-surface-elevation-raise-default);
+  border: 1px solid var(--border-default);
+}
+
+.dragPreview.neutral {
+  background-color: var(--background-surface-elevation-sunken-default);
+}
