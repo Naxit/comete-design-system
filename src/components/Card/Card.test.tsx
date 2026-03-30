@@ -23,7 +23,7 @@ describe("Card", () => {
   });
 
   describe("prop variant", () => {
-    it.each([["default"], ["outlined"], ["elevated"]] as const)(
+    it.each([["default"], ["outlined"], ["elevated"], ["neutral"]] as const)(
       "should apply class %s when variant=%s",
       (variant) => {
         const { container } = render(<Card variant={variant}>x</Card>);

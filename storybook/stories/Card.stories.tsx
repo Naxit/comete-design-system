@@ -19,7 +19,7 @@ const meta = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "outlined", "elevated"] satisfies CardVariant[],
+      options: ["default", "outlined", "elevated", "neutral"] satisfies CardVariant[],
     },
     className: { control: "text" },
   },
@@ -53,12 +53,17 @@ export const Elevated: Story = {
   args: { variant: "elevated" },
 };
 
+export const Neutral: Story = {
+  parameters: { design: { type: "figma", url: figmaUrl("5467:28520") } },
+  args: { variant: "neutral" },
+};
+
 export const AllVariants: Story = {
   name: "All variants",
-  parameters: { design: { type: "figma", url: figmaUrl("278:1379") } },
+  parameters: { design: { type: "figma", url: figmaUrl("5467:27892") } },
   render: () => (
     <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
-      {(["default", "outlined", "elevated"] as const).map((variant) => (
+      {(["default", "outlined", "elevated", "neutral"] as const).map((variant) => (
         <div key={variant} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
           <Card variant={variant}>
             <div style={{ padding: 24, width: 200 }}>

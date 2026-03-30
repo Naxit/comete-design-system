@@ -6,7 +6,7 @@ import styles from "./Card.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
-export type CardVariant = "default" | "outlined" | "elevated";
+export type CardVariant = "default" | "outlined" | "elevated" | "neutral";
 
 export interface CardProps {
   /**
@@ -14,6 +14,7 @@ export interface CardProps {
    * - "default"  — bordure standard (--border-disabled)
    * - "outlined" — bordure subtile (--border-subtle)
    * - "elevated" — bordure subtile + ombre portée (--shadow-sm)
+   * - "neutral"  — fond grisé (--background-neutral-subtlest-default), sans bordure
    * @default "default"
    */
   variant?: CardVariant;
@@ -53,6 +54,7 @@ export function Card({
     default: styles.default,
     outlined: styles.outlined,
     elevated: styles.elevated,
+    neutral: styles.neutral,
   };
 
   const classNames = [styles.card, variantClassMap[variant], className]

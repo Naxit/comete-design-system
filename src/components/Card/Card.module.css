@@ -32,3 +32,8 @@
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-sm);
 }
+
+/* Fond grisé, sans bordure — surface neutre */
+.neutral {
+  background-color: var(--background-neutral-subtlest-default);
+}
