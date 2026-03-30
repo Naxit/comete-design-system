@@ -8,6 +8,7 @@
 .checkbox {
   display: flex;
   align-items: flex-start;
+  column-gap: var(--space025);
   cursor: pointer;
   user-select: none;
 }
@@ -25,7 +26,6 @@
    ========================================================================== */
 
 .indicator {
-  position: relative;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -35,54 +35,76 @@
   color: var(--border-default);
 }
 
-/* Checked / Indeterminate — couleur brand */
+.iconWrapper {
+  position: relative;
+  display: flex;
+  width: 16px;
+  height: 16px;
+}
+
+/* Checked / Indeterminate — brand */
 .checkbox[data-selected] .indicator,
 .checkbox[data-indeterminate] .indicator {
   color: var(--background-brand-bold-default);
 }
 
-/* Hover */
-.checkbox:not([data-disabled])[data-hovered] .indicator {
+/* Hover — unchecked */
+.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-hovered] .indicator {
   color: var(--border-bold);
 }
 
+/* Hover — checked / indeterminate */
 .checkbox[data-selected]:not([data-disabled])[data-hovered] .indicator,
 .checkbox[data-indeterminate]:not([data-disabled])[data-hovered] .indicator {
   color: var(--background-brand-bold-hovered);
 }
 
-/* Pressed */
-.checkbox:not([data-disabled])[data-pressed] .indicator {
+/* Pressed — unchecked */
+.checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-pressed] .indicator {
   color: var(--border-bold);
 }
 
+/* Pressed — checked / indeterminate */
 .checkbox[data-selected]:not([data-disabled])[data-pressed] .indicator,
 .checkbox[data-indeterminate]:not([data-disabled])[data-pressed] .indicator {
   color: var(--background-brand-bold-pressed);
 }
 
-/* Invalid — unchecked */
-.checkbox[data-invalid] .indicator {
-  color: var(--border-critical);
-}
+/* ==========================================================================
+   Invalid — icône rouge pour tous les états (unchecked, checked, indeterminate)
+   ========================================================================== */
 
-/* Invalid — checked / indeterminate */
-.checkbox[data-invalid][data-selected] .indicator,
-.checkbox[data-invalid][data-indeterminate] .indicator {
+.checkbox[data-invalid] .indicator {
   color: var(--background-critical-bold-default);
 }
 
-.checkbox[data-invalid][data-selected]:not([data-disabled])[data-hovered] .indicator,
-.checkbox[data-invalid][data-indeterminate]:not([data-disabled])[data-hovered] .indicator {
+/* Invalid + hover */
+.checkbox[data-invalid]:not([data-disabled])[data-hovered] .indicator {
   color: var(--background-critical-bold-hovered);
 }
 
-.checkbox[data-invalid][data-selected]:not([data-disabled])[data-pressed] .indicator,
-.checkbox[data-invalid][data-indeterminate]:not([data-disabled])[data-pressed] .indicator {
+/* Invalid + pressed */
+.checkbox[data-invalid]:not([data-disabled])[data-pressed] .indicator {
   color: var(--background-critical-bold-pressed);
 }
 
-/* Disabled — priorité maximale, déclaré en dernier */
+/* ==========================================================================
+   Focus visible — override tout en brand (même si invalid)
+   ========================================================================== */
+
+.checkbox[data-focus-visible] .indicator {
+  color: var(--border-brand);
+}
+
+.checkbox[data-focus-visible][data-selected] .indicator,
+.checkbox[data-focus-visible][data-indeterminate] .indicator {
+  color: var(--background-brand-bold-default);
+}
+
+/* ==========================================================================
+   Disabled — priorité maximale, déclaré en dernier
+   ========================================================================== */
+
 .checkbox[data-disabled] .indicator {
   color: var(--icon-disabled);
 }

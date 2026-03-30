@@ -103,8 +103,17 @@ describe("Checkbox", () => {
       expect(onChange).toHaveBeenCalledWith(true);
     });
 
-    it("should set data-selected when checked", () => {
-      const { container } = render(<Checkbox label="Test" defaultSelected />);
+    it("should set data-selected when defaultChecked", () => {
+      const { container } = render(
+        <Checkbox label="Test" defaultChecked />,
+      );
+      expect(container.querySelector("[data-selected]")).toBeInTheDocument();
+    });
+
+    it("should set data-selected when isChecked", () => {
+      const { container } = render(
+        <Checkbox label="Test" isChecked onChange={() => {}} />,
+      );
       expect(container.querySelector("[data-selected]")).toBeInTheDocument();
     });
   });

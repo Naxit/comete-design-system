@@ -25,7 +25,7 @@ const meta = {
     isInvalid: { control: "boolean" },
     isRequired: { control: "boolean" },
     isIndeterminate: { control: "boolean" },
-    isSelected: { control: "boolean" },
+    isChecked: { control: "boolean" },
     className: { control: "text" },
   },
   args: {
@@ -48,7 +48,7 @@ export const Default: Story = {
 /** Checkbox coché. */
 export const Checked: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("11:312") } },
-  args: { defaultSelected: true },
+  args: { defaultChecked: true },
 };
 
 /** Checkbox indéterminé. */
@@ -67,7 +67,7 @@ export const Invalid: Story = {
 export const InvalidChecked: Story = {
   name: "Invalid checked",
   parameters: { design: { type: "figma", url: figmaUrl("2960:1142") } },
-  args: { isInvalid: true, defaultSelected: true },
+  args: { isInvalid: true, defaultChecked: true },
 };
 
 /** Checkbox désactivé. */
@@ -80,7 +80,7 @@ export const Disabled: Story = {
 export const DisabledChecked: Story = {
   name: "Disabled checked",
   parameters: { design: { type: "figma", url: figmaUrl("12:742") } },
-  args: { isDisabled: true, defaultSelected: true },
+  args: { isDisabled: true, defaultChecked: true },
 };
 
 /** Avec description. */
@@ -101,13 +101,13 @@ export const AllStates: Story = {
   render: () => {
     const states = [
       { label: "Unchecked" },
-      { label: "Checked", defaultSelected: true },
+      { label: "Checked", defaultChecked: true },
       { label: "Indeterminate", isIndeterminate: true },
       { label: "Invalid", isInvalid: true },
-      { label: "Invalid checked", isInvalid: true, defaultSelected: true },
+      { label: "Invalid checked", isInvalid: true, defaultChecked: true },
       { label: "Invalid indeterminate", isInvalid: true, isIndeterminate: true },
       { label: "Disabled", isDisabled: true },
-      { label: "Disabled checked", isDisabled: true, defaultSelected: true },
+      { label: "Disabled checked", isDisabled: true, defaultChecked: true },
       { label: "Disabled indeterminate", isDisabled: true, isIndeterminate: true },
       { label: "Required", isRequired: true },
       { label: "With description", description: "Helper text" },
