@@ -9,7 +9,9 @@
   border-radius: var(--radius0375);
   box-shadow: var(--elevation-large);
   min-width: 240px;
-  overflow: hidden;
+  max-height: 80vh;
+  overflow-x: hidden;
+  overflow-y: auto;
   outline: none;
 
   /* React Aria popover enter/exit animation */
