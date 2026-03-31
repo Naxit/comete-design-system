@@ -14,6 +14,7 @@ const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.";
 const meta = {
   title: "Components/Banner",
   component: Banner,
+  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("4559-5335") },

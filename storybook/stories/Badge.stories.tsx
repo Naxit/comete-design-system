@@ -12,6 +12,7 @@ const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":"
 const meta = {
   title: "Components/Badge",
   component: Badge,
+  tags: ["autodocs"],
   parameters: {
     layout: "centered",
     design: { type: "figma", url: figmaUrl("341-2448") },

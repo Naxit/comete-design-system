@@ -18,6 +18,7 @@ const figmaUrl = (nodeId: string) =>
 const meta = {
   title: "Components/TextField",
   component: TextField,
+  tags: ["autodocs"],
   parameters: {
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3232:15140") },

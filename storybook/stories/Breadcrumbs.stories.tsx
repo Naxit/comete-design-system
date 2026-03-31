@@ -16,6 +16,7 @@ const figmaUrl = (nodeId: string) =>
 const meta = {
   title: "Components/Breadcrumbs",
   component: Breadcrumbs,
+  tags: ["autodocs"],
   parameters: {
     layout: "padded",
     design: { type: "figma", url: figmaUrl("3132:44041") },

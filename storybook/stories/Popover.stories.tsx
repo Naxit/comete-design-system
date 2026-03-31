@@ -15,6 +15,7 @@ const figmaUrl = (nodeId: string) =>
 const meta = {
   title: "Components/Popover",
   component: Popover,
+  tags: ["autodocs"],
   parameters: {
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3704:70994") },

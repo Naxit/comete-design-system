@@ -13,6 +13,7 @@ const figmaUrl = (nodeId: string) =>
 const meta = {
   title: "Components/Code",
   component: Code,
+  tags: ["autodocs"],
   parameters: {
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3211:58477") },

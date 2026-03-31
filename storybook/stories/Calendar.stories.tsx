@@ -21,6 +21,7 @@ const figmaUrl = (nodeId: string) =>
 const meta = {
   title: "Components/Calendar",
   component: Calendar,
+  tags: ["autodocs"],
   parameters: {
     layout: "padded",
     design: { type: "figma", url: figmaUrl("3223:8583") },

@@ -11,6 +11,7 @@ const figmaUrl = (nodeId: string) => `${FIGMA_FILE}?node-id=${nodeId.replace(":"
 const meta = {
   title: "Components/Blanket",
   component: Blanket,
+  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("3065:21773") },

@@ -14,6 +14,7 @@ const figmaUrl = (nodeId: string) =>
 const meta = {
   title: "Components/ButtonGroup",
   component: ButtonGroup,
+  tags: ["autodocs"],
   parameters: {
     layout: "padded",
     design: { type: "figma", url: figmaUrl("4608:17266") },

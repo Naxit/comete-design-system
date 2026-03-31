@@ -17,6 +17,7 @@ const figmaUrl = (nodeId: string) =>
 const meta = {
   title: "Components/BottomNavigation",
   component: BottomNavigationItem,
+  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
     design: { type: "figma", url: figmaUrl("2524:18591") },

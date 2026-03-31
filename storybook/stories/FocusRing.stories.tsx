@@ -58,6 +58,7 @@ function Box({
 const meta = {
   title: "Components/FocusRing",
   component: FocusRing,
+  tags: ["autodocs"],
   parameters: {
     layout: "padded",
     design: { type: "figma", url: figmaUrl("3134:45684") },

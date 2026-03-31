@@ -48,6 +48,7 @@ function CardContent({ label = "Contenu" }: { label?: string }) {
 const meta = {
   title: "Components/Card",
   component: Card,
+  tags: ["autodocs"],
   parameters: {
     layout: "centered",
     design: { type: "figma", url: figmaUrl("5467:27892") },

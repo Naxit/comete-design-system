@@ -14,6 +14,7 @@ const figmaUrl = (nodeId: string) =>
 const meta = {
   title: "Components/Checkbox",
   component: Checkbox,
+  tags: ["autodocs"],
   parameters: {
     layout: "centered",
     design: { type: "figma", url: figmaUrl("11:309") },
