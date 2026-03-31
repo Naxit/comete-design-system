@@ -8,6 +8,7 @@ import {
   Button as AriaButton,
   type TextFieldProps as AriaTextFieldProps,
 } from "react-aria-components";
+import { Icon } from "../Icon/Icon.js";
 import styles from "./TextField.module.css";
 
 // -----------------------------------------------------------------------
@@ -36,26 +37,7 @@ export interface TextFieldProps
 }
 
 // -----------------------------------------------------------------------
-// Icônes inline
-
-function IconClear() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M4.5 4.5L11.5 11.5M11.5 4.5L4.5 11.5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
+// Spinner inline — pas d'icône spinner dans comete-icons
 
 function Spinner() {
   return (
@@ -168,7 +150,7 @@ export function TextField({
           onPress={handleClear}
           excludeFromTabOrder
         >
-          <IconClear />
+          <Icon icon="CloseSmallFaded" size={16} spacing="none" />
         </AriaButton>
       )}
       {elemAfter && <span className={styles.elemAfter}>{elemAfter}</span>}
