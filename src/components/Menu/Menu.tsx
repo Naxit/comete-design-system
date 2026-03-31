@@ -50,6 +50,8 @@ export interface MenuItemProps
 export interface MenuSectionProps {
   /** Titre de la section (affiché en majuscules au-dessus des items). */
   title?: string;
+  /** Affiche un séparateur au-dessus de la section (sauf la première). @default true */
+  hasSeparator?: boolean;
   /** Items du menu dans cette section. */
   children: ReactNode;
   /** Additional CSS class on the section. */
@@ -195,7 +197,6 @@ export function MenuItem({
               <Icon
                 icon={iconBefore}
                 size={24}
-                spacing="none"
                 variant="outlined"
                 color={isDisabled ? "disabled" : isSelected ? "selected" : "default"}
                 className={styles.iconBefore}
@@ -217,7 +218,6 @@ export function MenuItem({
               <Icon
                 icon={iconAfter}
                 size={24}
-                spacing="none"
                 variant="outlined"
                 color={isDisabled ? "disabled" : isSelected ? "selected" : "default"}
                 className={styles.iconAfter}
@@ -258,10 +258,14 @@ MenuItem.displayName = "MenuItem";
  */
 export function MenuSection({
   title,
+  hasSeparator = true,
   children,
   className,
 }: MenuSectionProps): ReactElement {
-  const classNames = [styles.section, className].filter(Boolean).join(" ");
+  const classNames = [
+    hasSeparator ? styles.section : styles.sectionNoSeparator,
+    className,
+  ].filter(Boolean).join(" ");
 
   return (
     <AriaSection className={classNames}>
