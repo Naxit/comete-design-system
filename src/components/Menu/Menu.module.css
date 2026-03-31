@@ -143,12 +143,12 @@
   text-overflow: ellipsis;
 
   /* Selected */
-  [data-selected] > & {
+  [data-selected] & {
     color: var(--text-selected);
   }
 
   /* Disabled */
-  [data-disabled] > & {
+  [data-disabled] & {
     color: var(--text-disabled);
   }
 }
@@ -164,7 +164,7 @@
   text-overflow: ellipsis;
 
   /* Disabled */
-  [data-disabled] > & {
+  [data-disabled] & {
     color: var(--text-disabled);
   }
 }
@@ -188,7 +188,7 @@
   font-size: var(--font-size-ui-xxs);
   color: var(--text-subtle);
 
-  [data-disabled] > & {
+  [data-disabled] & {
     color: var(--text-disabled);
   }
 }
@@ -205,6 +205,10 @@
     margin: var(--space075) 0;
     background: var(--border-default);
   }
+}
+
+.sectionNoSeparator {
+  /* No separator */
 }
 
 .sectionHeading {
