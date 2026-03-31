@@ -1,0 +1,17 @@
+/* ==========================================================================
+   Code — Comète Design System
+   Fragment de code inline.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+.code {
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-normal);
+  color: var(--text-primary);
+  background-color: var(--background-neutral-subtler-default);
+  border-radius: var(--radius0375);
+  padding-inline: var(--space050);
+  white-space: nowrap;
+}
