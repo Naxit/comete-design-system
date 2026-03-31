@@ -23,7 +23,7 @@
    Appearance: default (bordered box)
    ========================================================================== */
 
-.default {
+.bordered {
   background-color: var(--background-surface-elevation-raise-default);
   border: 2px solid var(--border-default);
   border-radius: var(--radius050);
@@ -81,7 +81,8 @@
    Compact
    ========================================================================== */
 
-.compact.default {
+.compact.bordered {
+  /* NOTE: specificity bump for compact override */
   padding: var(--space050);
 }
 

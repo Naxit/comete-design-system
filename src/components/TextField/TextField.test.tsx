@@ -17,7 +17,7 @@ describe("TextField", () => {
 
     it("should apply textField and default classes", () => {
       const { container } = render(<TextField aria-label="test" />);
-      expect(container.firstElementChild).toHaveClass("textField", "default");
+      expect(container.firstElementChild).toHaveClass("textField", "bordered");
     });
   });
 

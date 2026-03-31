@@ -120,9 +120,12 @@ export function TextField({
     inputRef.current?.focus();
   }
 
+  const appearanceClass =
+    appearance === "default" ? styles.bordered : styles.subtle;
+
   const rootClasses = [
     styles.textField,
-    styles[appearance],
+    appearanceClass,
     isCompact ? styles.compact : undefined,
     className,
   ]
