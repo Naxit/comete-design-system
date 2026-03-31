@@ -5,6 +5,7 @@ import {
   DatePicker as AriaDatePicker,
   DateInput as AriaDateInput,
   DateSegment as AriaDateSegment,
+  Group as AriaGroup,
   Button as AriaButton,
   Dialog as AriaDialog,
   type DatePickerProps as AriaDatePickerProps,
@@ -61,7 +62,7 @@ export function DatePicker<T extends DateValue = DateValue>({
 
   return (
     <AriaDatePicker className={rootClasses} {...ariaProps}>
-      <div className={styles.inputGroup}>
+      <AriaGroup className={styles.inputGroup}>
         <AriaDateInput className={styles.dateInput}>
           {(segment) => (
             <AriaDateSegment className={styles.segment} segment={segment} />
@@ -70,8 +71,8 @@ export function DatePicker<T extends DateValue = DateValue>({
         <AriaButton className={styles.calendarButton}>
           <Icon icon="CalendarMonth" size={24} />
         </AriaButton>
-      </div>
-      <Popover className={styles.popover}>
+      </AriaGroup>
+      <Popover placement="bottom start" className={styles.popover}>
         <AriaDialog className={styles.dialog}>
           <Calendar appearance="date" />
         </AriaDialog>
