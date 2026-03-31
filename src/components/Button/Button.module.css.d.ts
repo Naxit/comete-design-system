@@ -5,6 +5,7 @@ declare const styles: {
   readonly "critical": string;
   readonly "default": string;
   readonly "icon": string;
+  readonly "iconOnly": string;
   readonly "information": string;
   readonly "large": string;
   readonly "link": string;

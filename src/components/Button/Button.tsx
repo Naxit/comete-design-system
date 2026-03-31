@@ -24,7 +24,8 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
   iconAfter?: IconName;
   /** Additional CSS class names. */
   className?: string;
-  children: React.ReactNode;
+  /** Label du bouton. Optionnel pour un bouton icon-only. */
+  children?: React.ReactNode;
 }
 
 // ----------------------------------------------------------------------
@@ -123,7 +124,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     };
     const sizeClass = sizeClassMap[size];
 
-    const classNames = [styles.button, variantClass, colorClass, sizeClass, className]
+    // NOTE: icon-only when icon is present but children is empty/null/undefined
+    const isIconOnly =
+      (iconBefore !== undefined || iconAfter !== undefined) &&
+      (children === null || children === undefined || children === "");
+
+    const classNames = [
+      styles.button,
+      variantClass,
+      colorClass,
+      sizeClass,
+      isIconOnly ? styles.iconOnly : undefined,
+      className,
+    ]
       .filter(Boolean)
       .join(" ");
 

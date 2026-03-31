@@ -67,6 +67,11 @@
   padding: var(--space075) var(--space200);
 }
 
+/* Icon-only — padding horizontal réduit */
+.iconOnly {
+  padding-inline: var(--space025);
+}
+
 /* ==========================================================================
    Variant: contained
    ========================================================================== */
