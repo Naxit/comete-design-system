@@ -8,6 +8,7 @@ export * from "./Breadcrumbs";
 export * from "./Card";
 export * from "./Checkbox";
 export * from "./Code";
+export * from "./DatePicker";
 export * from "./Field";
 export * from "./FocusRing";
 export * from "./ButtonGroup";
