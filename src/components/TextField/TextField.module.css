@@ -11,6 +11,7 @@
   gap: var(--space075);
   min-height: 24px;
   width: 100%;
+  box-sizing: border-box;
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
@@ -114,4 +115,57 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Clear button
+   ========================================================================== */
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius0375);
+  background: transparent;
+  color: var(--icon-default);
+  cursor: pointer;
+  outline: none;
+}
+
+.clearButton[data-hovered] {
+  background-color: var(--background-neutral-subtlest-hovered);
+}
+
+.clearButton[data-pressed] {
+  background-color: var(--background-neutral-subtlest-pressed);
+}
+
+/* ==========================================================================
+   Spinner
+   ========================================================================== */
+
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--icon-subtle);
+  animation: spinner-rotate 800ms linear infinite;
+}
+
+@keyframes spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }

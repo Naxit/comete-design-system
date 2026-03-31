@@ -98,6 +98,65 @@ describe("TextField", () => {
     });
   });
 
+  describe("prop isClearable", () => {
+    it("should not show clear button when empty", () => {
+      render(<TextField aria-label="test" isClearable />);
+      expect(
+        screen.queryByRole("button", { name: "Effacer" }),
+      ).not.toBeInTheDocument();
+    });
+
+    it("should show clear button when has value", () => {
+      render(
+        <TextField aria-label="test" isClearable defaultValue="hello" />,
+      );
+      expect(
+        screen.getByRole("button", { name: "Effacer" }),
+      ).toBeInTheDocument();
+    });
+
+    it("should clear value on clear button click", async () => {
+      const onChange = vi.fn();
+      render(
+        <TextField
+          aria-label="test"
+          isClearable
+          defaultValue="hello"
+          onChange={onChange}
+        />,
+      );
+      await userEvent.click(screen.getByRole("button", { name: "Effacer" }));
+      expect(onChange).toHaveBeenCalledWith("");
+      expect(screen.getByRole("textbox")).toHaveValue("");
+    });
+
+    it("should not show clear button when disabled", () => {
+      render(
+        <TextField
+          aria-label="test"
+          isClearable
+          defaultValue="hello"
+          isDisabled
+        />,
+      );
+      expect(
+        screen.queryByRole("button", { name: "Effacer" }),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  describe("prop isLoading", () => {
+    it("should show spinner when loading", () => {
+      render(<TextField aria-label="test" isLoading />);
+      expect(screen.getByRole("status")).toBeInTheDocument();
+    });
+
+    it("should not show spinner by default", () => {
+      render(<TextField aria-label="test" />);
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    });
+  });
+
   describe("prop className", () => {
     it("should append custom className", () => {
       const { container } = render(

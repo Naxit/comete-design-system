@@ -120,11 +120,22 @@ export const FieldSuccess: Story = {
   ),
 };
 
+/** Avec bouton clear. */
+export const Clearable: Story = {
+  args: { isClearable: true, defaultValue: "Field value" },
+};
+
+/** Avec spinner de chargement. */
+export const Loading: Story = {
+  args: { isLoading: true, isClearable: true, defaultValue: "Field value" },
+};
+
 /** Toutes les apparences × états. */
 export const AllStates: Story = {
   name: "All states",
   render: () => {
     const appearances: TextFieldAppearance[] = ["default", "subtle"];
+    const col = { width: 200 };
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
         {appearances.map((a) => (
@@ -139,22 +150,32 @@ export const AllStates: Story = {
               appearance={a}
             </span>
             <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-              <div style={{ width: 200 }}>
+              <div style={col}>
                 <Field label="Default">
                   <TextField appearance={a} placeholder="Placeholder" />
                 </Field>
               </div>
-              <div style={{ width: 200 }}>
+              <div style={col}>
                 <Field label="Filled">
                   <TextField appearance={a} defaultValue="Value" />
                 </Field>
               </div>
-              <div style={{ width: 200 }}>
+              <div style={col}>
+                <Field label="Typing (clearable)">
+                  <TextField appearance={a} defaultValue="Value" isClearable />
+                </Field>
+              </div>
+              <div style={col}>
+                <Field label="Loading">
+                  <TextField appearance={a} defaultValue="Value" isLoading isClearable />
+                </Field>
+              </div>
+              <div style={col}>
                 <Field label="Invalid" message="Error message" messageType="critical">
                   <TextField appearance={a} defaultValue="Value" isInvalid />
                 </Field>
               </div>
-              <div style={{ width: 200 }}>
+              <div style={col}>
                 <Field label="Disabled">
                   <TextField appearance={a} defaultValue="Value" isDisabled />
                 </Field>

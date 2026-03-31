@@ -1,9 +1,11 @@
 // TextField — Comète Design System
 // Champ de saisie texte accessible via React Aria.
 import type { ReactElement, ReactNode } from "react";
+import { useRef, useState } from "react";
 import {
   TextField as AriaTextField,
   Input as AriaInput,
+  Button as AriaButton,
   type TextFieldProps as AriaTextFieldProps,
 } from "react-aria-components";
 import styles from "./TextField.module.css";
@@ -21,6 +23,10 @@ export interface TextFieldProps
   isCompact?: boolean;
   /** Texte indicatif affiché quand le champ est vide. */
   placeholder?: string;
+  /** Affiche un bouton clear (×) quand le champ a une valeur. @default false */
+  isClearable?: boolean;
+  /** Affiche un spinner de chargement. @default false */
+  isLoading?: boolean;
   /** Élément affiché avant l'input (icône, etc.). */
   elemBefore?: ReactNode;
   /** Élément affiché après l'input (icône, bouton, etc.). */
@@ -30,19 +36,71 @@ export interface TextFieldProps
 }
 
 // -----------------------------------------------------------------------
+// Icônes inline
+
+function IconClear() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M4.5 4.5L11.5 11.5M11.5 4.5L4.5 11.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function Spinner() {
+  return (
+    <span className={styles.spinner} role="status" aria-label="Chargement">
+      <svg
+        width="16"
+        height="16"
+        viewBox="0 0 16 16"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle
+          cx="8"
+          cy="8"
+          r="6"
+          stroke="currentColor"
+          strokeOpacity="0.25"
+          strokeWidth="2"
+        />
+        <path
+          d="M14 8a6 6 0 00-6-6"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        />
+      </svg>
+    </span>
+  );
+}
+
+// -----------------------------------------------------------------------
 // Composant
 
 /**
  * TextField — Comète Design System
  *
  * Champ de saisie texte. Deux apparences : default (bordure complète)
- * et subtle (bordure basse uniquement). Supporte compact, disabled, invalid.
+ * et subtle (bordure basse uniquement). Supporte compact, disabled, invalid,
+ * clear button et loading spinner.
  *
  * ```tsx
  * import { Field, TextField } from "@naxit/comete-design-system";
  *
  * <Field label="Email" isRequired>
- *   <TextField placeholder="nom@example.com" type="email" />
+ *   <TextField placeholder="nom@example.com" type="email" isClearable />
  * </Field>
  * ```
  */
@@ -50,11 +108,36 @@ export function TextField({
   appearance = "default",
   isCompact = false,
   placeholder,
+  isClearable = false,
+  isLoading = false,
   elemBefore,
   elemAfter,
   className,
+  value: controlledValue,
+  defaultValue,
+  onChange,
   ...ariaProps
 }: TextFieldProps): ReactElement {
+  const [internalValue, setInternalValue] = useState(defaultValue ?? "");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // NOTE: Always use controlled mode internally for clear/loading support
+  const isControlled = controlledValue !== undefined;
+  const currentValue = isControlled ? controlledValue : internalValue;
+  const hasValue = currentValue !== "";
+
+  function handleChange(newValue: string) {
+    if (!isControlled) {
+      setInternalValue(newValue);
+    }
+    onChange?.(newValue);
+  }
+
+  function handleClear() {
+    handleChange("");
+    inputRef.current?.focus();
+  }
+
   const rootClasses = [
     styles.textField,
     styles[appearance],
@@ -65,9 +148,29 @@ export function TextField({
     .join(" ");
 
   return (
-    <AriaTextField className={rootClasses} {...ariaProps}>
+    <AriaTextField
+      className={rootClasses}
+      value={currentValue}
+      onChange={handleChange}
+      {...ariaProps}
+    >
       {elemBefore && <span className={styles.elemBefore}>{elemBefore}</span>}
-      <AriaInput className={styles.input} placeholder={placeholder} />
+      <AriaInput
+        ref={inputRef}
+        className={styles.input}
+        placeholder={placeholder}
+      />
+      {isLoading && <Spinner />}
+      {isClearable && hasValue && !ariaProps.isDisabled && (
+        <AriaButton
+          className={styles.clearButton}
+          aria-label="Effacer"
+          onPress={handleClear}
+          excludeFromTabOrder
+        >
+          <IconClear />
+        </AriaButton>
+      )}
       {elemAfter && <span className={styles.elemAfter}>{elemAfter}</span>}
     </AriaTextField>
   );
