@@ -1,20 +1,22 @@
 declare const styles: {
-  readonly compact: string;
-  readonly content: string;
-  readonly description: string;
-  readonly divider: string;
-  readonly iconAfter: string;
-  readonly iconBefore: string;
-  readonly item: string;
-  readonly itemContainer: string;
-  readonly menu: string;
-  readonly popover: string;
-  readonly section: string;
-  readonly sectionHeading: string;
-  readonly sectionNoSeparator: string;
-  readonly slotAfter: string;
-  readonly title: string;
-  readonly withDescription: string;
+  readonly "compact": string;
+  readonly "content": string;
+  readonly "description": string;
+  readonly "divider": string;
+  readonly "iconAfter": string;
+  readonly "iconBefore": string;
+  readonly "item": string;
+  readonly "itemContainer": string;
+  readonly "menu": string;
+  readonly "popover": string;
+  readonly "popover-fade-in": string;
+  readonly "popover-fade-out": string;
+  readonly "section": string;
+  readonly "sectionHeading": string;
+  readonly "sectionNoSeparator": string;
+  readonly "slotAfter": string;
+  readonly "title": string;
+  readonly "withDescription": string;
 };
-
 export = styles;
+

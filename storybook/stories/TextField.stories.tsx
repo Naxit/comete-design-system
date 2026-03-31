@@ -72,9 +72,6 @@ export const Focused: Story = {
       <Field label="Default focus">
         <TextField {...args} />
       </Field>
-      <Field label="Subtle focus">
-        <TextField {...args} appearance="subtle" />
-      </Field>
       <Field label="Sans focus (pour comparaison)">
         <TextField placeholder="Pas de focus" />
       </Field>
