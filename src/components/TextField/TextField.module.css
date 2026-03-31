@@ -1,0 +1,117 @@
+/* ==========================================================================
+   TextField — Comète Design System
+   Champ de saisie texte accessible.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+/* Base — layout flex pour elemBefore / input / elemAfter */
+.textField {
+  display: flex;
+  align-items: center;
+  gap: var(--space075);
+  min-height: 24px;
+  width: 100%;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+/* ==========================================================================
+   Appearance: default (bordered box)
+   ========================================================================== */
+
+.default {
+  background-color: var(--background-surface-elevation-raise-default);
+  border: 2px solid var(--border-default);
+  border-radius: var(--radius050);
+  padding: var(--space100);
+}
+
+.default[data-hovered] {
+  background-color: var(--background-surface-elevation-sunken-default);
+  border-color: var(--border-bold);
+}
+
+.default[data-focused] {
+  border-color: var(--border-focus);
+}
+
+.default[data-invalid] {
+  border-color: var(--border-critical);
+}
+
+.default[data-disabled] {
+  background-color: var(--background-neutral-subtlest-default);
+  border-color: var(--border-disabled);
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Appearance: subtle (bottom border only)
+   ========================================================================== */
+
+.subtle {
+  border-bottom: 1px solid var(--border-bold);
+  padding-bottom: var(--space050);
+}
+
+.subtle[data-focused] {
+  border-bottom-color: var(--border-focus);
+}
+
+.subtle[data-invalid] {
+  border-bottom-color: var(--border-critical);
+}
+
+.subtle[data-disabled] {
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Compact
+   ========================================================================== */
+
+.compact.default {
+  padding: var(--space050);
+}
+
+/* ==========================================================================
+   Input
+   ========================================================================== */
+
+.input {
+  flex: 1 1 0%;
+  min-width: 0;
+  min-height: 24px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  letter-spacing: inherit;
+  color: var(--text-primary);
+}
+
+.input::placeholder {
+  color: var(--text-subtlest);
+}
+
+.textField[data-disabled] .input {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.textField[data-disabled] .input::placeholder {
+  color: var(--text-disabled);
+}
+
+/* ==========================================================================
+   Éléments before / after
+   ========================================================================== */
+
+.elemBefore,
+.elemAfter {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
