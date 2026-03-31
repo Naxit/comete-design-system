@@ -1,0 +1,13 @@
+/* ==========================================================================
+   Popup — Comète Design System
+   Conteneur flottant positionné relativement à un trigger.
+   ========================================================================== */
+
+.popup {
+  /* Le Popover fournit déjà bg, shadow, radius, animations */
+}
+
+.dialog {
+  outline: none;
+  padding: var(--space200);
+}
