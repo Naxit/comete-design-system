@@ -22,6 +22,8 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
   iconBefore?: IconName;
   /** Icon name displayed after the label. Color is automatically resolved from variant + color. */
   iconAfter?: IconName;
+  /** Affiche un spinner et désactive les interactions. @default false */
+  isLoading?: boolean;
   /** Additional CSS class names. */
   className?: string;
   /** Label du bouton. Optionnel pour un bouton icon-only. */
@@ -89,6 +91,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       size = "medium",
       iconBefore,
       iconAfter,
+      isLoading = false,
       className,
       children,
       ...ariaProps
@@ -135,6 +138,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       colorClass,
       sizeClass,
       isIconOnly ? styles.iconOnly : undefined,
+      isLoading ? styles.loading : undefined,
       className,
     ]
       .filter(Boolean)
@@ -143,13 +147,47 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const iconColor = resolveIconColor(variant, color);
 
     return (
-      <AriaButton ref={ref} className={classNames} {...ariaProps}>
-        {iconBefore && (
-          <Icon icon={iconBefore} color={iconColor} className={styles.icon} />
-        )}
-        {children}
-        {iconAfter && (
-          <Icon icon={iconAfter} color={iconColor} className={styles.icon} />
+      <AriaButton
+        ref={ref}
+        className={classNames}
+        isDisabled={isLoading || ariaProps.isDisabled}
+        {...ariaProps}
+      >
+        {isLoading ? (
+          <span className={styles.spinner} aria-label="Chargement">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="9"
+                stroke="currentColor"
+                strokeOpacity="0.25"
+                strokeWidth="3"
+              />
+              <path
+                d="M21 12a9 9 0 00-9-9"
+                stroke="currentColor"
+                strokeWidth="3"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>
+        ) : (
+          <>
+            {iconBefore && (
+              <Icon icon={iconBefore} color={iconColor} className={styles.icon} />
+            )}
+            {children}
+            {iconAfter && (
+              <Icon icon={iconAfter} color={iconColor} className={styles.icon} />
+            )}
+          </>
         )}
       </AriaButton>
     );
