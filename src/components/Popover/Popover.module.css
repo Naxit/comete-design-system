@@ -1,0 +1,47 @@
+/* ==========================================================================
+   Popover — Comète Design System
+   Overlay flottant positionné relativement à un trigger.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+.popover {
+  background-color: var(--background-surface-elevation-raise-default);
+  border-radius: var(--radius0375);
+  box-shadow: var(--elevation-large);
+  min-width: 240px;
+  overflow: hidden;
+  outline: none;
+
+  /* React Aria popover enter/exit animation */
+  &[data-entering] {
+    animation: popover-fade-in 150ms ease-out;
+  }
+
+  &[data-exiting] {
+    animation: popover-fade-out 100ms ease-in;
+  }
+}
+
+@keyframes popover-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes popover-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
