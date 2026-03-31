@@ -63,6 +63,24 @@ export const Compact: Story = {
   args: { isCompact: true },
 };
 
+/** Focus — auto-focus pour tester la bordure bleue et le focus ring. */
+export const Focused: Story = {
+  args: { autoFocus: true, placeholder: "Ce champ a le focus" },
+  render: (args) => (
+    <div style={{ width: 280, display: "flex", flexDirection: "column", gap: 24 }}>
+      <Field label="Default focus">
+        <TextField {...args} />
+      </Field>
+      <Field label="Subtle focus">
+        <TextField {...args} appearance="subtle" />
+      </Field>
+      <Field label="Sans focus (pour comparaison)">
+        <TextField placeholder="Pas de focus" />
+      </Field>
+    </div>
+  ),
+};
+
 /** TextField invalid. */
 export const Invalid: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("398:3720") } },
