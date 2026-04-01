@@ -123,7 +123,7 @@ function TabStory(args: TabStoryArgs) {
 
 /** state=default, isSelected=false */
 export const Default: Story = {
-  name: "default",
+  name: "Default",
   parameters: {
     design: { type: "figma", url: figmaUrl("5107:63425") },
   },
@@ -135,7 +135,7 @@ export const Default: Story = {
 
 /** state=hover, isSelected=false — survolez le tab pour voir l'état hover. */
 export const Hover: Story = {
-  name: "hover",
+  name: "Hover",
   parameters: {
     pseudo: { hover: true },
     design: { type: "figma", url: figmaUrl("5107:63434") },
@@ -148,7 +148,7 @@ export const Hover: Story = {
 
 /** state=press, isSelected=false — cliquez et maintenez pour voir l'état press. */
 export const Press: Story = {
-  name: "press",
+  name: "Press",
   parameters: {
     pseudo: { active: true },
     design: { type: "figma", url: figmaUrl("5107:63437") },
@@ -161,7 +161,7 @@ export const Press: Story = {
 
 /** state=default, isSelected=true */
 export const Selected: Story = {
-  name: "selected",
+  name: "Selected",
   args: { isSelected: true },
   parameters: {
     design: { type: "figma", url: figmaUrl("5107:63427") },
@@ -174,20 +174,10 @@ export const Selected: Story = {
 
 /** state=disabled, isSelected=false */
 export const Disabled: Story = {
-  name: "disabled",
+  name: "Disabled",
   args: { isDisabled: true },
   parameters: {
     design: { type: "figma", url: figmaUrl("6156:1453") },
-  },
-  render: TabStory,
-};
-
-/** state=disabled, isSelected=true */
-export const DisabledSelected: Story = {
-  name: "disabled + selected",
-  args: { isDisabled: true, isSelected: true },
-  parameters: {
-    design: { type: "figma", url: figmaUrl("6156:1470") },
   },
   render: TabStory,
 };
