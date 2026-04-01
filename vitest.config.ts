@@ -18,7 +18,7 @@ export default defineConfig({
       deps: {
         // @naxit/comete-icons importe un fichier CSS side-effect : on le passe
         // par le pipeline Vite pour qu'il soit transformé correctement en test.
-        inline: ["@naxit/comete-icons"],
+        inline: ["@naxit/comete-icons", "@naxit/comete-illustrations"],
       },
     },
   },

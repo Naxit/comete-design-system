@@ -1,0 +1,8 @@
+/* Illustration wrapper — inline display for seamless flow with content */
+.illustration {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 0;
+}
