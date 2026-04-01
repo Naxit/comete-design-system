@@ -15,4 +15,5 @@ export * from "./Calendar";
 export * from "./Icon";
 export * from "./Menu";
 export * from "./Popover";
+export * from "./Tabs";
 export * from "./TextField";
