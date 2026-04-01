@@ -49,6 +49,7 @@ export function Popover({
     <AriaPopover
       className={[styles.popover, className].filter(Boolean).join(" ")}
       offset={offset}
+      shouldFlip
       {...ariaProps}
     >
       {children}
