@@ -1,0 +1,127 @@
+/* Tabs — Comète Design System */
+
+/* ------------------------------------------------------------------ */
+/* Root container                                                      */
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ------------------------------------------------------------------ */
+/* TabList — horizontal row with bottom border                         */
+
+.tabList {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid var(--border-default);
+}
+
+/* ------------------------------------------------------------------ */
+/* Tab item                                                            */
+
+.tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: var(--size400);
+  padding: var(--space075) var(--space100);
+  cursor: pointer;
+  outline: none;
+
+  &[data-disabled] {
+    cursor: default;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Tab container (icon + label row)                                    */
+
+.tabContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space050);
+  padding: 0 var(--space075);
+}
+
+/* ------------------------------------------------------------------ */
+/* Tab label                                                           */
+
+.tabLabel {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-s);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  text-align: center;
+  white-space: nowrap;
+  color: var(--text-subtle);
+
+  /* Hovered — unselected */
+  [data-hovered]:not([data-selected]) & {
+    color: var(--text-subtle);
+  }
+
+  /* Pressed — unselected */
+  [data-pressed]:not([data-selected]) & {
+    color: var(--text-primary);
+  }
+
+  /* Selected */
+  [data-selected] & {
+    color: var(--text-information);
+  }
+
+  /* Disabled */
+  [data-disabled] & {
+    color: var(--text-disabled);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Tab indicator (bottom line)                                         */
+
+.tabIndicator {
+  position: absolute;
+  bottom: 0;
+  left: var(--space100);
+  right: var(--space100);
+  height: var(--size0375);
+  background: transparent;
+
+  /* Hover — unselected: show subtle underline */
+  [data-hovered]:not([data-selected]) & {
+    background: var(--border-default);
+  }
+
+  /* Pressed — unselected */
+  [data-pressed]:not([data-selected]) & {
+    background: var(--border-bold);
+  }
+
+  /* Selected */
+  [data-selected] & {
+    background: var(--border-selected);
+  }
+
+  /* Disabled + selected */
+  [data-disabled][data-selected] & {
+    background: var(--border-disabled);
+  }
+
+  /* Disabled — unselected: no indicator */
+  [data-disabled]:not([data-selected]) & {
+    background: transparent;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* TabPanel                                                            */
+
+.tabPanel {
+  outline: none;
+}
