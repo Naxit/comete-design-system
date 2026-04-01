@@ -8,9 +8,7 @@ declare const styles: {
   readonly "item": string;
   readonly "itemContainer": string;
   readonly "menu": string;
-  readonly "popover": string;
-  readonly "popover-fade-in": string;
-  readonly "popover-fade-out": string;
+  readonly "menuPopover": string;
   readonly "section": string;
   readonly "sectionHeading": string;
   readonly "sectionNoSeparator": string;

@@ -40,6 +40,7 @@ interface MenuItemStoryArgs {
 
 const meta = {
   title: "Components/Menu/MenuItem",
+  tags: ["autodocs"],
   parameters: {
     layout: "centered",
     design: {
@@ -139,9 +140,6 @@ export const Default: Story = {
     slotAfter: false,
     isDisabled: false,
   },
-
-  name: "default",
-
   parameters: {
     design: { type: "figma", url: figmaUrl("4711:15206") },
   },
@@ -151,7 +149,6 @@ export const Default: Story = {
 
 /** État sélectionné. */
 export const Selected: Story = {
-  name: "selected",
   args: { isSelected: true },
   parameters: {
     design: { type: "figma", url: figmaUrl("4711:15213") },
@@ -161,7 +158,6 @@ export const Selected: Story = {
 
 /** État désactivé. */
 export const Disabled: Story = {
-  name: "disabled",
   args: { isDisabled: true },
   parameters: {
     design: { type: "figma", url: figmaUrl("4711:15264") },
@@ -171,7 +167,6 @@ export const Disabled: Story = {
 
 /** Désactivé + sélectionné. */
 export const DisabledSelected: Story = {
-  name: "disabled + selected",
   args: { isDisabled: true, isSelected: true },
   parameters: {
     design: { type: "figma", url: figmaUrl("6433:33967") },

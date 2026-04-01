@@ -7,6 +7,7 @@ import {
   Menu,
   MenuItem,
   MenuTrigger,
+  SubmenuTrigger,
   MenuPopover,
   MenuSection,
   MenuDivider,
@@ -201,5 +202,37 @@ describe("Menu", () => {
     await user.click(screen.getByText("Modifier"));
     // Menu should be closed (no menu role in the DOM)
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
+  });
+
+  // SubmenuTrigger --------------------------------------------------------
+
+  it("should render a submenu trigger item with data-has-submenu", async () => {
+    await renderOpenMenu(
+      <SubmenuTrigger>
+        <MenuItem id="more">Plus</MenuItem>
+        <MenuPopover>
+          <Menu>
+            <MenuItem id="sub-a">Sub A</MenuItem>
+          </Menu>
+        </MenuPopover>
+      </SubmenuTrigger>
+    );
+    const trigger = screen.getByRole("menuitem", { name: "Plus" });
+    expect(trigger).toHaveAttribute("data-has-submenu", "true");
+  });
+
+  it("should auto-render ChevronRight icon on submenu trigger", async () => {
+    await renderOpenMenu(
+      <SubmenuTrigger>
+        <MenuItem id="more">Plus</MenuItem>
+        <MenuPopover>
+          <Menu>
+            <MenuItem id="sub-a">Sub A</MenuItem>
+          </Menu>
+        </MenuPopover>
+      </SubmenuTrigger>
+    );
+    const trigger = screen.getByRole("menuitem", { name: "Plus" });
+    expect(trigger.querySelector("svg")).toBeInTheDocument();
   });
 });

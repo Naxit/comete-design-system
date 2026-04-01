@@ -1,6 +1,6 @@
 // Popover — Comète Design System
 // Overlay flottant positionné relativement à un trigger.
-import type { ReactElement, ReactNode } from "react";
+import type { CSSProperties, ReactElement, ReactNode } from "react";
 import {
   Popover as AriaPopover,
   type PopoverProps as AriaPopoverProps,
@@ -16,6 +16,8 @@ export interface PopoverProps
   children: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Inline styles (ex : CSS custom properties pour la largeur). */
+  style?: CSSProperties;
 }
 
 // -----------------------------------------------------------------------
@@ -42,12 +44,14 @@ export interface PopoverProps
 export function Popover({
   children,
   className,
+  style,
   offset = 4,
   ...ariaProps
 }: PopoverProps): ReactElement {
   return (
     <AriaPopover
       className={[styles.popover, className].filter(Boolean).join(" ")}
+      style={style}
       offset={offset}
       shouldFlip
       {...ariaProps}
