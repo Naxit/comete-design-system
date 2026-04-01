@@ -5,6 +5,13 @@ import {
   MenuItem,
 } from "@naxit/comete-design-system/components";
 import type { IconName } from "@naxit/comete-icons";
+import { iconRegistry } from "@naxit/comete-icons";
+
+// -----------------------------------------------------------------------
+// Icon options (from registry — always in sync)
+
+const ICON_NAMES = Object.keys(iconRegistry).sort() as IconName[];
+const ICON_OPTIONS: Array<IconName | "none"> = ["none", ...ICON_NAMES];
 
 // -----------------------------------------------------------------------
 // Figma
@@ -21,8 +28,8 @@ interface MenuItemStoryArgs {
   title: string;
   descriptionText: string;
   description: boolean;
-  iconBefore: boolean;
-  iconAfter: boolean;
+  iconBefore: IconName | "none";
+  iconAfter: IconName | "none";
   slotAfter: boolean;
   isDisabled: boolean;
   isSelected: boolean;
@@ -55,12 +62,16 @@ const meta = {
       description: "Afficher la description",
     },
     iconBefore: {
-      control: "boolean",
-      description: "Afficher l'icône avant le label",
+      control: "select",
+      options: ICON_OPTIONS,
+      description: "Icône avant le label",
+      name: "<Icon> before",
     },
     iconAfter: {
-      control: "boolean",
-      description: "Afficher l'icône après le label",
+      control: "select",
+      options: ICON_OPTIONS,
+      description: "Icône après le label",
+      name: "<Icon> after",
     },
     slotAfter: {
       control: "boolean",
@@ -79,8 +90,8 @@ const meta = {
     title: "Title",
     descriptionText: "Description",
     description: true,
-    iconBefore: true,
-    iconAfter: true,
+    iconBefore: "Star" as IconName,
+    iconAfter: "ChevronRight" as IconName,
     slotAfter: false,
     isDisabled: false,
     isSelected: false,
@@ -103,8 +114,8 @@ function MenuItemStory(args: MenuItemStoryArgs) {
         <MenuItem
           id="item"
           isDisabled={args.isDisabled}
-          iconBefore={args.iconBefore ? ("Star" as IconName) : undefined}
-          iconAfter={args.iconAfter ? ("ChevronRight" as IconName) : undefined}
+          iconBefore={args.iconBefore !== "none" ? args.iconBefore : undefined}
+          iconAfter={args.iconAfter !== "none" ? args.iconAfter : undefined}
           description={args.description ? args.descriptionText : undefined}
           slotAfter={args.slotAfter ? <kbd>⌘K</kbd> : undefined}
         >
@@ -122,11 +133,11 @@ function MenuItemStory(args: MenuItemStoryArgs) {
 export const Default: Story = {
   args: {
     description: true,
-    iconBefore: true,
+    iconBefore: "Star" as IconName,
     isSelected: false,
-    descriptionText: "True",
+    descriptionText: "Description",
     slotAfter: false,
-    isDisabled: false
+    isDisabled: false,
   },
 
   name: "default",
