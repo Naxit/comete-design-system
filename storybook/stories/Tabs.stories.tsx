@@ -39,7 +39,7 @@ type Story = StoryObj;
 
 /** Tabs par défaut avec 7 onglets comme sur le Figma. */
 export const Default: Story = {
-  name: "default",
+  name: "Default",
   parameters: {
     design: { type: "figma", url: figmaUrl("5107:63570") },
   },
@@ -66,8 +66,8 @@ export const Default: Story = {
 };
 
 /** Avec un onglet désactivé. */
-export const WithDisabled: Story = {
-  name: "with disabled tab",
+export const Disabled: Story = {
+  name: "Disabled tab",
   render: () => (
     <Tabs disabledKeys={["tab3"]}>
       <TabList>
@@ -85,8 +85,8 @@ export const WithDisabled: Story = {
 };
 
 /** Avec des icônes avant le label. */
-export const WithIconsBefore: Story = {
-  name: "with iconBefore",
+export const IconsBefore: Story = {
+  name: "IconBefore",
   render: () => (
     <Tabs>
       <TabList>
@@ -102,8 +102,8 @@ export const WithIconsBefore: Story = {
 };
 
 /** Avec des icônes après le label. */
-export const WithIconsAfter: Story = {
-  name: "with iconAfter",
+export const IconsAfter: Story = {
+  name: "IconAfter",
   render: () => (
     <Tabs>
       <TabList>
@@ -119,8 +119,8 @@ export const WithIconsAfter: Story = {
 };
 
 /** Avec du contenu dans les panneaux. */
-export const WithContent: Story = {
-  name: "with content",
+export const Content: Story = {
+  name: "Content",
   render: () => (
     <Tabs>
       <TabList>
