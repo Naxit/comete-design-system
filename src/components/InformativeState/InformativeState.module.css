@@ -1,0 +1,87 @@
+/* InformativeState — Comete Design System
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodee. */
+
+/* ------------------------------------------------------------------ */
+/* Root container                                                      */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space300);
+  min-width: var(--size3200);
+  max-width: var(--size6400);
+  padding: var(--space600);
+  flex-grow: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* Image slot (illustration)                                           */
+
+.image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Stack (text + actions)                                              */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space200);
+  width: 100%;
+}
+
+/* ------------------------------------------------------------------ */
+/* Stack text (title + description)                                    */
+
+.stackText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space100);
+  width: 100%;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------ */
+/* Title                                                               */
+
+.title {
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-m);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-ui-m);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-primary);
+}
+
+/* ------------------------------------------------------------------ */
+/* Description                                                         */
+
+.description {
+  margin: 0;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-subtle);
+}
+
+/* ------------------------------------------------------------------ */
+/* Stack actions (ButtonGroup slot)                                    */
+
+.stackActions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
