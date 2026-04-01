@@ -5,17 +5,19 @@ import {
   Menu as AriaMenu,
   MenuItem as AriaMenuItem,
   MenuTrigger as AriaMenuTrigger,
-  Popover as AriaPopover,
+  SubmenuTrigger as AriaSubmenuTrigger,
   Section as AriaSection,
   Header as AriaHeader,
   Separator as AriaSeparator,
   type MenuProps as AriaMenuProps,
   type MenuItemProps as AriaMenuItemProps,
   type MenuTriggerProps as AriaMenuTriggerProps,
+  type SubmenuTriggerProps as AriaSubmenuTriggerProps,
 } from "react-aria-components";
 import type { IconName } from "@naxit/comete-icons";
 import { Icon } from "../Icon/index.js";
 import { FocusRing } from "../FocusRing/index.js";
+import { Popover } from "../Popover/index.js";
 import styles from "./Menu.module.css";
 
 // -----------------------------------------------------------------------
@@ -58,6 +60,10 @@ export interface MenuSectionProps {
   className?: string;
 }
 
+export interface SubmenuTriggerProps extends AriaSubmenuTriggerProps {
+  children: ReactElement[];
+}
+
 export interface MenuPopoverProps {
   /** Width of the popover. @default 320 */
   width?: number;
@@ -94,29 +100,55 @@ export function MenuTrigger(props: MenuTriggerProps): ReactElement {
 MenuTrigger.displayName = "MenuTrigger";
 
 // -----------------------------------------------------------------------
+// SubmenuTrigger — wraps a MenuItem + Popover for cascading menus
+
+/**
+ * SubmenuTrigger — Comète Design System
+ *
+ * Wraps a MenuItem (trigger) and a Popover+Menu to create a cascading
+ * submenu. The submenu opens on hover or ArrowRight.
+ *
+ * ```tsx
+ * <Menu>
+ *   <SubmenuTrigger>
+ *     <MenuItem>Plus d'options</MenuItem>
+ *     <MenuPopover>
+ *       <Menu>
+ *         <MenuItem>Sous-option 1</MenuItem>
+ *       </Menu>
+ *     </MenuPopover>
+ *   </SubmenuTrigger>
+ * </Menu>
+ * ```
+ */
+export function SubmenuTrigger(props: SubmenuTriggerProps): ReactElement {
+  return <AriaSubmenuTrigger {...props} />;
+}
+
+SubmenuTrigger.displayName = "SubmenuTrigger";
+
+// -----------------------------------------------------------------------
 // MenuPopover — popover container with elevation
 
 /**
  * MenuPopover — Comète Design System
  *
- * Popover qui contient le Menu. Fournit l'ombre, le border-radius et le
- * positionnement automatique via React Aria.
+ * Popover qui contient le Menu. Délègue au composant Popover du DS
+ * pour le positionnement, l'ombre et les animations.
  */
 export function MenuPopover({
   width = 320,
   className,
   children,
 }: MenuPopoverProps): ReactElement {
-  const classNames = [styles.popover, className].filter(Boolean).join(" ");
-
+  const cssVars = { "--menu-popover-width": `${width}px` } as React.CSSProperties;
   return (
-    <AriaPopover
-      className={classNames}
-      style={{ width }}
-      offset={4}
+    <Popover
+      className={[styles.menuPopover, className].filter(Boolean).join(" ")}
+      style={cssVars}
     >
       {children}
-    </AriaPopover>
+    </Popover>
   );
 }
 
@@ -185,50 +217,54 @@ export function MenuItem({
         className,
       ].filter(Boolean).join(" ")}
     >
-      {({ isFocusVisible, isDisabled, isSelected }) => (
-        <>
-          {/* Container interne */}
-          <span
-            className={styles.itemContainer}
-            data-selected={isSelected || undefined}
-            data-disabled={isDisabled || undefined}
-          >
-            {iconBefore && (
-              <Icon
-                icon={iconBefore}
-                size={24}
-                variant="outlined"
-                color={isDisabled ? "disabled" : isSelected ? "selected" : "default"}
-                className={styles.iconBefore}
-              />
-            )}
+      {({ isFocusVisible, isDisabled, isSelected, hasSubmenu }) => {
+        const trailingIcon = iconAfter ?? (hasSubmenu ? "ChevronRight" : undefined);
 
-            <span className={styles.content}>
-              <span className={styles.title}>{children}</span>
-              {hasDescription && (
-                <span className={styles.description}>{description}</span>
+        return (
+          <>
+            {/* Container interne */}
+            <span
+              className={styles.itemContainer}
+              data-selected={isSelected || undefined}
+              data-disabled={isDisabled || undefined}
+            >
+              {iconBefore && (
+                <Icon
+                  icon={iconBefore}
+                  size={24}
+                  variant="outlined"
+                  color={isDisabled ? "disabled" : isSelected ? "selected" : "default"}
+                  className={styles.iconBefore}
+                />
+              )}
+
+              <span className={styles.content}>
+                <span className={styles.title}>{children}</span>
+                {hasDescription && (
+                  <span className={styles.description}>{description}</span>
+                )}
+              </span>
+
+              {slotAfter && (
+                <span className={styles.slotAfter}>{slotAfter}</span>
+              )}
+
+              {trailingIcon && (
+                <Icon
+                  icon={trailingIcon}
+                  size={24}
+                  variant="outlined"
+                  color={isDisabled ? "disabled" : isSelected ? "selected" : "default"}
+                  className={styles.iconAfter}
+                />
               )}
             </span>
 
-            {slotAfter && (
-              <span className={styles.slotAfter}>{slotAfter}</span>
-            )}
-
-            {iconAfter && (
-              <Icon
-                icon={iconAfter}
-                size={24}
-                variant="outlined"
-                color={isDisabled ? "disabled" : isSelected ? "selected" : "default"}
-                className={styles.iconAfter}
-              />
-            )}
-          </span>
-
-          {/* Focus ring overlay */}
-          {isFocusVisible && <FocusRing borderRadius={1} position="inside" />}
-        </>
-      )}
+            {/* Focus ring overlay */}
+            {isFocusVisible && <FocusRing borderRadius={1} position="inside" />}
+          </>
+        );
+      }}
     </AriaMenuItem>
   );
 }

@@ -39,7 +39,6 @@ type Story = StoryObj;
 
 /** Tabs par défaut avec 7 onglets comme sur le Figma. */
 export const Default: Story = {
-  name: "Default",
   parameters: {
     design: { type: "figma", url: figmaUrl("5107:63570") },
   },
@@ -120,7 +119,6 @@ export const IconsAfter: Story = {
 
 /** Avec du contenu dans les panneaux. */
 export const Content: Story = {
-  name: "Content",
   render: () => (
     <Tabs>
       <TabList>

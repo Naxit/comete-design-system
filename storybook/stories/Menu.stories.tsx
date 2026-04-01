@@ -1,9 +1,12 @@
 // Menu — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
+  Button,
   Menu,
   MenuItem,
+  MenuPopover,
   MenuSection,
+  SubmenuTrigger,
 } from "@naxit/comete-design-system/components";
 
 // -----------------------------------------------------------------------
@@ -70,6 +73,7 @@ function SampleSection({
 
 const meta = {
   title: "Components/Menu",
+  tags: ["autodocs"],
   parameters: {
     layout: "centered",
     design: {
@@ -121,12 +125,44 @@ function MenuStory(args: MenuStoryArgs) {
   );
 }
 
+
 // -----------------------------------------------------------------------
-// Stories — Figma variants (menus = 1, 2, 3)
+// Stories — Figma variants 
+
+/** Menu simple à 3 options sans description ni icône après. */
+export const SimpleOptions: Story = {
+  render: () => (
+    <div style={{ width: 360 }}>
+      <Menu>
+        <MenuItem id="edit" iconBefore="Edit">Modifier</MenuItem>
+        <MenuItem id="duplicate" iconBefore="ContentCopy">Dupliquer</MenuItem>
+        <MenuItem id="delete" iconBefore="Delete">Supprimer</MenuItem>
+      </Menu>
+    </div>
+  ),
+};
+
+/** Menu avec un bouton dans le slotAfter d'un item. */
+export const WithSlotAfterButton: Story = {
+  render: () => (
+    <div style={{ width: 360 }}>
+      <Menu>
+        <MenuItem id="profile" iconBefore="Person">Profil</MenuItem>
+        <MenuItem
+          id="invite"
+          iconBefore="PersonAdd"
+          slotAfter={<Button size="small" variant="outlined">Inviter</Button>}
+        >
+          Membres
+        </MenuItem>
+        <MenuItem id="settings" iconBefore="Settings">Paramètres</MenuItem>
+      </Menu>
+    </div>
+  ),
+};
 
 /** Variante menus = 1 : menu avec une seule section. */
 export const OneSection: Story = {
-  name: "menus = 1",
   args: { menus: 1 },
   parameters: {
     design: { type: "figma", url: figmaUrl("4711:14820") },
@@ -136,7 +172,6 @@ export const OneSection: Story = {
 
 /** Variante menus = 2 : menu avec deux sections. */
 export const TwoSections: Story = {
-  name: "menus = 2",
   args: {
     menus: 2,
     hasSeparator: false
@@ -149,10 +184,39 @@ export const TwoSections: Story = {
 
 /** Variante menus = 3 : menu avec trois sections. */
 export const ThreeSections: Story = {
-  name: "menus = 3",
   args: { menus: 3 },
   parameters: {
     design: { type: "figma", url: figmaUrl("4711:14825") },
   },
   render: MenuStory,
+};
+
+/** Menu en cascade : un item ouvre un sous-menu. */
+export const Submenu: Story = {
+  render: () => (
+    <div style={{ width: 360 }}>
+      <Menu>
+        <MenuItem id="edit" iconBefore="Edit">Modifier</MenuItem>
+        <SubmenuTrigger>
+          <MenuItem id="move" iconBefore="Folder">Déplacer vers</MenuItem>
+          <MenuPopover>
+            <Menu>
+              <MenuItem id="drafts">Brouillons</MenuItem>
+              <MenuItem id="archive">Archives</MenuItem>
+              <SubmenuTrigger>
+                <MenuItem id="projects">Projets</MenuItem>
+                <MenuPopover>
+                  <Menu>
+                    <MenuItem id="p-alpha">Alpha</MenuItem>
+                    <MenuItem id="p-beta">Beta</MenuItem>
+                  </Menu>
+                </MenuPopover>
+              </SubmenuTrigger>
+            </Menu>
+          </MenuPopover>
+        </SubmenuTrigger>
+        <MenuItem id="delete" iconBefore="Delete">Supprimer</MenuItem>
+      </Menu>
+    </div>
+  ),
 };

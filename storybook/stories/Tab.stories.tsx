@@ -123,7 +123,6 @@ function TabStory(args: TabStoryArgs) {
 
 /** state=default, isSelected=false */
 export const Default: Story = {
-  name: "Default",
   parameters: {
     design: { type: "figma", url: figmaUrl("5107:63425") },
   },
@@ -135,7 +134,6 @@ export const Default: Story = {
 
 /** state=hover, isSelected=false — survolez le tab pour voir l'état hover. */
 export const Hover: Story = {
-  name: "Hover",
   parameters: {
     pseudo: { hover: true },
     design: { type: "figma", url: figmaUrl("5107:63434") },
@@ -148,7 +146,6 @@ export const Hover: Story = {
 
 /** state=press, isSelected=false — cliquez et maintenez pour voir l'état press. */
 export const Press: Story = {
-  name: "Press",
   parameters: {
     pseudo: { active: true },
     design: { type: "figma", url: figmaUrl("5107:63437") },
@@ -161,7 +158,6 @@ export const Press: Story = {
 
 /** state=default, isSelected=true */
 export const Selected: Story = {
-  name: "Selected",
   args: { isSelected: true },
   parameters: {
     design: { type: "figma", url: figmaUrl("5107:63427") },
@@ -174,7 +170,6 @@ export const Selected: Story = {
 
 /** state=disabled, isSelected=false */
 export const Disabled: Story = {
-  name: "Disabled",
   args: { isDisabled: true },
   parameters: {
     design: { type: "figma", url: figmaUrl("6156:1453") },
