@@ -1,11 +1,16 @@
+import { DocsContainer } from "@storybook/addon-docs/blocks";
 import { ThemeProvider } from "@naxit/comete-design-system/providers";
 import "@naxit/comete-design-tokens/css";
 import "./preview.css";
+import type { ComponentProps } from "react";
+import { useEffect, useState } from "react";
 import type { Decorator, Preview } from "@storybook/react-vite";
 // NOTE: useEffect and useGlobals must both come from storybook/preview-api when
 // used together in a decorator. Mixing React hooks with Storybook hooks in the
 // same function causes a runtime error.
 import { useGlobals } from "storybook/preview-api";
+import { GLOBALS_UPDATED } from "storybook/internal/core-events";
+import { themes } from "storybook/theming";
 import { INITIAL_VIEWPORTS } from 'storybook/viewport';
 
 // ----------------------------------------------------------------------
@@ -46,6 +51,20 @@ const preview: Preview = {
   },
 
   parameters: {
+    docs: {
+      container: (props: ComponentProps<typeof DocsContainer>) => {
+        const initial = document.documentElement.getAttribute("data-theme") === "dark";
+        const [isDark, setIsDark] = useState(initial); // eslint-disable-line react-hooks/rules-of-hooks
+        useEffect(() => { // eslint-disable-line react-hooks/rules-of-hooks
+          const onGlobalsUpdated = (event: { globals: Record<string, unknown> }) => {
+            setIsDark(event.globals["theme"] === "dark");
+          };
+          props.context.channel.on(GLOBALS_UPDATED, onGlobalsUpdated);
+          return () => { props.context.channel.off(GLOBALS_UPDATED, onGlobalsUpdated); };
+        }, [props.context.channel]);
+        return <DocsContainer {...props} theme={isDark ? themes.dark : themes.light} />;
+      },
+    },
     // WORKAROUND: "todo" au lieu de "error" — violations de contraste connues dans
     // @naxit/comete-design-tokens (success, critical, information : ratio < 4.5:1 WCAG AA).
     // Repasser à "error" une fois les tokens corrigés.

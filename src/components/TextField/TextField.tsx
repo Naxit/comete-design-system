@@ -26,7 +26,7 @@ export interface TextFieldProps
   placeholder?: string;
   /** Affiche un bouton clear (×) quand le champ a une valeur. @default false */
   isClearable?: boolean;
-  /** Affiche un spinner de chargement. @default false */
+  /** Affiche un spinner de chargement. @default true */
   isLoading?: boolean;
   /** Élément affiché avant l'input (icône, etc.). */
   elemBefore?: ReactNode;
@@ -90,7 +90,7 @@ export function TextField({
   appearance = "default",
   isCompact = false,
   placeholder,
-  isClearable = false,
+  isClearable = true,
   isLoading = false,
   elemBefore,
   elemAfter,

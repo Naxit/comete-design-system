@@ -308,7 +308,7 @@ export const IconOnly: Story = {
   name: "Icon only",
   render: () => (
     <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Button iconBefore="Image" color="default" />
+      <Button iconBefore="Image" color="default" size="small" />
       <Button iconBefore="Lock" color="brand" />
       <Button iconBefore="Check" color="success" variant="outlined" />
       <Button iconBefore="Image" color="critical" variant="subtle" />
