@@ -102,7 +102,7 @@ const meta = {
     },
   },
   args: {
-    title: "Creer un element",
+    title: "Créer un élément",
     description: true,
     descriptionText: "Description",
     image: true,
@@ -126,14 +126,14 @@ function InformativeStateStory(args: InformativeStateStoryArgs) {
 
   const actionsSlot = args.actions ? (
     <ButtonGroup>
-      <Button variant="contained" color="brand">
-        {args.primaryAction}
-      </Button>
       {args.secondaryAction && (
         <Button variant="outlined" color="default">
           {args.secondaryAction}
         </Button>
       )}
+      <Button variant="contained" color="brand">
+        {args.primaryAction}
+      </Button>
     </ButtonGroup>
   ) : undefined;
 
@@ -202,11 +202,35 @@ export const TitleOnly: Story = {
 export const WithTwoActions: Story = {
   name: "With two actions",
   args: {
-    primaryAction: "Creer",
+    primaryAction: "Créer",
     secondaryAction: "Annuler",
   },
   parameters: {
     design: { type: "figma", url: figmaUrl("4775:13732") },
+  },
+  render: InformativeStateStory,
+};
+
+/** Etat d'erreur avec illustration ConnexionError. */
+export const Error: Story = {
+  args: {
+    title: "Erreur de chargement",
+    illustration: "ConnexionError" as IllustrationName,
+    actions: false,
+  },
+  parameters: {
+    design: { type: "figma", url: figmaUrl("5624:2764") },
+  },
+  render: InformativeStateStory,
+};
+
+/** Etat vide avec illustration Empty. */
+export const Empty: Story = {
+  args: {
+    illustration: "Empty" as IllustrationName,
+  },
+  parameters: {
+    design: { type: "figma", url: figmaUrl("4775:14145") },
   },
   render: InformativeStateStory,
 };

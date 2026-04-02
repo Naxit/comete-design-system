@@ -38,12 +38,12 @@ export interface InformativeStateProps {
  * import { InformativeState, Illustration, ButtonGroup, Button } from "@naxit/comete-design-system";
  *
  * <InformativeState
- *   title="Aucun element"
- *   description="Commencez par creer un premier element."
+ *   title="Aucun élément"
+ *   description="Commencez par créer un premier élément."
  *   image={<Illustration illustration="Empty" size={128} />}
  *   actions={
  *     <ButtonGroup>
- *       <Button variant="contained" color="brand">Creer</Button>
+ *       <Button variant="contained" color="brand">Créer</Button>
  *     </ButtonGroup>
  *   }
  * />
