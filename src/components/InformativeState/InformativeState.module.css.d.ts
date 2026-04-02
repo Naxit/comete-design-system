@@ -1,10 +1,11 @@
 declare const styles: {
-  readonly root: string;
-  readonly image: string;
-  readonly stack: string;
-  readonly stackText: string;
-  readonly title: string;
-  readonly description: string;
-  readonly stackActions: string;
+  readonly "description": string;
+  readonly "image": string;
+  readonly "root": string;
+  readonly "stack": string;
+  readonly "stackActions": string;
+  readonly "stackText": string;
+  readonly "title": string;
 };
 export = styles;
+
