@@ -1,0 +1,44 @@
+/* ==========================================================================
+   YearPicker — Comète Design System
+   Sélecteur d'année unique.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+/* Root */
+.root {
+  position: relative;
+  display: inline-flex;
+  width: max-content;
+}
+
+/* Conteneur des boutons chevron + année */
+.content {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+  width: 100%;
+}
+
+/* Boutons chevron ←/→ */
+.chevronButton {
+  flex-shrink: 0;
+}
+
+/* Bouton année central — occupe l'espace restant */
+.yearButton {
+  flex: 1 0 0;
+  justify-content: center;
+  padding: var(--space050) var(--space150);
+  font-weight: var(--font-weight-medium);
+  min-width: 0;
+}
+
+/* Popover */
+.popover {
+  min-width: auto;
+}
+
+/* Dialog — reset outline */
+.dialog {
+  outline: none;
+}
