@@ -167,39 +167,6 @@ export const SpacingCompact: Story = {
   },
 };
 
-/** Toutes les apparences cote a cote. */
-export const AllAppearances: Story = {
-  name: "All appearances",
-  render: (args) => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <InteractiveProgressIndicator {...args} appearance="default" />
-      <InteractiveProgressIndicator {...args} appearance="primary" />
-      <InteractiveProgressIndicator {...args} appearance="help" />
-      <div
-        style={{
-          backgroundColor: "var(--background-accent-bold-default)",
-          padding: "var(--space200)",
-          borderRadius: "var(--radius100)",
-        }}
-      >
-        <InteractiveProgressIndicator {...args} appearance="inverted" />
-      </div>
-    </div>
-  ),
-};
-
-/** Toutes les tailles cote a cote. */
-export const AllSizes: Story = {
-  name: "All sizes",
-  render: (args) => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      <InteractiveProgressIndicator {...args} size="small" />
-      <InteractiveProgressIndicator {...args} size="medium" />
-      <InteractiveProgressIndicator {...args} size="large" />
-    </div>
-  ),
-};
-
 /** Avec boutons de navigation avant et apres. */
 export const WithNavigationButtons: Story = {
   name: "With navigation buttons",
@@ -240,4 +207,39 @@ export const WithNavigationButtons: Story = {
       </div>
     );
   },
+};
+
+// -----------------------------------------------------------------------
+
+/** Toutes les apparences cote a cote. */
+export const AllAppearances: Story = {
+  name: "All appearances",
+  render: (args) => (
+    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <InteractiveProgressIndicator {...args} appearance="default" />
+      <InteractiveProgressIndicator {...args} appearance="primary" />
+      <InteractiveProgressIndicator {...args} appearance="help" />
+      <div
+        style={{
+          backgroundColor: "var(--background-accent-bold-default)",
+          padding: "var(--space200)",
+          borderRadius: "var(--radius100)",
+        }}
+      >
+        <InteractiveProgressIndicator {...args} appearance="inverted" />
+      </div>
+    </div>
+  ),
+};
+
+/** Toutes les tailles cote a cote. */
+export const AllSizes: Story = {
+  name: "All sizes",
+  render: (args) => (
+    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      <InteractiveProgressIndicator {...args} size="small" />
+      <InteractiveProgressIndicator {...args} size="medium" />
+      <InteractiveProgressIndicator {...args} size="large" />
+    </div>
+  ),
 };

@@ -6,6 +6,7 @@
 
 .nav {
   display: flex;
+  flex-grow: 1;
   background-color: var(--background-surface-default);
   /* padding-bottom: 24px — espace pour le home indicator iOS (safe area) */
   padding: var(--space050) var(--space050) var(--space300);

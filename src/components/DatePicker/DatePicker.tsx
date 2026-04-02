@@ -5,6 +5,7 @@ import {
   DatePicker as AriaDatePicker,
   DateInput as AriaDateInput,
   DateSegment as AriaDateSegment,
+  Group as AriaGroup,
   Dialog as AriaDialog,
   type DatePickerProps as AriaDatePickerProps,
   type DateValue,
@@ -62,25 +63,27 @@ export function DatePicker<T extends DateValue = DateValue>({
     >
       {({ isDisabled, isInvalid }) => (
         <>
-          <InputContainer
-            appearance={appearance}
-            isCompact={isCompact}
-            isDisabled={isDisabled}
-            isInvalid={isInvalid}
-          >
-            <AriaDateInput className={styles.dateInput}>
-              {(segment) => (
-                <AriaDateSegment className={styles.segment} segment={segment} />
-              )}
-            </AriaDateInput>
-            <Button
-              variant="subtle"
-              size="small"
-              iconBefore="CalendarMonth"
-              className={styles.calendarButton}
+          <AriaGroup>
+            <InputContainer
+              appearance={appearance}
+              isCompact={isCompact}
               isDisabled={isDisabled}
-            />
-          </InputContainer>
+              isInvalid={isInvalid}
+            >
+              <AriaDateInput className={styles.dateInput}>
+                {(segment) => (
+                  <AriaDateSegment className={styles.segment} segment={segment} />
+                )}
+              </AriaDateInput>
+              <Button
+                variant="subtle"
+                size="small"
+                iconBefore="CalendarMonth"
+                className={styles.calendarButton}
+                isDisabled={isDisabled}
+              />
+            </InputContainer>
+          </AriaGroup>
           <Popover placement="bottom start" className={styles.popover}>
             <AriaDialog className={styles.dialog}>
               <Calendar appearance="date" />

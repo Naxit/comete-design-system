@@ -176,3 +176,25 @@ export const Disabled: Story = {
   },
   render: TabStory,
 };
+
+// -----------------------------------------------------------------------
+// All states
+
+/** Tous les états côte à côte. */
+export const AllStates: Story = {
+  name: "All states",
+  render: () => (
+    <Tabs selectedKey="selected" disabledKeys={["disabled"]}>
+      <TabList>
+        <Tab id="default">Default</Tab>
+        <Tab id="selected">Selected</Tab>
+        <Tab id="disabled">Disabled</Tab>
+        <Tab id="with-icon" iconBefore="Star">With icon</Tab>
+      </TabList>
+      <TabPanel id="default" />
+      <TabPanel id="selected" />
+      <TabPanel id="disabled" />
+      <TabPanel id="with-icon" />
+    </Tabs>
+  ),
+};

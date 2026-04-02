@@ -16,7 +16,7 @@ const meta = {
   component: ButtonGroup,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
+    layout: "centered",
     design: { type: "figma", url: figmaUrl("4608:17266") },
   },
 } satisfies Meta<typeof ButtonGroup>;

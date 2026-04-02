@@ -23,7 +23,7 @@ const meta = {
   component: Tabs,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
+    layout: "centered",
     design: {
       type: "figma",
       url: figmaUrl("5107:63005"),
@@ -127,17 +127,17 @@ export const Content: Story = {
         <Tab id="settings">Paramètres</Tab>
       </TabList>
       <TabPanel id="details">
-        <div style={{ padding: "16px 0" }}>
+        <div style={{ padding: "16px", backgroundColor: "#fafafa" }}>
           <p>Contenu du panneau Détails.</p>
         </div>
       </TabPanel>
       <TabPanel id="activity">
-        <div style={{ padding: "16px 0" }}>
+        <div style={{ padding: "16px", backgroundColor: "#fafafa" }}>
           <p>Contenu du panneau Activité.</p>
         </div>
       </TabPanel>
       <TabPanel id="settings">
-        <div style={{ padding: "16px 0" }}>
+        <div style={{ padding: "16px", backgroundColor: "#fafafa" }}>
           <p>Contenu du panneau Paramètres.</p>
         </div>
       </TabPanel>

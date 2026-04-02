@@ -234,3 +234,57 @@ export const Empty: Story = {
   },
   render: InformativeStateStory,
 };
+
+/** Toutes les variantes de contenu. */
+export const AllVariants: Story = {
+  name: "All variants",
+  render: () => (
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
+      <InformativeState
+        title="Complet"
+        description="Illustration, description et action."
+        image={<Illustration illustration="Empty" size={128} />}
+        actions={
+          <ButtonGroup>
+            <Button color="brand">Action</Button>
+          </ButtonGroup>
+        }
+      />
+      <InformativeState
+        title="Sans illustration"
+        description="Description et action uniquement."
+        actions={
+          <ButtonGroup>
+            <Button color="brand">Action</Button>
+          </ButtonGroup>
+        }
+      />
+      <InformativeState
+        title="Sans description"
+        image={<Illustration illustration="Empty" size={128} />}
+        actions={
+          <ButtonGroup>
+            <Button color="brand">Action</Button>
+          </ButtonGroup>
+        }
+      />
+      <InformativeState title="Titre seul" />
+      <InformativeState
+        title="Erreur"
+        description="Impossible de charger les données."
+        image={<Illustration illustration="ConnexionError" size={128} />}
+      />
+      <InformativeState
+        title="Vide"
+        description="Aucun élément à afficher."
+        image={<Illustration illustration="Empty" size={128} />}
+        actions={
+          <ButtonGroup>
+            <Button color="brand">Créer</Button>
+            <Button variant="subtle">Annuler</Button>
+          </ButtonGroup>
+        }
+      />
+    </div>
+  ),
+};

@@ -263,6 +263,34 @@ export const IconAllColors: Story = {
 
 // ----------------------------------------------------------------------
 
+/** Bouton icon-only (sans label) */
+export const IconOnly: Story = {
+  name: "Icon only",
+  render: () => (
+    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+      <Button iconBefore="Image" color="default" size="small" />
+      <Button iconBefore="Lock" color="brand" />
+      <Button iconBefore="Check" color="success" variant="outlined" />
+      <Button iconBefore="Image" color="critical" variant="subtle" />
+    </div>
+  ),
+};
+
+/** Bouton en état loading (spinner remplace le contenu) */
+export const Loading: Story = {
+  render: () => (
+    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+      <Button color="default" isLoading>Default</Button>
+      <Button color="brand" isLoading>Brand</Button>
+      <Button color="success" isLoading>Success</Button>
+      <Button variant="outlined" color="brand" isLoading>Outlined</Button>
+      <Button variant="subtle" color="default" isLoading>Subtle</Button>
+    </div>
+  ),
+};
+
+// ----------------------------------------------------------------------
+
 /** All contained color variants side by side */
 export const AllColors: Story = {
   render: (args) => (
@@ -297,34 +325,6 @@ export const AllSizes: Story = {
       <Button size="small" color="brand">Small</Button>
       <Button size="medium" color="brand">Medium</Button>
       <Button size="large" color="brand">Large</Button>
-    </div>
-  ),
-};
-
-// ----------------------------------------------------------------------
-
-/** Bouton icon-only (sans label) */
-export const IconOnly: Story = {
-  name: "Icon only",
-  render: () => (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Button iconBefore="Image" color="default" size="small" />
-      <Button iconBefore="Lock" color="brand" />
-      <Button iconBefore="Check" color="success" variant="outlined" />
-      <Button iconBefore="Image" color="critical" variant="subtle" />
-    </div>
-  ),
-};
-
-/** Bouton en état loading (spinner remplace le contenu) */
-export const Loading: Story = {
-  render: () => (
-    <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-      <Button color="default" isLoading>Default</Button>
-      <Button color="brand" isLoading>Brand</Button>
-      <Button color="success" isLoading>Success</Button>
-      <Button variant="outlined" color="brand" isLoading>Outlined</Button>
-      <Button variant="subtle" color="default" isLoading>Subtle</Button>
     </div>
   ),
 };

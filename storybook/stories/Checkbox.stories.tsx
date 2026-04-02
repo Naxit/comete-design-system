@@ -95,35 +95,6 @@ export const Required: Story = {
   args: { label: "Label", isRequired: true },
 };
 
-/** Toutes les combinaisons. */
-export const AllStates: Story = {
-  name: "All states",
-  parameters: { design: { type: "figma", url: figmaUrl("11:309") } },
-  render: () => {
-    const states = [
-      { label: "Unchecked" },
-      { label: "Checked", defaultChecked: true },
-      { label: "Indeterminate", isIndeterminate: true },
-      { label: "Invalid", isInvalid: true },
-      { label: "Invalid checked", isInvalid: true, defaultChecked: true },
-      { label: "Invalid indeterminate", isInvalid: true, isIndeterminate: true },
-      { label: "Disabled", isDisabled: true },
-      { label: "Disabled checked", isDisabled: true, defaultChecked: true },
-      { label: "Disabled indeterminate", isDisabled: true, isIndeterminate: true },
-      { label: "Required", isRequired: true },
-      { label: "With description", description: "Helper text" },
-    ] as const;
-
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        {states.map((props) => (
-          <Checkbox key={props.label} {...props} />
-        ))}
-      </div>
-    );
-  },
-};
-
 // -----------------------------------------------------------------------
 // Play functions — tests d'interaction
 
@@ -177,5 +148,36 @@ export const KeyboardNavigation: Story = {
     checkbox.focus();
     await userEvent.keyboard(" ");
     await expect(args.onChange).toHaveBeenCalledOnce();
+  },
+};
+
+// -----------------------------------------------------------------------
+
+/** Toutes les combinaisons. */
+export const AllStates: Story = {
+  name: "All states",
+  parameters: { design: { type: "figma", url: figmaUrl("11:309") } },
+  render: () => {
+    const states = [
+      { label: "Unchecked" },
+      { label: "Checked", defaultChecked: true },
+      { label: "Indeterminate", isIndeterminate: true },
+      { label: "Invalid", isInvalid: true },
+      { label: "Invalid checked", isInvalid: true, defaultChecked: true },
+      { label: "Invalid indeterminate", isInvalid: true, isIndeterminate: true },
+      { label: "Disabled", isDisabled: true },
+      { label: "Disabled checked", isDisabled: true, defaultChecked: true },
+      { label: "Disabled indeterminate", isDisabled: true, isIndeterminate: true },
+      { label: "Required", isRequired: true },
+      { label: "With description", description: "Helper text" },
+    ] as const;
+
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {states.map((props) => (
+          <Checkbox key={props.label} {...props} />
+        ))}
+      </div>
+    );
   },
 };

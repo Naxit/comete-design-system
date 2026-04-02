@@ -97,21 +97,6 @@ export const Rounded: Story = {
 };
 
 // ----------------------------------------------------------------------
-// Sizes
-
-export const AllSizes: Story = {
-  render: (args) => (
-    <div style={{ display: "flex", gap: 16, alignItems: "flex-end" }}>
-      {(
-        ["xsmall", "small", "medium", "large", "xlarge", "xxlarge"] as const
-      ).map((size) => (
-        <Avatar key={size} {...args} size={size} />
-      ))}
-    </div>
-  ),
-};
-
-// ----------------------------------------------------------------------
 // States
 
 export const Selected: Story = {
@@ -150,4 +135,19 @@ export const InteractiveDisabled: Story = {
     await userEvent.click(canvas.getByRole("button"));
     void expect(args.onPress).not.toHaveBeenCalled();
   },
+};
+
+// ----------------------------------------------------------------------
+// Sizes
+
+export const AllSizes: Story = {
+  render: (args) => (
+    <div style={{ display: "flex", gap: 16, alignItems: "flex-end" }}>
+      {(
+        ["xsmall", "small", "medium", "large", "xlarge", "xxlarge"] as const
+      ).map((size) => (
+        <Avatar key={size} {...args} size={size} />
+      ))}
+    </div>
+  ),
 };

@@ -1,6 +1,6 @@
 // BottomNavigation — stories Storybook
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import {
   BottomNavigation,
   BottomNavigationItem,
@@ -10,6 +10,7 @@ const FIGMA_FILE =
   "https://www.figma.com/design/YO9cW75K8aLcM5BbojZAqB/Com%C3%A8te-Design-System";
 const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
+const SMALL_WIDTH = 80;
 
 // -----------------------------------------------------------------------
 // Meta — on documente l'item individuel pour le contrôle interactif
@@ -19,15 +20,13 @@ const meta = {
   component: BottomNavigationItem,
   tags: ["autodocs"],
   parameters: {
-    layout: "fullscreen",
+    layout: "centered",
     design: { type: "figma", url: figmaUrl("2524:18591") },
   },
   decorators: [
     (Story: () => ReactNode) => (
-      <div style={{ display: "flex", alignItems: "flex-end", minHeight: "100vh" }}>
-        <div style={{ width: "100%" }}>
-          <Story />
-        </div>
+      <div style={{ display: "flex", justifyContent: "center", width: 402 }}>
+        <Story />
       </div>
     ),
   ],
@@ -56,9 +55,11 @@ type Story = StoryObj<typeof BottomNavigationItem>;
 export const Default: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("14:1031") } },
   render: (args) => (
-    <BottomNavigation>
-      <BottomNavigationItem {...args} />
-    </BottomNavigation>
+    <div style={{ width: SMALL_WIDTH }}>
+      <BottomNavigation>
+        <BottomNavigationItem {...args} />
+      </BottomNavigation>
+    </div>
   ),
 };
 
@@ -66,9 +67,11 @@ export const Selected: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("14:1031") } },
   args: { isSelected: true },
   render: (args) => (
-    <BottomNavigation>
-      <BottomNavigationItem {...args} />
-    </BottomNavigation>
+    <div style={{ width: SMALL_WIDTH }}>
+      <BottomNavigation>
+        <BottomNavigationItem {...args} />
+      </BottomNavigation>
+    </div>
   ),
 };
 
@@ -77,26 +80,37 @@ export const WithBadge: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("14:1031") } },
   args: { label: "Notifications", icon: "Notifications", badge: "3" },
   render: (args) => (
-    <BottomNavigation>
-      <BottomNavigationItem {...args} />
-    </BottomNavigation>
+    <div style={{ width: SMALL_WIDTH }}>
+      <BottomNavigation>
+        <BottomNavigationItem {...args} />
+      </BottomNavigation>
+    </div>
   ),
 };
 
 export const FullNav: Story = {
   name: "Full navigation bar",
   parameters: { design: { type: "figma", url: figmaUrl("2524:18591") } },
-  render: () => (
-    <BottomNavigation>
-      <BottomNavigationItem label="Accueil" icon="Home" isSelected />
-      <BottomNavigationItem label="Agenda" icon="CalendarMonth" />
-      <BottomNavigationItem
-        label="Notifications"
-        icon="Notifications"
-        badge="5"
-      />
-      <BottomNavigationItem label="Profil" icon="Person" />
-      <BottomNavigationItem label="Missions" icon="Star" />
-    </BottomNavigation>
-  ),
+  render: () => {
+    const items = [
+      { label: "Accueil", icon: "Home" as const },
+      { label: "Agenda", icon: "CalendarMonth" as const },
+      { label: "Notifications", icon: "Notifications" as const, badge: "5" },
+      { label: "Profil", icon: "Person" as const },
+      { label: "Missions", icon: "Star" as const },
+    ];
+    const [selected, setSelected] = useState("Accueil");
+    return (
+      <BottomNavigation>
+        {items.map((item) => (
+          <BottomNavigationItem
+            key={item.label}
+            {...item}
+            isSelected={selected === item.label}
+            onClick={() => { setSelected(item.label); }}
+          />
+        ))}
+      </BottomNavigation>
+    );
+  },
 };
