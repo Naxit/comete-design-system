@@ -1,0 +1,60 @@
+/* ==========================================================================
+   TimePicker — Comète Design System
+   Styles spécifiques au sélecteur d'heure.
+   Le conteneur visuel (bordure, radius, états) est géré par InputContainer.
+   ========================================================================== */
+
+/* Root */
+.timePicker {
+  position: relative;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Time input (segments)
+   ========================================================================== */
+
+.timeInput {
+  display: flex;
+  align-items: center;
+  flex: 1 1 0%;
+  min-width: 0;
+  color: var(--text-primary);
+}
+
+.timePicker[data-disabled] .timeInput {
+  color: var(--text-disabled);
+}
+
+/* ==========================================================================
+   Time segment
+   ========================================================================== */
+
+.segment {
+  padding-inline: 1px;
+  border-radius: var(--radius025);
+  outline: none;
+  caret-color: transparent;
+}
+
+.segment[data-placeholder] {
+  color: var(--text-subtlest);
+}
+
+.segment[data-focused] {
+  background-color: var(--background-brand-bold-default);
+  color: var(--text-inverted);
+}
+
+.segment[data-type="literal"] {
+  color: var(--text-subtlest);
+  padding-inline: 0;
+}
+
+/* ==========================================================================
+   Clock icon
+   ========================================================================== */
+
+.clockIcon {
+  flex-shrink: 0;
+}

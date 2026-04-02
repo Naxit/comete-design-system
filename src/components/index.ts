@@ -24,3 +24,4 @@ export * from "./ProgressIndicator";
 export * from "./Popup";
 export * from "./Tabs";
 export * from "./TextField";
+export * from "./TimePicker";
