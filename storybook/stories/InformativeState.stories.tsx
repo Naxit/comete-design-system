@@ -106,7 +106,7 @@ const meta = {
     description: true,
     descriptionText: "Description",
     image: true,
-    illustration: ILLUSTRATION_NAMES[0]!,
+    illustration: ILLUSTRATION_NAMES[0],
     actions: true,
     primaryAction: "Primary action",
     secondaryAction: "",
@@ -152,7 +152,6 @@ function InformativeStateStory(args: InformativeStateStoryArgs) {
 
 /** Etat par defaut avec illustration, titre, description et action. */
 export const Default: Story = {
-  name: "Default",
   parameters: {
     design: { type: "figma", url: figmaUrl("4775:13732") },
   },

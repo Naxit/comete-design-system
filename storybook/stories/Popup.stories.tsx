@@ -10,10 +10,38 @@ const figmaUrl = (nodeId: string) =>
 // -----------------------------------------------------------------------
 // Meta
 
+const PLACEMENTS = [
+  "top start",
+  "top",
+  "top end",
+  "bottom start",
+  "bottom",
+  "bottom end",
+  "left",
+  "right",
+  "start",
+  "end",
+] as const;
+
 const meta = {
   title: "Components/Popup",
   component: Popup,
   tags: ["autodocs"],
+  argTypes: {
+    placement: {
+      control: "select",
+      options: PLACEMENTS,
+      description: "Position du popover par rapport au trigger",
+    },
+    offset: {
+      control: { type: "number", min: 0, max: 32, step: 2 },
+      description: "Décalage vertical en px",
+    },
+  },
+  args: {
+    placement: "bottom start",
+    offset: 4,
+  },
   parameters: {
     layout: "centered",
     design: { type: "figma", url: figmaUrl("3247:5981") },
@@ -29,8 +57,8 @@ type Story = StoryObj<typeof Popup>;
 /** Popup bottom-start (par défaut). */
 export const Default: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("3255:9400") } },
-  render: () => (
-    <Popup trigger={<Button>Ouvrir</Button>}>
+  render: (args) => (
+    <Popup trigger={<Button>Ouvrir</Button>} placement={args.placement} offset={args.offset}>
       <p
         style={{
           margin: 0,
@@ -72,31 +100,20 @@ export const BottomEnd: Story = {
 /** Tous les placements. */
 export const AllPlacements: Story = {
   name: "All placements",
-  render: () => {
-    const placements = [
-      "top start",
-      "top",
-      "top end",
-      "bottom start",
-      "bottom",
-      "bottom end",
-    ] as const;
-
-    return (
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: 24,
-          padding: 120,
-        }}
-      >
-        {placements.map((p) => (
-          <Popup key={p} trigger={<Button>{p}</Button>} placement={p}>
-            <p style={{ margin: 0, whiteSpace: "nowrap" }}>{p}</p>
-          </Popup>
-        ))}
-      </div>
-    );
-  },
+  render: () => (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(3, 1fr)",
+        gap: 24,
+        padding: 120,
+      }}
+    >
+      {PLACEMENTS.map((p) => (
+        <Popup key={p} trigger={<Button>{p}</Button>} placement={p}>
+          <p style={{ margin: 0, whiteSpace: "nowrap" }}>{p}</p>
+        </Popup>
+      ))}
+    </div>
+  ),
 };
