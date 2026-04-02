@@ -19,6 +19,7 @@ export * from "./InformativeState";
 export * from "./InputContainer";
 export * from "./Menu";
 export * from "./Popover";
+export * from "./ProgressIndicator";
 export * from "./Popup";
 export * from "./Tabs";
 export * from "./TextField";
