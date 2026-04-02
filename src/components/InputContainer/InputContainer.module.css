@@ -1,0 +1,79 @@
+/* ==========================================================================
+   InputContainer — Comète Design System
+   Conteneur visuel partagé pour tous les champs de saisie.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+/* Base — layout flex horizontal */
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space075);
+  min-height: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+}
+
+/* ==========================================================================
+   Appearance: default (bordered box)
+   ========================================================================== */
+
+.bordered {
+  background-color: var(--background-surface-elevation-raise-default);
+  border: 2px solid var(--border-default);
+  border-radius: var(--radius050);
+  padding: var(--space100);
+}
+
+.bordered:not(:focus-within):not(.disabled):hover {
+  background-color: var(--background-surface-elevation-sunken-default);
+  border-color: var(--border-bold);
+}
+
+.bordered:focus-within:not(.disabled) {
+  border-color: var(--border-focus);
+}
+
+.bordered.invalid {
+  border-color: var(--border-critical);
+}
+
+.bordered.disabled {
+  background-color: var(--background-neutral-subtlest-default);
+  border-color: var(--border-disabled);
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Appearance: subtle (bottom border only)
+   ========================================================================== */
+
+.subtle {
+  border-bottom: 1px solid var(--border-bold);
+  padding-bottom: var(--space050);
+}
+
+.subtle:focus-within:not(.disabled) {
+  border-bottom-color: var(--border-focus);
+}
+
+.subtle.invalid {
+  border-bottom-color: var(--border-critical);
+}
+
+.subtle.disabled {
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Compact
+   ========================================================================== */
+
+.compact.bordered {
+  padding: var(--space050);
+}

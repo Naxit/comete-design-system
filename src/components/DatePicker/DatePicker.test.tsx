@@ -15,12 +15,10 @@ describe("DatePicker", () => {
       expect(DatePicker.displayName).toBe("DatePicker");
     });
 
-    it("should apply datePicker and bordered classes by default", () => {
+    it("should apply datePicker class on root and bordered on InputContainer", () => {
       const { container } = render(<DatePicker aria-label="Date" />);
-      expect(container.firstElementChild).toHaveClass(
-        "datePicker",
-        "bordered",
-      );
+      expect(container.firstElementChild).toHaveClass("datePicker");
+      expect(container.querySelector(".inputContainer")).toHaveClass("bordered");
     });
 
     it("should render calendar button", () => {
@@ -30,11 +28,11 @@ describe("DatePicker", () => {
   });
 
   describe("prop appearance", () => {
-    it("should apply subtle class", () => {
+    it("should apply subtle class on InputContainer", () => {
       const { container } = render(
         <DatePicker aria-label="Date" appearance="subtle" />,
       );
-      expect(container.firstElementChild).toHaveClass("subtle");
+      expect(container.querySelector(".inputContainer")).toHaveClass("subtle");
     });
   });
 
