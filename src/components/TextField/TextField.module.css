@@ -1,87 +1,12 @@
 /* ==========================================================================
    TextField — Comète Design System
-   Champ de saisie texte accessible.
-   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Styles spécifiques au champ de saisie texte.
+   Le conteneur visuel (bordure, radius, états) est géré par InputContainer.
    ========================================================================== */
 
-/* Base — layout flex pour elemBefore / input / elemAfter */
+/* Root — positionné pour que AriaTextField puisse fournir le contexte */
 .textField {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: var(--space075);
-  min-height: 24px;
   width: 100%;
-  box-sizing: border-box;
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xs);
-  line-height: var(--line-height-ui-xs);
-  letter-spacing: var(--letter-spacing-negative-tight);
-}
-
-/* ==========================================================================
-   Appearance: default (bordered box)
-   ========================================================================== */
-
-.bordered {
-  background-color: var(--background-surface-elevation-raise-default);
-  border: 2px solid var(--border-default);
-  border-radius: var(--radius050);
-  padding: var(--space100);
-}
-
-.bordered:not(:focus-within):hover {
-  background-color: var(--background-surface-elevation-sunken-default);
-  border-color: var(--border-bold);
-}
-
-.bordered[data-invalid] {
-  border-color: var(--border-critical);
-}
-
-.bordered:focus-within {
-  border-color: var(--border-focus);
-}
-
-.bordered[data-disabled] {
-  background-color: var(--background-neutral-subtlest-default);
-  border-color: var(--border-disabled);
-  cursor: not-allowed;
-}
-
-.bordered[data-disabled]:hover {
-  background-color: var(--background-neutral-subtlest-default);
-  border-color: var(--border-disabled);
-}
-
-/* ==========================================================================
-   Appearance: subtle (bottom border only)
-   ========================================================================== */
-
-.subtle {
-  border-bottom: 1px solid var(--border-bold);
-  padding-bottom: var(--space050);
-}
-
-.subtle:focus-within {
-  border-bottom-color: var(--border-focus);
-}
-
-.subtle[data-invalid] {
-  border-bottom-color: var(--border-critical);
-}
-
-.subtle[data-disabled] {
-  cursor: not-allowed;
-}
-
-/* ==========================================================================
-   Compact
-   ========================================================================== */
-
-.compact.bordered {
-  /* NOTE: specificity bump for compact override */
-  padding: var(--space050);
 }
 
 /* ==========================================================================

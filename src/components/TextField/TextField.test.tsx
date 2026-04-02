@@ -15,27 +15,28 @@ describe("TextField", () => {
       expect(TextField.displayName).toBe("TextField");
     });
 
-    it("should apply textField and default classes", () => {
+    it("should apply textField class on root and bordered on InputContainer", () => {
       const { container } = render(<TextField aria-label="test" />);
-      expect(container.firstElementChild).toHaveClass("textField", "bordered");
+      expect(container.firstElementChild).toHaveClass("textField");
+      expect(container.querySelector(".inputContainer")).toHaveClass("bordered");
     });
   });
 
   describe("prop appearance", () => {
-    it("should apply subtle class", () => {
+    it("should apply subtle class on InputContainer", () => {
       const { container } = render(
         <TextField aria-label="test" appearance="subtle" />,
       );
-      expect(container.firstElementChild).toHaveClass("subtle");
+      expect(container.querySelector(".inputContainer")).toHaveClass("subtle");
     });
   });
 
   describe("prop isCompact", () => {
-    it("should apply compact class", () => {
+    it("should apply compact class on InputContainer", () => {
       const { container } = render(
         <TextField aria-label="test" isCompact />,
       );
-      expect(container.firstElementChild).toHaveClass("compact");
+      expect(container.querySelector(".inputContainer")).toHaveClass("compact");
     });
   });
 

@@ -16,6 +16,7 @@ export * from "./Calendar";
 export * from "./Icon";
 export * from "./Illustration";
 export * from "./InformativeState";
+export * from "./InputContainer";
 export * from "./Menu";
 export * from "./Popover";
 export * from "./Popup";

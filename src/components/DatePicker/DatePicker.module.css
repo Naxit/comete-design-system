@@ -1,77 +1,14 @@
 /* ==========================================================================
    DatePicker — Comète Design System
-   Sélecteur de date : champ segmenté + popover calendrier.
-   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Styles spécifiques au sélecteur de date.
+   Le conteneur visuel (bordure, radius, états) est géré par InputContainer.
+   Le bouton calendrier utilise le Button DS.
    ========================================================================== */
 
-/* Base */
+/* Root */
 .datePicker {
   position: relative;
   width: 100%;
-}
-
-/* ==========================================================================
-   Input group (champ + bouton calendrier)
-   ========================================================================== */
-
-.inputGroup {
-  display: flex;
-  align-items: center;
-  gap: var(--space075);
-  width: 100%;
-  box-sizing: border-box;
-  font-family: var(--font-family-primary);
-  font-size: var(--font-size-ui-xs);
-  line-height: var(--line-height-ui-xs);
-  letter-spacing: var(--letter-spacing-negative-tight);
-}
-
-/* ==========================================================================
-   Appearance: default (bordered)
-   ========================================================================== */
-
-.bordered .inputGroup {
-  background-color: var(--background-surface-elevation-raise-default);
-  border: 2px solid var(--border-default);
-  border-radius: var(--radius050);
-  padding: var(--space100);
-}
-
-.bordered .inputGroup:hover {
-  background-color: var(--background-surface-elevation-sunken-default);
-  border-color: var(--border-bold);
-}
-
-.bordered:focus-within .inputGroup {
-  border-color: var(--border-focus);
-  background-color: var(--background-surface-elevation-raise-default);
-}
-
-.datePicker[data-invalid] .inputGroup {
-  border-color: var(--border-critical);
-}
-
-.datePicker[data-disabled] .inputGroup {
-  background-color: var(--background-neutral-subtlest-default);
-  border-color: var(--border-disabled);
-  cursor: not-allowed;
-}
-
-/* ==========================================================================
-   Appearance: subtle (bottom border only)
-   ========================================================================== */
-
-.subtle .inputGroup {
-  border-bottom: 1px solid var(--border-bold);
-  padding-bottom: var(--space050);
-}
-
-.subtle:focus-within .inputGroup {
-  border-bottom-color: var(--border-focus);
-}
-
-.datePicker[data-invalid].subtle .inputGroup {
-  border-bottom-color: var(--border-critical);
 }
 
 /* ==========================================================================
@@ -116,38 +53,15 @@
 }
 
 /* ==========================================================================
-   Calendar button (trigger)
+   Calendar button — override Button DS pour intégration dans le champ
    ========================================================================== */
 
 .calendarButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
-  padding: 0;
-  border: none;
-  border-radius: var(--radius0375);
-  background: transparent;
-  color: var(--icon-default);
-  cursor: pointer;
-  outline: none;
-}
-
-.calendarButton[data-hovered] {
-  background-color: var(--background-neutral-subtlest-hovered);
-}
-
-.calendarButton[data-pressed] {
-  background-color: var(--background-neutral-subtlest-pressed);
-}
-
-.datePicker[data-disabled] .calendarButton {
-  color: var(--icon-disabled);
-  cursor: not-allowed;
 }
 
 /* ==========================================================================
-   Popover
+   Popover / Dialog
    ========================================================================== */
 
 .popover {

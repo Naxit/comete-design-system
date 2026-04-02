@@ -9,12 +9,14 @@ import {
   type TextFieldProps as AriaTextFieldProps,
 } from "react-aria-components";
 import { Icon } from "../Icon/Icon.js";
+import { InputContainer } from "../InputContainer/InputContainer.js";
+import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
 import styles from "./TextField.module.css";
 
 // -----------------------------------------------------------------------
 // Types publics
 
-export type TextFieldAppearance = "default" | "subtle";
+export type TextFieldAppearance = InputContainerAppearance;
 
 export interface TextFieldProps
   extends Omit<AriaTextFieldProps, "className" | "style" | "children"> {
@@ -120,43 +122,40 @@ export function TextField({
     inputRef.current?.focus();
   }
 
-  const appearanceClass =
-    appearance === "default" ? styles.bordered : styles.subtle;
-
-  const rootClasses = [
-    styles.textField,
-    appearanceClass,
-    isCompact ? styles.compact : undefined,
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   return (
     <AriaTextField
-      className={rootClasses}
+      className={[styles.textField, className].filter(Boolean).join(" ")}
       value={currentValue}
       onChange={handleChange}
       {...ariaProps}
     >
-      {elemBefore && <span className={styles.elemBefore}>{elemBefore}</span>}
-      <AriaInput
-        ref={inputRef}
-        className={styles.input}
-        placeholder={placeholder}
-      />
-      {isLoading && <Spinner />}
-      {isClearable && hasValue && !ariaProps.isDisabled && (
-        <AriaButton
-          className={styles.clearButton}
-          aria-label="Effacer"
-          onPress={handleClear}
-          excludeFromTabOrder
+      {({ isDisabled, isInvalid }) => (
+        <InputContainer
+          appearance={appearance}
+          isCompact={isCompact}
+          isDisabled={isDisabled}
+          isInvalid={isInvalid ?? false}
         >
-          <Icon icon="CloseSmallFaded" size={16} spacing="none" />
-        </AriaButton>
+          {elemBefore && <span className={styles.elemBefore}>{elemBefore}</span>}
+          <AriaInput
+            ref={inputRef}
+            className={styles.input}
+            placeholder={placeholder}
+          />
+          {isLoading && <Spinner />}
+          {isClearable && hasValue && !isDisabled && (
+            <AriaButton
+              className={styles.clearButton}
+              aria-label="Effacer"
+              onPress={handleClear}
+              excludeFromTabOrder
+            >
+              <Icon icon="CloseSmallFaded" size={16} spacing="none" />
+            </AriaButton>
+          )}
+          {elemAfter && <span className={styles.elemAfter}>{elemAfter}</span>}
+        </InputContainer>
       )}
-      {elemAfter && <span className={styles.elemAfter}>{elemAfter}</span>}
     </AriaTextField>
   );
 }
