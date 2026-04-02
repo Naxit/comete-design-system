@@ -319,7 +319,7 @@ function IconExplorer(): ReactElement {
           marginBottom: 20,
           padding: 16,
           background: "var(--background-neutral-subtler-default, #f7f7f7)",
-          borderRadius: 12,
+          borderRadius: 8,
           border: "1px solid var(--border-default, #eee)",
         }}
       >

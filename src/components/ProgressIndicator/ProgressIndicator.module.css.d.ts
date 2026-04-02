@@ -1,16 +1,17 @@
 declare const styles: {
-  readonly root: string;
-  readonly small: string;
-  readonly medium: string;
-  readonly large: string;
-  readonly compact: string;
-  readonly cozy: string;
-  readonly comfortable: string;
-  readonly dot: string;
-  readonly default: string;
-  readonly primary: string;
-  readonly help: string;
-  readonly inverted: string;
-  readonly selected: string;
+  readonly "comfortable": string;
+  readonly "compact": string;
+  readonly "cozy": string;
+  readonly "default": string;
+  readonly "dot": string;
+  readonly "help": string;
+  readonly "inverted": string;
+  readonly "large": string;
+  readonly "medium": string;
+  readonly "primary": string;
+  readonly "root": string;
+  readonly "selected": string;
+  readonly "small": string;
 };
-export default styles;
+export = styles;
+
