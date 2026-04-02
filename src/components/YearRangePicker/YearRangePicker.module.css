@@ -1,0 +1,51 @@
+/* ==========================================================================
+   YearRangePicker — Comète Design System
+   Sélecteur de plage d'années.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+/* Root */
+.root {
+  position: relative;
+  display: inline-flex;
+  width: max-content;
+}
+
+/* Conteneur des deux boutons année + séparateur */
+.yearValue {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+}
+
+/* Bouton année — override pour réduire le padding */
+.yearButton {
+  padding: var(--space050) var(--space150);
+  font-weight: var(--font-weight-medium);
+  min-width: 0;
+}
+
+/* Séparateur → */
+.separator {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-xs);
+  color: var(--text-subtlest);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* Bouton calendrier */
+.calendarButton {
+  flex-shrink: 0;
+}
+
+/* Popover */
+.popover {
+  min-width: auto;
+}
+
+/* Dialog — reset outline */
+.dialog {
+  outline: none;
+}

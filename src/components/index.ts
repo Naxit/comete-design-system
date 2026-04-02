@@ -25,3 +25,4 @@ export * from "./Popup";
 export * from "./Tabs";
 export * from "./TextField";
 export * from "./TimePicker";
+export * from "./YearRangePicker";
