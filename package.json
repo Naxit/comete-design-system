@@ -46,7 +46,7 @@
   },
   "peerDependencies": {
     "@naxit/comete-design-tokens": "^0.4.1",
-    "@naxit/comete-icons": "^0.3.0",
+    "@naxit/comete-icons": "^0.3.1",
     "@naxit/comete-illustrations": "^0.1.0-alpha.1",
     "react": "^18.0.0 || ^19.0.0",
     "react-dom": "^18.0.0 || ^19.0.0"
@@ -55,8 +55,8 @@
     "@eslint/js": "^9.39.4",
     "@internationalized/date": "^3.12.0",
     "@naxit/comete-design-tokens": "^0.4.1",
-    "@naxit/comete-icons": "^0.3.0",
-    "@naxit/comete-illustrations": "^0.1.0-alpha.1",
+    "@naxit/comete-icons": "^0.3.1",
+    "@naxit/comete-illustrations": "0.1.0-alpha.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",

@@ -1,0 +1,95 @@
+/* ==========================================================================
+   DropIndicator — Comète Design System
+   Indicateur visuel de zone de dépôt (drag & drop).
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+.dropIndicator {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* Orientation verticale */
+.vertical {
+  flex-direction: column;
+  width: auto;
+  height: 100%;
+}
+
+/* ==========================================================================
+   Appearance: round — cercles aux extrémités
+   ========================================================================== */
+
+.circle {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-round);
+  background-color: var(--border-selected);
+}
+
+/* ==========================================================================
+   Appearance: angle — triangle rentrant aux extrémités
+   ========================================================================== */
+
+.angle {
+  flex-shrink: 0;
+  width: 0;
+  height: 0;
+  border: 4px solid transparent;
+}
+
+/* Horizontal : triangles pointent vers l'intérieur (gauche/droite) */
+.dropIndicator:not(.vertical) .angle:first-child {
+  border-left-color: var(--border-selected);
+  border-right: none;
+}
+
+.dropIndicator:not(.vertical) .angle:last-child {
+  border-right-color: var(--border-selected);
+  border-left: none;
+}
+
+/* Vertical : triangles pointent vers l'intérieur (haut/bas) */
+.vertical .angle:first-child {
+  border-top-color: var(--border-selected);
+  border-bottom: none;
+}
+
+.vertical .angle:last-child {
+  border-bottom-color: var(--border-selected);
+  border-top: none;
+}
+
+/* ==========================================================================
+   Ajustements du début et fin de ligne
+   ========================================================================== */
+
+.dropIndicator:not(.vertical) div:first-child {
+  margin-right: -2px;
+}
+.dropIndicator:not(.vertical) div:last-child {
+  margin-left: -2px;
+}
+.vertical div:first-child {
+  margin-bottom: -2px;
+}
+.vertical div:last-child {
+  margin-top: -2px;
+}
+
+/* ==========================================================================
+   Ligne centrale
+   ========================================================================== */
+
+.line {
+  flex: 1 0 0;
+  height: 2px;
+  background-color: var(--border-selected);
+}
+
+.vertical .line {
+  height: auto;
+  width: 2px;
+}
