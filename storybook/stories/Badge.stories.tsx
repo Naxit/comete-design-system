@@ -57,47 +57,6 @@ export const Default: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("582-27488") } },
 };
 
-export const AllAppearances: Story = {
-  name: "All appearances",
-  parameters: { design: { type: "figma", url: figmaUrl("341-2448") } },
-  render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-      {(
-        [
-          "neutral",
-          "primary",
-          "primary-inverted",
-          "critical",
-          "success",
-          "warning",
-          "accent",
-        ] as const
-      ).map((appearance) => (
-        <div key={appearance} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <Badge appearance={appearance} importance="high" label="High" />
-          <Badge appearance={appearance} importance="medium" label="Medium" />
-          <Badge appearance={appearance} importance="low" />
-          <span style={{ marginLeft: 24, width: 120, fontSize: 12, color: "var(--text-subtle)", fontFamily: "monospace" }}>
-            {appearance}
-          </span>
-        </div>
-      ))}
-    </div>
-  ),
-};
-
-export const HighImportance: Story = {
-  name: "High importance",
-  parameters: { design: { type: "figma", url: figmaUrl("582-27488") } },
-  args: { importance: "high", label: "New" },
-};
-
-export const MediumImportance: Story = {
-  name: "Medium importance",
-  parameters: { design: { type: "figma", url: figmaUrl("2951-14451") } },
-  args: { importance: "medium", label: "12" },
-};
-
 export const LowImportance: Story = {
   name: "Low importance (dot)",
   parameters: { design: { type: "figma", url: figmaUrl("2952-14713") } },
@@ -110,6 +69,18 @@ export const LowImportance: Story = {
       )}
     </div>
   ),
+};
+
+export const MediumImportance: Story = {
+  name: "Medium importance",
+  parameters: { design: { type: "figma", url: figmaUrl("2951-14451") } },
+  args: { importance: "medium", label: "24" },
+};
+
+export const HighImportance: Story = {
+  name: "High importance",
+  parameters: { design: { type: "figma", url: figmaUrl("582-27488") } },
+  args: { importance: "high", label: "24" },
 };
 
 export const WithCutoutBorder: Story = {
@@ -142,6 +113,35 @@ export const Disabled: Story = {
       <Badge appearance="neutral" importance="high" label="Disabled" isDisabled />
       <Badge appearance="primary" importance="medium" label="Disabled" isDisabled />
       <Badge appearance="critical" importance="low" isDisabled />
+    </div>
+  ),
+};
+
+export const AllAppearances: Story = {
+  name: "All appearances",
+  parameters: { design: { type: "figma", url: figmaUrl("341-2448") } },
+  render: () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+      {(
+        [
+          "neutral",
+          "primary",
+          "primary-inverted",
+          "critical",
+          "success",
+          "warning",
+          "accent",
+        ] as const
+      ).map((appearance) => (
+        <div key={appearance} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Badge appearance={appearance} importance="high" label="High" />
+          <Badge appearance={appearance} importance="medium" label="Medium" />
+          <Badge appearance={appearance} importance="low" />
+          <span style={{ marginLeft: 24, width: 120, fontSize: 12, color: "var(--text-subtle)", fontFamily: "monospace" }}>
+            {appearance}
+          </span>
+        </div>
+      ))}
     </div>
   ),
 };

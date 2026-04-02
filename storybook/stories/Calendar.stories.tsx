@@ -23,7 +23,7 @@ const meta = {
   component: Calendar,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
+    layout: "centered",
     design: { type: "figma", url: figmaUrl("3223:8583") },
   },
   argTypes: {

@@ -18,7 +18,7 @@ const meta = {
   component: Breadcrumbs,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
+    layout: "centered",
     design: { type: "figma", url: figmaUrl("3132:44041") },
   },
 } satisfies Meta<typeof Breadcrumbs>;

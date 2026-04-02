@@ -166,11 +166,37 @@ export const Disabled: Story = {
   render: MenuItemStory,
 };
 
-/** Désactivé + sélectionné. */
-export const DisabledSelected: Story = {
-  args: { isDisabled: true, isSelected: true },
-  parameters: {
-    design: { type: "figma", url: figmaUrl("6433:33967") },
-  },
-  render: MenuItemStory,
+/** Tous les états côte à côte. */
+export const AllStates: Story = {
+  name: "All states",
+  render: () => (
+    <div style={{ display: "flex", gap: 24 }}>
+      {[
+        { label: "Default", disabled: false, selected: false },
+        { label: "Selected", disabled: false, selected: true },
+        { label: "Disabled", disabled: true, selected: false },
+      ].map(({ label, disabled, selected }) => (
+        <div key={label} style={{ width: 280 }}>
+          <span style={{ fontFamily: "monospace", fontSize: 11, color: "var(--text-subtlest)" }}>
+            {label}
+          </span>
+          <Menu
+            aria-label={label}
+            selectionMode={selected ? "multiple" : undefined}
+            selectedKeys={selected ? ["item"] : []}
+          >
+            <MenuItem
+              id="item"
+              iconBefore="Star"
+              iconAfter="ChevronRight"
+              description="Description"
+              isDisabled={disabled}
+            >
+              Option
+            </MenuItem>
+          </Menu>
+        </div>
+      ))}
+    </div>
+  ),
 };

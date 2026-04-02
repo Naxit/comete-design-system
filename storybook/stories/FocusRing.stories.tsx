@@ -60,7 +60,7 @@ const meta = {
   component: FocusRing,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
+    layout: "centered",
     design: { type: "figma", url: figmaUrl("3134:45684") },
   },
   argTypes: {

@@ -39,7 +39,7 @@ const meta = {
     side: "both",
   },
   parameters: {
-    layout: "padded",
+    layout: "centered",
     design: { type: "figma", url: figmaUrl("6284:794") },
   },
 } satisfies Meta<typeof DropIndicator>;
@@ -53,23 +53,43 @@ type Story = StoryObj<typeof DropIndicator>;
 /** Indicateur horizontal avec cercles (par défaut). */
 export const Default: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("6284:1095") } },
+  render: (args) => (
+    <div style={{ width: 120 }}>
+      <DropIndicator {...args} />
+    </div>
+  ),
 };
 
 /** Indicateur avec triangles rentrants. */
 export const Angle: Story = {
   args: { appearance: "angle" },
+  render: (args) => (
+    <div style={{ width: 120 }}>
+      <DropIndicator {...args} />
+    </div>
+  ),
 };
 
 /** Triangle uniquement côté start. */
 export const AngleStart: Story = {
   name: "Angle — start only",
   args: { appearance: "angle", side: "start" },
+  render: (args) => (
+    <div style={{ width: 120 }}>
+      <DropIndicator {...args} />
+    </div>
+  ),
 };
 
 /** Cercle uniquement côté end. */
 export const RoundEnd: Story = {
   name: "Round — end only",
   args: { side: "end" },
+  render: (args) => (
+    <div style={{ width: 120 }}>
+      <DropIndicator {...args} />
+    </div>
+  ),
 };
 
 /** Indicateur vertical. */
@@ -91,35 +111,6 @@ export const VerticalAngle: Story = {
       <DropIndicator {...args} />
     </div>
   ),
-};
-
-/** Toutes les combinaisons. */
-export const AllVariants: Story = {
-  name: "All variants",
-  render: () => {
-    const appearances: DropIndicatorAppearance[] = ["round", "angle"];
-    const sides: DropIndicatorSide[] = ["both", "start", "end"];
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 24, width: 300 }}>
-        {appearances.map((a) =>
-          sides.map((s) => (
-            <div key={`${a}-${s}`} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <span
-                style={{
-                  fontFamily: "monospace",
-                  fontSize: 11,
-                  color: "var(--text-subtlest)",
-                }}
-              >
-                appearance={a} side={s}
-              </span>
-              <DropIndicator appearance={a} side={s} />
-            </div>
-          ))
-        )}
-      </div>
-    );
-  },
 };
 
 /** Démo entre deux blocs (contexte drag & drop). */
@@ -154,4 +145,33 @@ export const InContainer: Story = {
       />
     </div>
   ),
+};
+
+/** Toutes les combinaisons. */
+export const AllVariants: Story = {
+  name: "All variants",
+  render: () => {
+    const appearances: DropIndicatorAppearance[] = ["round", "angle"];
+    const sides: DropIndicatorSide[] = ["both", "start", "end"];
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 24, width: 300 }}>
+        {appearances.map((a) =>
+          sides.map((s) => (
+            <div key={`${a}-${s}`} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <span
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 11,
+                  color: "var(--text-subtlest)",
+                }}
+              >
+                appearance={a} side={s}
+              </span>
+              <DropIndicator appearance={a} side={s} />
+            </div>
+          ))
+        )}
+      </div>
+    );
+  },
 };

@@ -126,6 +126,47 @@ export const DragLeft: Story = {
   },
 };
 
+// -----------------------------------------------------------------------
+// Play functions — tests d'interaction
+
+/** Vérifie que onPress est appelé au clic. */
+export const PressInteraction: Story = {
+  name: "Press interaction",
+  args: { variant: "actionable", onPress: fn() },
+  play: async ({
+    canvasElement,
+    args,
+  }: {
+    canvasElement: HTMLElement;
+    args: { onPress?: () => void };
+  }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button"));
+    await expect(args.onPress).toHaveBeenCalledOnce();
+  },
+};
+
+/** Vérifie la navigation clavier (Enter). */
+export const KeyboardNavigation: Story = {
+  name: "Keyboard navigation",
+  args: { variant: "actionable", onPress: fn() },
+  play: async ({
+    canvasElement,
+    args,
+  }: {
+    canvasElement: HTMLElement;
+    args: { onPress?: () => void };
+  }) => {
+    const canvas = within(canvasElement);
+    const card = canvas.getByRole("button");
+    card.focus();
+    await userEvent.keyboard("{Enter}");
+    await expect(args.onPress).toHaveBeenCalledOnce();
+  },
+};
+
+// -----------------------------------------------------------------------
+
 /** Toutes les combinaisons appearance × variant. */
 export const AllVariants: Story = {
   name: "All variants",
@@ -190,44 +231,5 @@ export const AllVariants: Story = {
         ))}
       </div>
     );
-  },
-};
-
-// -----------------------------------------------------------------------
-// Play functions — tests d'interaction
-
-/** Vérifie que onPress est appelé au clic. */
-export const PressInteraction: Story = {
-  name: "Press interaction",
-  args: { variant: "actionable", onPress: fn() },
-  play: async ({
-    canvasElement,
-    args,
-  }: {
-    canvasElement: HTMLElement;
-    args: { onPress?: () => void };
-  }) => {
-    const canvas = within(canvasElement);
-    await userEvent.click(canvas.getByRole("button"));
-    await expect(args.onPress).toHaveBeenCalledOnce();
-  },
-};
-
-/** Vérifie la navigation clavier (Enter). */
-export const KeyboardNavigation: Story = {
-  name: "Keyboard navigation",
-  args: { variant: "actionable", onPress: fn() },
-  play: async ({
-    canvasElement,
-    args,
-  }: {
-    canvasElement: HTMLElement;
-    args: { onPress?: () => void };
-  }) => {
-    const canvas = within(canvasElement);
-    const card = canvas.getByRole("button");
-    card.focus();
-    await userEvent.keyboard("{Enter}");
-    await expect(args.onPress).toHaveBeenCalledOnce();
   },
 };
