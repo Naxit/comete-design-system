@@ -1,0 +1,132 @@
+/* ProgressIndicator — Comete Design System */
+
+/* -----------------------------------------------------------------------
+   Root
+   ----------------------------------------------------------------------- */
+
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* -----------------------------------------------------------------------
+   Spacing × Size → gap
+   Matrix:
+     |            | compact        | cozy           | comfortable    |
+     |------------|----------------|----------------|----------------|
+     | small      | space025 (2px) | space050 (4px) | space075 (6px) |
+     | medium     | space050 (4px) | space075 (6px) | space100 (8px) |
+     | large      | space075 (6px) | space100 (8px) | space150 (12px)|
+   ----------------------------------------------------------------------- */
+
+/* — small — */
+.small.compact {
+  gap: var(--space025);
+}
+.small.cozy {
+  gap: var(--space050);
+}
+.small.comfortable {
+  gap: var(--space075);
+}
+
+/* — medium — */
+.medium.compact {
+  gap: var(--space050);
+}
+.medium.cozy {
+  gap: var(--space075);
+}
+.medium.comfortable {
+  gap: var(--space100);
+}
+
+/* — large — */
+.large.compact {
+  gap: var(--space075);
+}
+.large.cozy {
+  gap: var(--space100);
+}
+.large.comfortable {
+  gap: var(--space150);
+}
+
+/* -----------------------------------------------------------------------
+   Dot — base (button reset + shape)
+   ----------------------------------------------------------------------- */
+
+.dot {
+  display: block;
+  flex-shrink: 0;
+  border-radius: var(--radius-round);
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+}
+
+/* -----------------------------------------------------------------------
+   Dot — sizes
+   ----------------------------------------------------------------------- */
+
+.small > .dot {
+  width: var(--size050);
+  height: var(--size050);
+}
+
+.medium > .dot {
+  width: var(--size100);
+  height: var(--size100);
+}
+
+.large > .dot {
+  width: var(--size150);
+  height: var(--size150);
+}
+
+/* -----------------------------------------------------------------------
+   Dot — appearance × state (not selected)
+   ----------------------------------------------------------------------- */
+
+.dot.default,
+.dot.primary,
+.dot.help {
+  background-color: var(--background-neutral-subtler-default);
+}
+
+.dot.inverted {
+  background-color: var(--background-neutral-bold-default);
+}
+
+/* -----------------------------------------------------------------------
+   Dot — appearance × state (selected)
+   ----------------------------------------------------------------------- */
+
+.dot.default.selected {
+  background-color: var(--background-selected-bold-default);
+}
+
+.dot.primary.selected {
+  background-color: var(--background-brand-bold-default);
+}
+
+.dot.help.selected {
+  background-color: var(--background-accent-bold-default);
+}
+
+.dot.inverted.selected {
+  background-color: var(--icon-inverted);
+}
+
+/* -----------------------------------------------------------------------
+   Dot — focus-visible (focus ring)
+   Figma: 2px solid --border-focused, round, offset 2px from dot edge
+   ----------------------------------------------------------------------- */
+
+.dot:focus-visible {
+  box-shadow: 0 0 0 var(--size025) var(--border-focused);
+}
