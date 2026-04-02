@@ -112,7 +112,7 @@ type Story = StoryObj<MenuStoryArgs>;
 function MenuStory(args: MenuStoryArgs) {
   return (
     <div style={{ width: 360 }}>
-      <Menu>
+      <Menu aria-label="Menu">
         <SampleSection sectionTitle={args.title} hasSeparator={args.hasSeparator} />
         {args.menus >= 2 && (
           <SampleSection sectionTitle={args.title} hasSeparator={args.hasSeparator} offset={3} />
@@ -133,7 +133,7 @@ function MenuStory(args: MenuStoryArgs) {
 export const SimpleOptions: Story = {
   render: () => (
     <div style={{ width: 360 }}>
-      <Menu>
+      <Menu aria-label="Menu">
         <MenuItem id="edit" iconBefore="Edit">Modifier</MenuItem>
         <MenuItem id="duplicate" iconBefore="ContentCopy">Dupliquer</MenuItem>
         <MenuItem id="delete" iconBefore="Delete">Supprimer</MenuItem>
@@ -146,7 +146,7 @@ export const SimpleOptions: Story = {
 export const WithSlotAfterButton: Story = {
   render: () => (
     <div style={{ width: 360 }}>
-      <Menu>
+      <Menu aria-label="Menu">
         <MenuItem id="profile" iconBefore="Person">Profil</MenuItem>
         <MenuItem
           id="invite"
@@ -195,18 +195,18 @@ export const ThreeSections: Story = {
 export const Submenu: Story = {
   render: () => (
     <div style={{ width: 360 }}>
-      <Menu>
+      <Menu aria-label="Menu">
         <MenuItem id="edit" iconBefore="Edit">Modifier</MenuItem>
         <SubmenuTrigger>
           <MenuItem id="move" iconBefore="Folder">Déplacer vers</MenuItem>
           <MenuPopover>
-            <Menu>
+            <Menu aria-label="Menu">
               <MenuItem id="drafts">Brouillons</MenuItem>
               <MenuItem id="archive">Archives</MenuItem>
               <SubmenuTrigger>
                 <MenuItem id="projects">Projets</MenuItem>
                 <MenuPopover>
-                  <Menu>
+                  <Menu aria-label="Menu">
                     <MenuItem id="p-alpha">Alpha</MenuItem>
                     <MenuItem id="p-beta">Beta</MenuItem>
                   </Menu>

@@ -109,6 +109,7 @@ function MenuItemStory(args: MenuItemStoryArgs) {
   return (
     <div style={{ width: 360 }}>
       <Menu
+        aria-label="Menu"
         selectionMode={args.isSelected ? "multiple" : undefined}
         selectedKeys={args.isSelected ? ["item"] : []}
       >

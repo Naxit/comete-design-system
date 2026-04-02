@@ -73,7 +73,7 @@ export const Focused: Story = {
         <TextField {...args} />
       </Field>
       <Field label="Sans focus (pour comparaison)">
-        <TextField placeholder="Pas de focus" />
+        <TextField aria-label="Sans focus" placeholder="Pas de focus" />
       </Field>
     </div>
   ),
@@ -97,7 +97,7 @@ export const WithField: Story = {
   render: () => (
     <div style={{ width: 280 }}>
       <Field label="Email" isRequired>
-        <TextField placeholder="nom@example.com" type="email" />
+        <TextField aria-label="Email" placeholder="nom@example.com" type="email" />
       </Field>
     </div>
   ),
@@ -115,6 +115,7 @@ export const FieldInvalid: Story = {
         messageType="critical"
       >
         <TextField
+          aria-label="Email"
           placeholder="nom@example.com"
           type="email"
           isInvalid
@@ -130,7 +131,7 @@ export const FieldSuccess: Story = {
   render: () => (
     <div style={{ width: 280 }}>
       <Field label="Email" message="Adresse valide" messageType="success">
-        <TextField defaultValue="axel@example.com" type="email" />
+        <TextField aria-label="Email" defaultValue="axel@example.com" type="email" />
       </Field>
     </div>
   ),
@@ -168,32 +169,32 @@ export const AllStates: Story = {
             <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
               <div style={col}>
                 <Field label="Default">
-                  <TextField appearance={a} placeholder="Placeholder" />
+                  <TextField aria-label="Default" appearance={a} placeholder="Placeholder" />
                 </Field>
               </div>
               <div style={col}>
                 <Field label="Filled">
-                  <TextField appearance={a} defaultValue="Value" />
+                  <TextField aria-label="Filled" appearance={a} defaultValue="Value" />
                 </Field>
               </div>
               <div style={col}>
                 <Field label="Typing (clearable)">
-                  <TextField appearance={a} defaultValue="Value" isClearable />
+                  <TextField aria-label="Typing" appearance={a} defaultValue="Value" isClearable />
                 </Field>
               </div>
               <div style={col}>
                 <Field label="Loading">
-                  <TextField appearance={a} defaultValue="Value" isLoading isClearable />
+                  <TextField aria-label="Loading" appearance={a} defaultValue="Value" isLoading isClearable />
                 </Field>
               </div>
               <div style={col}>
                 <Field label="Invalid" message="Error message" messageType="critical">
-                  <TextField appearance={a} defaultValue="Value" isInvalid />
+                  <TextField aria-label="Invalid" appearance={a} defaultValue="Value" isInvalid />
                 </Field>
               </div>
               <div style={col}>
                 <Field label="Disabled">
-                  <TextField appearance={a} defaultValue="Value" isDisabled />
+                  <TextField aria-label="Disabled" appearance={a} defaultValue="Value" isDisabled />
                 </Field>
               </div>
             </div>
