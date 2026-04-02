@@ -81,7 +81,7 @@ export const WithField: Story = {
   render: () => (
     <div style={{ width: 320 }}>
       <Field label="Date de début" isRequired>
-        <DatePicker />
+        <DatePicker aria-label="Date de début" />
       </Field>
     </div>
   ),
@@ -97,7 +97,7 @@ export const FieldInvalid: Story = {
         message="La date est invalide"
         messageType="critical"
       >
-        <DatePicker isInvalid defaultValue={today(getLocalTimeZone())} />
+        <DatePicker aria-label="Date de fin" isInvalid defaultValue={today(getLocalTimeZone())} />
       </Field>
     </div>
   ),
@@ -110,12 +110,13 @@ export const AllAppearances: Story = {
     <div style={{ display: "flex", gap: 32 }}>
       <div style={{ width: 280 }}>
         <Field label="Default">
-          <DatePicker defaultValue={today(getLocalTimeZone())} />
+          <DatePicker aria-label="Default" defaultValue={today(getLocalTimeZone())} />
         </Field>
       </div>
       <div style={{ width: 280 }}>
         <Field label="Subtle">
           <DatePicker
+            aria-label="Subtle"
             appearance="subtle"
             defaultValue={today(getLocalTimeZone())}
           />

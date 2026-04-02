@@ -194,6 +194,7 @@ export const Week: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: () => (
     <Calendar
+      aria-label="Choisir une semaine"
       appearance="week"
       defaultValue={{
         start: new CalendarDate(2026, 3, 9),
@@ -213,7 +214,7 @@ export const WeekControlled: Story = {
     });
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <Calendar appearance="week" value={range} onChange={setRange} />
+        <Calendar aria-label="Choisir une semaine" appearance="week" value={range} onChange={setRange} />
         <p style={{ fontFamily: "monospace", fontSize: 13 }}>
           {range.start.toString()} → {range.end.toString()}
         </p>
@@ -227,6 +228,7 @@ export const WeekDisabled: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: () => (
     <Calendar
+      aria-label="Calendrier semaine désactivé"
       appearance="week"
       defaultValue={{
         start: new CalendarDate(2026, 3, 9),
@@ -247,7 +249,7 @@ export const WeekPeriod: Story = {
     });
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <Calendar appearance="week" mode="period" value={range} onChange={setRange} />
+        <Calendar aria-label="Choisir une période" appearance="week" mode="period" value={range} onChange={setRange} />
         <p style={{ fontFamily: "monospace", fontSize: 13 }}>
           {range.start.toString()} → {range.end.toString()}
         </p>
@@ -270,6 +272,7 @@ export const WeekPeriodDual: Story = {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <Calendar
+          aria-label="Choisir une période"
           appearance="week"
           calendars={2}
           value={range}
@@ -291,6 +294,7 @@ export const Month: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: () => (
     <Calendar
+      aria-label="Choisir un mois"
       appearance="month"
       defaultValue={new CalendarDate(2026, 3, 1)}
     />
@@ -306,7 +310,7 @@ export const MonthControlled: Story = {
     );
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <Calendar appearance="month" value={value} onChange={setValue} />
+        <Calendar aria-label="Choisir un mois" appearance="month" value={value} onChange={setValue} />
         <p style={{ fontFamily: "monospace", fontSize: 13 }}>
           Sélectionné : {value.year}/{String(value.month).padStart(2, "0")}
         </p>
@@ -320,6 +324,7 @@ export const MonthDisabled: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: () => (
     <Calendar
+      aria-label="Calendrier mois désactivé"
       appearance="month"
       defaultValue={new CalendarDate(2026, 3, 1)}
       isDisabled
@@ -338,6 +343,7 @@ export const DualMonth: Story = {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <Calendar
+          aria-label="Choisir une période"
           appearance="month"
           calendars={2}
           value={range}
@@ -360,7 +366,7 @@ export const Year: Story = {
   name: "Année",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: () => (
-    <Calendar appearance="year" defaultValue={new CalendarDate(2026, 1, 1)} />
+    <Calendar aria-label="Choisir une année" appearance="year" defaultValue={new CalendarDate(2026, 1, 1)} />
   ),
 };
 
@@ -373,7 +379,7 @@ export const YearControlled: Story = {
     );
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <Calendar appearance="year" value={value} onChange={setValue} />
+        <Calendar aria-label="Choisir une année" appearance="year" value={value} onChange={setValue} />
         <p style={{ fontFamily: "monospace", fontSize: 13 }}>
           Sélectionné : {value.year}
         </p>
@@ -387,6 +393,7 @@ export const YearDisabled: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: () => (
     <Calendar
+      aria-label="Calendrier année désactivé"
       appearance="year"
       defaultValue={new CalendarDate(2026, 1, 1)}
       isDisabled
@@ -408,6 +415,7 @@ export const DualYear: Story = {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <Calendar
+          aria-label="Choisir une période"
           appearance="year"
           calendars={2}
           value={range}

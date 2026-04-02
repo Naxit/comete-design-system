@@ -6,7 +6,7 @@ import {
   MenuItem as AriaMenuItem,
   MenuTrigger as AriaMenuTrigger,
   SubmenuTrigger as AriaSubmenuTrigger,
-  Section as AriaSection,
+  MenuSection as AriaMenuSection,
   Header as AriaHeader,
   Separator as AriaSeparator,
   type MenuProps as AriaMenuProps,
@@ -304,12 +304,12 @@ export function MenuSection({
   ].filter(Boolean).join(" ");
 
   return (
-    <AriaSection className={classNames}>
+    <AriaMenuSection className={classNames}>
       {title && (
         <AriaHeader className={styles.sectionHeading}>{title}</AriaHeader>
       )}
       {children}
-    </AriaSection>
+    </AriaMenuSection>
   );
 }
 
