@@ -1,9 +1,10 @@
 declare const styles: {
-  readonly root: string;
-  readonly content: string;
-  readonly chevronButton: string;
-  readonly yearButton: string;
-  readonly popover: string;
-  readonly dialog: string;
+  readonly "chevronButton": string;
+  readonly "content": string;
+  readonly "dialog": string;
+  readonly "popover": string;
+  readonly "root": string;
+  readonly "yearButton": string;
 };
-export default styles;
+export = styles;
+
