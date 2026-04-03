@@ -1,0 +1,108 @@
+/* ==========================================================================
+   MonthPicker — Comète Design System
+   Sélecteur de mois unique.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+/* Root */
+.root {
+  position: relative;
+  display: inline-flex;
+  width: max-content;
+}
+
+/* Conteneur des boutons / inputs */
+.content {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+  width: 100%;
+}
+
+/* Boutons chevron ←/→ (mode navigation) */
+.chevronButton {
+  flex-shrink: 0;
+}
+
+/* Bouton mois/année central (mode navigation) — occupe l'espace restant */
+.monthButton {
+  flex: 1 0 0;
+  justify-content: center;
+  font-weight: var(--font-weight-medium);
+  min-width: 0;
+}
+
+/* Input mois (mode saisie) */
+.monthInput {
+  width: 2ch;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-primary);
+  text-align: center;
+  padding: 0;
+}
+
+.monthInput:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.monthInput::placeholder {
+  color: var(--text-subtlest);
+}
+
+/* Séparateur "/" entre mois et année (mode saisie) */
+.separator {
+  color: var(--text-subtlest);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-xs);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* Input année (mode saisie) */
+.yearInput {
+  width: 4ch;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-primary);
+  text-align: center;
+  padding: 0;
+}
+
+.yearInput:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.yearInput::placeholder {
+  color: var(--text-subtlest);
+}
+
+/* Bouton calendrier (mode saisie) */
+.calendarButton {
+  flex-shrink: 0;
+}
+
+/* Popover */
+.popover {
+  min-width: auto;
+}
+
+/* Dialog — reset outline */
+.dialog {
+  outline: none;
+}
