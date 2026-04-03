@@ -1,8 +1,8 @@
-// YearPicker — stories Storybook
+// MonthPicker — stories Storybook
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { YearPicker, Field } from "@naxit/comete-design-system/components";
-import type { YearPickerProps } from "@naxit/comete-design-system/components";
+import { MonthPicker, Field } from "@naxit/comete-design-system/components";
+import type { MonthPickerProps } from "@naxit/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -16,24 +16,28 @@ const figmaUrl = (nodeId: string) =>
 // Meta
 
 const meta = {
-  title: "Components/YearPicker",
-  component: YearPicker,
+  title: "Components/MonthPicker",
+  component: MonthPicker,
   tags: ["autodocs"],
   parameters: {
     layout: "centered",
     design: {
       type: "figma",
-      url: figmaUrl("3370:6833"),
+      url: figmaUrl("3363:12640"),
     },
   },
   argTypes: {
+    month: {
+      control: { type: "number", min: 1, max: 12 },
+      description: "Mois sélectionné (1-12)",
+    },
     year: {
       control: { type: "number" },
       description: "Année sélectionnée",
     },
     isEditable: {
       control: "boolean",
-      description: "Mode saisie (input + icône calendrier)",
+      description: "Mode saisie (inputs + icône calendrier)",
     },
     appearance: {
       control: { type: "inline-radio" },
@@ -49,17 +53,18 @@ const meta = {
       description: "Désactive le composant",
     },
   },
-} satisfies Meta<typeof YearPicker>;
+} satisfies Meta<typeof MonthPicker>;
 
 export default meta;
-type Story = StoryObj<typeof YearPicker>;
+type Story = StoryObj<typeof MonthPicker>;
 
 // -----------------------------------------------------------------------
 // Render helper — contrôlé via useState
 
-function ControlledRender(args: YearPickerProps) {
-  const currentYear = new Date().getFullYear();
-  const [year, setYear] = useState(args.year ?? currentYear);
+function ControlledRender(args: MonthPickerProps) {
+  const now = new Date();
+  const [month, setMonth] = useState(args.month ?? now.getMonth() + 1);
+  const [year, setYear] = useState(args.year ?? now.getFullYear());
   return (
     <div
       style={{
@@ -69,10 +74,12 @@ function ControlledRender(args: YearPickerProps) {
         alignItems: "center",
       }}
     >
-      <YearPicker
+      <MonthPicker
         {...args}
+        month={month}
         year={year}
-        onChange={(y) => {
+        onChange={(m, y) => {
+          setMonth(m);
           setYear(y);
         }}
       />
@@ -83,7 +90,7 @@ function ControlledRender(args: YearPickerProps) {
           color: "var(--text-subtlest)",
         }}
       >
-        Sélection : {year}
+        Sélection : {String(month).padStart(2, "0")}/{year}
       </p>
     </div>
   );
@@ -92,47 +99,50 @@ function ControlledRender(args: YearPickerProps) {
 // -----------------------------------------------------------------------
 // Stories
 
-/** Mode navigation (défaut) — chevrons ←/→ + bouton année. */
+/** Mode saisie (défaut) — inputs mois/année + icône calendrier. */
 export const Default: Story = {
   render: ControlledRender,
   parameters: {
-    design: { type: "figma", url: figmaUrl("3370:6839") },
+    design: { type: "figma", url: figmaUrl("3363:12640") },
   },
 };
 
-/** Mode navigation — chevrons ←/→ + bouton année. */
+/** Mode navigation — chevrons ←/→ + bouton mois/année. */
 export const Navigable: Story = {
   render: ControlledRender,
   args: {
+    month: 6,
     year: 2025,
     isEditable: false,
   },
   parameters: {
-    design: { type: "figma", url: figmaUrl("3370:6839") },
+    design: { type: "figma", url: figmaUrl("3363:12640") },
   },
 };
 
-/** YearPicker subtle. */
+/** MonthPicker subtle. */
 export const Subtle: Story = {
   render: ControlledRender,
   args: {
+    month: 6,
     year: 2025,
     appearance: "subtle",
   },
   parameters: {
-    design: { type: "figma", url: figmaUrl("3370:6839") },
+    design: { type: "figma", url: figmaUrl("3363:12640") },
   },
 };
 
-/** YearPicker invalid. */
+/** MonthPicker invalid. */
 export const Invalid: Story = {
   render: ControlledRender,
   args: {
+    month: 6,
     year: 2025,
     isInvalid: true,
   },
   parameters: {
-    design: { type: "figma", url: figmaUrl("3370:6839") },
+    design: { type: "figma", url: figmaUrl("3363:12640") },
   },
 };
 
@@ -140,39 +150,42 @@ export const Invalid: Story = {
 export const Disabled: Story = {
   render: ControlledRender,
   args: {
+    month: 6,
     year: 2025,
     isDisabled: true,
   },
   parameters: {
-    design: { type: "figma", url: figmaUrl("3513:37040") },
+    design: { type: "figma", url: figmaUrl("3363:12640") },
   },
 };
 
-/** YearPicker dans un Field avec label. */
+/** MonthPicker dans un Field avec label. */
 export const WithField: Story = {
   name: "With Field wrapper",
-  render: (args: YearPickerProps) => {
+  render: (args: MonthPickerProps) => {
+    const [month, setMonth] = useState(args.month ?? 6);
     const [year, setYear] = useState(args.year ?? 2025);
     return (
-      <Field label="Année" isRequired>
-        <YearPicker {...args} year={year} onChange={setYear} />
+      <Field label="Mois" isRequired>
+        <MonthPicker {...args} month={month} year={year} onChange={(m, y) => { setMonth(m); setYear(y); }} />
       </Field>
     );
   },
 };
 
-/** YearPicker avec message d'erreur. */
+/** MonthPicker avec message d'erreur. */
 export const FieldInvalid: Story = {
   name: "Field invalid",
-  render: (args: YearPickerProps) => {
+  render: (args: MonthPickerProps) => {
+    const [month, setMonth] = useState(args.month ?? 6);
     const [year, setYear] = useState(args.year ?? 2025);
     return (
       <Field
-        label="Année"
-        message="L'année est invalide"
+        label="Mois"
+        message="Le mois est invalide"
         messageType="critical"
       >
-        <YearPicker {...args} year={year} onChange={setYear} isInvalid />
+        <MonthPicker {...args} month={month} year={year} onChange={(m, y) => { setMonth(m); setYear(y); }} isInvalid />
       </Field>
     );
   },
@@ -181,16 +194,18 @@ export const FieldInvalid: Story = {
 /** Toutes les apparences. */
 export const AllAppearances: Story = {
   name: "All appearances",
-  render: (args: YearPickerProps) => {
-    const [yearDefault, setYearDefault] = useState(args.year ?? 2025);
-    const [yearSubtle, setYearSubtle] = useState(args.year ?? 2025);
+  render: (args: MonthPickerProps) => {
+    const [monthDef, setMonthDef] = useState(args.month ?? 6);
+    const [yearDef, setYearDef] = useState(args.year ?? 2025);
+    const [monthSub, setMonthSub] = useState(args.month ?? 6);
+    const [yearSub, setYearSub] = useState(args.year ?? 2025);
     return (
       <div style={{ display: "flex", gap: 32 }}>
         <Field label="Default">
-          <YearPicker {...args} year={yearDefault} onChange={setYearDefault} />
+          <MonthPicker {...args} month={monthDef} year={yearDef} onChange={(m, y) => { setMonthDef(m); setYearDef(y); }} />
         </Field>
         <Field label="Subtle">
-          <YearPicker {...args} year={yearSubtle} onChange={setYearSubtle} appearance="subtle" />
+          <MonthPicker {...args} month={monthSub} year={yearSub} onChange={(m, y) => { setMonthSub(m); setYearSub(y); }} appearance="subtle" />
         </Field>
       </div>
     );

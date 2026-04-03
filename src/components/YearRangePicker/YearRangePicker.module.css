@@ -11,18 +11,39 @@
   width: max-content;
 }
 
-/* Conteneur des deux boutons année + séparateur */
+/* Conteneur des deux boutons/inputs année + séparateur */
 .yearValue {
   display: flex;
   align-items: center;
   gap: var(--space100);
 }
 
-/* Bouton année — override pour réduire le padding */
+/* Bouton année (mode navigation) */
 .yearButton {
-  padding: var(--space050) var(--space150);
   font-weight: var(--font-weight-medium);
   min-width: 0;
+}
+
+/* Input année (mode saisie) */
+.yearInput {
+  width: 4ch;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-primary);
+  text-align: center;
+  padding: 0;
+}
+
+.yearInput:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
 }
 
 /* Séparateur → */

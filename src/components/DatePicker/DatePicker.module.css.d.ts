@@ -1,10 +1,12 @@
 declare const styles: {
   readonly "calendarButton": string;
+  readonly "chevronButton": string;
+  readonly "dateButton": string;
   readonly "dateInput": string;
   readonly "datePicker": string;
   readonly "dialog": string;
+  readonly "navigationContent": string;
   readonly "popover": string;
   readonly "segment": string;
 };
 export = styles;
-
