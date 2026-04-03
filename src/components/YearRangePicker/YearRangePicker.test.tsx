@@ -4,6 +4,8 @@ import userEvent from "@testing-library/user-event";
 import { YearRangePicker } from "./YearRangePicker.js";
 
 describe("YearRangePicker", () => {
+  // -- Rendering (editable mode = default) --
+
   it("should render with current year when no props provided", () => {
     render(<YearRangePicker />);
     const currentYear = new Date().getFullYear();
@@ -57,29 +59,42 @@ describe("YearRangePicker", () => {
     render(
       <YearRangePicker startYear={2023} endYear={2025} isDisabled />
     );
-    const startBtn = screen.getByLabelText("Année de début : 2023");
-    const endBtn = screen.getByLabelText("Année de fin : 2025");
     const calBtn = screen.getByLabelText("Ouvrir le sélecteur d'années");
-    expect(startBtn).toBeDisabled();
-    expect(endBtn).toBeDisabled();
     expect(calBtn).toBeDisabled();
   });
 
-  // -- calendars=2 (default) — dual calendar everywhere --
+  // -- Editable mode (default) --
+
+  it("should render inputs and calendar icon in editable mode (default)", () => {
+    render(
+      <YearRangePicker startYear={2023} endYear={2025} />
+    );
+    expect(screen.getByLabelText("Année de début : 2023")).toBeInTheDocument();
+    expect(screen.getByLabelText("Année de fin : 2025")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Ouvrir le sélecteur d'années")
+    ).toBeInTheDocument();
+    // Inputs should be present
+    expect(screen.getByLabelText("Année de début : 2023").tagName).toBe(
+      "INPUT"
+    );
+  });
+
+  it("should open calendar in editable mode", async () => {
+    const user = userEvent.setup();
+    render(
+      <YearRangePicker startYear={2023} endYear={2025} />
+    );
+    await user.click(screen.getByLabelText("Ouvrir le sélecteur d'années"));
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+  });
+
+  // -- Navigation mode (isEditable=false) with calendars=2 --
 
   it("should open dual calendar when start year button is clicked (calendars=2)", async () => {
     const user = userEvent.setup();
-    render(<YearRangePicker startYear={2023} endYear={2025} />);
+    render(<YearRangePicker startYear={2023} endYear={2025} isEditable={false} />);
     await user.click(screen.getByLabelText("Année de début : 2023"));
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
-    const grids = screen.getAllByRole("grid");
-    expect(grids.length).toBeGreaterThanOrEqual(2);
-  });
-
-  it("should open dual calendar when end year button is clicked (calendars=2)", async () => {
-    const user = userEvent.setup();
-    render(<YearRangePicker startYear={2023} endYear={2025} />);
-    await user.click(screen.getByLabelText("Année de fin : 2025"));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     const grids = screen.getAllByRole("grid");
     expect(grids.length).toBeGreaterThanOrEqual(2);
@@ -87,32 +102,21 @@ describe("YearRangePicker", () => {
 
   it("should open dual calendar when calendar button is clicked (calendars=2)", async () => {
     const user = userEvent.setup();
-    render(<YearRangePicker startYear={2023} endYear={2025} />);
+    render(<YearRangePicker startYear={2023} endYear={2025} isEditable={false} />);
     await user.click(screen.getByLabelText("Ouvrir le sélecteur d'années"));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     const grids = screen.getAllByRole("grid");
     expect(grids.length).toBeGreaterThanOrEqual(2);
   });
 
-  // -- calendars=1 — single calendar everywhere --
+  // -- Navigation mode with calendars=1 --
 
   it("should open single calendar when start year button is clicked (calendars=1)", async () => {
     const user = userEvent.setup();
     render(
-      <YearRangePicker startYear={2023} endYear={2025} calendars={1} />
+      <YearRangePicker startYear={2023} endYear={2025} isEditable={false} calendars={1} />
     );
     await user.click(screen.getByLabelText("Année de début : 2023"));
-    expect(screen.getByRole("dialog")).toBeInTheDocument();
-    const grids = screen.getAllByRole("grid");
-    expect(grids).toHaveLength(1);
-  });
-
-  it("should open single calendar when calendar button is clicked (calendars=1)", async () => {
-    const user = userEvent.setup();
-    render(
-      <YearRangePicker startYear={2023} endYear={2025} calendars={1} />
-    );
-    await user.click(screen.getByLabelText("Ouvrir le sélecteur d'années"));
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     const grids = screen.getAllByRole("grid");
     expect(grids).toHaveLength(1);
@@ -127,6 +131,7 @@ describe("YearRangePicker", () => {
       <YearRangePicker
         startYear={2025}
         endYear={2025}
+        isEditable={false}
         calendars={1}
         onChange={onChange}
       />
@@ -135,6 +140,8 @@ describe("YearRangePicker", () => {
     const cell2023 = screen.getByRole("gridcell", { name: "2023" });
     await user.click(cell2023);
     expect(onChange).toHaveBeenCalledWith(2023, 2025);
+    // Popover should NOT close after selection
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 
   it("should call onChange with end changed (calendars=1, end button)", async () => {
@@ -144,6 +151,7 @@ describe("YearRangePicker", () => {
       <YearRangePicker
         startYear={2023}
         endYear={2025}
+        isEditable={false}
         calendars={1}
         onChange={onChange}
       />
@@ -152,6 +160,8 @@ describe("YearRangePicker", () => {
     const cell2027 = screen.getByRole("gridcell", { name: "2027" });
     await user.click(cell2027);
     expect(onChange).toHaveBeenCalledWith(2023, 2027);
+    // Popover should NOT close after selection
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
 
   it("should auto-swap when start > end (calendars=1)", async () => {
@@ -161,6 +171,7 @@ describe("YearRangePicker", () => {
       <YearRangePicker
         startYear={2020}
         endYear={2022}
+        isEditable={false}
         calendars={1}
         onChange={onChange}
       />

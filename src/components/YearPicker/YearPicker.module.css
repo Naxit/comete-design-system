@@ -11,7 +11,7 @@
   width: max-content;
 }
 
-/* Conteneur des boutons chevron + année */
+/* Conteneur des boutons / input */
 .content {
   display: flex;
   align-items: center;
@@ -19,18 +19,47 @@
   width: 100%;
 }
 
-/* Boutons chevron ←/→ */
+/* Boutons chevron ←/→ (mode navigation) */
 .chevronButton {
   flex-shrink: 0;
 }
 
-/* Bouton année central — occupe l'espace restant */
+/* Bouton année central (mode navigation) — occupe l'espace restant */
 .yearButton {
   flex: 1 0 0;
   justify-content: center;
-  padding: var(--space050) var(--space150);
   font-weight: var(--font-weight-medium);
   min-width: 0;
+}
+
+/* Input année (mode saisie) */
+.yearInput {
+  width: 4ch;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-primary);
+  text-align: center;
+  padding: 0;
+}
+
+.yearInput:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.yearInput::placeholder {
+  color: var(--text-subtlest);
+}
+
+/* Bouton calendrier (mode saisie) */
+.calendarButton {
+  flex-shrink: 0;
 }
 
 /* Popover */
