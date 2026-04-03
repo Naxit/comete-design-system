@@ -19,6 +19,7 @@ export * from "./Illustration";
 export * from "./InformativeState";
 export * from "./InputContainer";
 export * from "./Menu";
+export * from "./MonthPicker";
 export * from "./Popover";
 export * from "./ProgressIndicator";
 export * from "./Popup";
