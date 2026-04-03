@@ -29,6 +29,10 @@ const meta = {
       control: "select",
       options: ["default", "subtle"] satisfies DatePickerAppearance[],
     },
+    isEditable: {
+      control: "boolean",
+      description: "Mode saisie (champ segmenté + icône calendrier)",
+    },
     isDisabled: { control: "boolean" },
     isInvalid: { control: "boolean" },
     className: { control: "text" },
@@ -78,10 +82,10 @@ export const Disabled: Story = {
 /** DatePicker dans un Field avec label. */
 export const WithField: Story = {
   name: "With Field wrapper",
-  render: () => (
+  render: (args) => (
     <div style={{ width: 320 }}>
       <Field label="Date de début" isRequired>
-        <DatePicker aria-label="Date de début" />
+        <DatePicker {...args} aria-label="Date de début" />
       </Field>
     </div>
   ),
@@ -90,32 +94,39 @@ export const WithField: Story = {
 /** DatePicker avec message d'erreur. */
 export const FieldInvalid: Story = {
   name: "Field invalid",
-  render: () => (
+  render: (args) => (
     <div style={{ width: 320 }}>
       <Field
         label="Date de fin"
         message="La date est invalide"
         messageType="critical"
       >
-        <DatePicker aria-label="Date de fin" isInvalid defaultValue={today(getLocalTimeZone())} />
+        <DatePicker {...args} aria-label="Date de fin" isInvalid defaultValue={today(getLocalTimeZone())} />
       </Field>
     </div>
   ),
 };
 
+/** Mode navigation — chevrons ←/→ + bouton date formatée. */
+export const Navigable: Story = {
+  parameters: { design: { type: "figma", url: figmaUrl("3246:2714") } },
+  args: { isEditable: false, defaultValue: today(getLocalTimeZone()) },
+};
+
 /** Toutes les apparences. */
 export const AllAppearances: Story = {
   name: "All appearances",
-  render: () => (
+  render: (args) => (
     <div style={{ display: "flex", gap: 32 }}>
       <div style={{ width: 280 }}>
         <Field label="Default">
-          <DatePicker aria-label="Default" defaultValue={today(getLocalTimeZone())} />
+          <DatePicker {...args} aria-label="Default" defaultValue={today(getLocalTimeZone())} />
         </Field>
       </div>
       <div style={{ width: 280 }}>
         <Field label="Subtle">
           <DatePicker
+            {...args}
             aria-label="Subtle"
             appearance="subtle"
             defaultValue={today(getLocalTimeZone())}

@@ -2,6 +2,7 @@ declare const styles: {
   readonly root: string;
   readonly yearValue: string;
   readonly yearButton: string;
+  readonly yearInput: string;
   readonly separator: string;
   readonly calendarButton: string;
   readonly popover: string;

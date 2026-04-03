@@ -12,9 +12,34 @@
 }
 
 /* ==========================================================================
-   Date input (segments)
+   Mode navigation — chevrons + bouton date formatée
    ========================================================================== */
 
+.navigationContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+  width: 100%;
+}
+
+/* Boutons chevron ←/→ */
+.chevronButton {
+  flex-shrink: 0;
+}
+
+/* Bouton date central — occupe l'espace restant */
+.dateButton {
+  flex: 1 0 0;
+  justify-content: center;
+  font-weight: var(--font-weight-medium);
+  min-width: 0;
+}
+
+/* ==========================================================================
+   Mode saisie — segments + bouton calendrier
+   ========================================================================== */
+
+/* Date input (segments) */
 .dateInput {
   display: flex;
   align-items: center;

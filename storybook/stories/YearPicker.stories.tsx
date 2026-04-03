@@ -1,7 +1,7 @@
 // YearPicker — stories Storybook
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { YearPicker } from "@naxit/comete-design-system/components";
+import { YearPicker, Field } from "@naxit/comete-design-system/components";
 import type { YearPickerProps } from "@naxit/comete-design-system/components";
 
 // -----------------------------------------------------------------------
@@ -30,6 +30,15 @@ const meta = {
     year: {
       control: { type: "number" },
       description: "Année sélectionnée",
+    },
+    isEditable: {
+      control: "boolean",
+      description: "Mode saisie (input + icône calendrier)",
+    },
+    appearance: {
+      control: { type: "inline-radio" },
+      options: ["default", "subtle"],
+      description: "Apparence visuelle",
     },
     isInvalid: {
       control: "boolean",
@@ -83,7 +92,7 @@ function ControlledRender(args: YearPickerProps) {
 // -----------------------------------------------------------------------
 // Stories
 
-/** État par défaut (année courante). */
+/** Mode navigation (défaut) — chevrons ←/→ + bouton année. */
 export const Default: Story = {
   render: ControlledRender,
   parameters: {
@@ -91,7 +100,31 @@ export const Default: Story = {
   },
 };
 
-/** État invalide. */
+/** Mode navigation — chevrons ←/→ + bouton année. */
+export const Navigable: Story = {
+  render: ControlledRender,
+  args: {
+    year: 2025,
+    isEditable: false,
+  },
+  parameters: {
+    design: { type: "figma", url: figmaUrl("3370:6839") },
+  },
+};
+
+/** YearPicker subtle. */
+export const Subtle: Story = {
+  render: ControlledRender,
+  args: {
+    year: 2025,
+    appearance: "subtle",
+  },
+  parameters: {
+    design: { type: "figma", url: figmaUrl("3370:6839") },
+  },
+};
+
+/** YearPicker invalid. */
 export const Invalid: Story = {
   render: ControlledRender,
   args: {
@@ -112,5 +145,54 @@ export const Disabled: Story = {
   },
   parameters: {
     design: { type: "figma", url: figmaUrl("3513:37040") },
+  },
+};
+
+/** YearPicker dans un Field avec label. */
+export const WithField: Story = {
+  name: "With Field wrapper",
+  render: (args: YearPickerProps) => {
+    const [year, setYear] = useState(args.year ?? 2025);
+    return (
+      <Field label="Année" isRequired>
+        <YearPicker {...args} year={year} onChange={setYear} />
+      </Field>
+    );
+  },
+};
+
+/** YearPicker avec message d'erreur. */
+export const FieldInvalid: Story = {
+  name: "Field invalid",
+  render: (args: YearPickerProps) => {
+    const [year, setYear] = useState(args.year ?? 2025);
+    return (
+      <Field
+        label="Année"
+        message="L'année est invalide"
+        messageType="critical"
+      >
+        <YearPicker {...args} year={year} onChange={setYear} isInvalid />
+      </Field>
+    );
+  },
+};
+
+/** Toutes les apparences. */
+export const AllAppearances: Story = {
+  name: "All appearances",
+  render: (args: YearPickerProps) => {
+    const [yearDefault, setYearDefault] = useState(args.year ?? 2025);
+    const [yearSubtle, setYearSubtle] = useState(args.year ?? 2025);
+    return (
+      <div style={{ display: "flex", gap: 32 }}>
+        <Field label="Default">
+          <YearPicker {...args} year={yearDefault} onChange={setYearDefault} />
+        </Field>
+        <Field label="Subtle">
+          <YearPicker {...args} year={yearSubtle} onChange={setYearSubtle} appearance="subtle" />
+        </Field>
+      </div>
+    );
   },
 };

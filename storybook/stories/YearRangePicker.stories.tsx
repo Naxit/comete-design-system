@@ -1,7 +1,7 @@
 // YearRangePicker — stories Storybook
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { YearRangePicker } from "@naxit/comete-design-system/components";
+import { YearRangePicker, Field } from "@naxit/comete-design-system/components";
 import type { YearRangePickerProps } from "@naxit/comete-design-system/components";
 
 // -----------------------------------------------------------------------
@@ -38,7 +38,16 @@ const meta = {
     calendars: {
       control: { type: "inline-radio" },
       options: [1, 2],
-      description: "Nombre de calendriers dans le popover du bouton calendrier",
+      description: "Nombre de calendriers dans les popovers",
+    },
+    isEditable: {
+      control: "boolean",
+      description: "Mode saisie (inputs + icône calendrier)",
+    },
+    appearance: {
+      control: { type: "inline-radio" },
+      options: ["default", "subtle"],
+      description: "Apparence visuelle",
     },
     isInvalid: {
       control: "boolean",
@@ -55,7 +64,7 @@ export default meta;
 type Story = StoryObj<typeof YearRangePicker>;
 
 // -----------------------------------------------------------------------
-// Render helper — tous les exemples sont contrôlés via useState
+// Render helper — contrôlé via useState
 
 function ControlledRender(args: YearRangePickerProps) {
   const currentYear = new Date().getFullYear();
@@ -95,7 +104,7 @@ function ControlledRender(args: YearRangePickerProps) {
 // -----------------------------------------------------------------------
 // Stories
 
-/** État par défaut (année courante). */
+/** Mode navigation (défaut) — boutons année + icône calendrier. */
 export const Default: Story = {
   render: ControlledRender,
   parameters: {
@@ -103,12 +112,38 @@ export const Default: Story = {
   },
 };
 
-/** État invalide. */
+/** Mode navigation — boutons année cliquables. */
+export const Navigable: Story = {
+  render: ControlledRender,
+  args: {
+    startYear: 2023,
+    endYear: 2025,
+    isEditable: false,
+  },
+  parameters: {
+    design: { type: "figma", url: figmaUrl("4254:23633") },
+  },
+};
+
+/** YearRangePicker subtle. */
+export const Subtle: Story = {
+  render: ControlledRender,
+  args: {
+    startYear: 2023,
+    endYear: 2025,
+    appearance: "subtle",
+  },
+  parameters: {
+    design: { type: "figma", url: figmaUrl("4254:23633") },
+  },
+};
+
+/** YearRangePicker invalid. */
 export const Invalid: Story = {
   render: ControlledRender,
   args: {
-    startYear: 2025,
-    endYear: 2026,
+    startYear: 2023,
+    endYear: 2025,
     isInvalid: true,
   },
   parameters: {
@@ -129,3 +164,55 @@ export const Disabled: Story = {
   },
 };
 
+/** YearRangePicker dans un Field avec label. */
+export const WithField: Story = {
+  name: "With Field wrapper",
+  render: (args: YearRangePickerProps) => {
+    const [start, setStart] = useState(args.startYear ?? 2023);
+    const [end, setEnd] = useState(args.endYear ?? 2025);
+    return (
+      <Field label="Période" isRequired>
+        <YearRangePicker {...args} startYear={start} endYear={end} onChange={(s, e) => { setStart(s); setEnd(e); }} />
+      </Field>
+    );
+  },
+};
+
+/** YearRangePicker avec message d'erreur. */
+export const FieldInvalid: Story = {
+  name: "Field invalid",
+  render: (args: YearRangePickerProps) => {
+    const [start, setStart] = useState(args.startYear ?? 2023);
+    const [end, setEnd] = useState(args.endYear ?? 2025);
+    return (
+      <Field
+        label="Période"
+        message="La période est invalide"
+        messageType="critical"
+      >
+        <YearRangePicker {...args} startYear={start} endYear={end} onChange={(s, e) => { setStart(s); setEnd(e); }} isInvalid />
+      </Field>
+    );
+  },
+};
+
+/** Toutes les apparences. */
+export const AllAppearances: Story = {
+  name: "All appearances",
+  render: (args: YearRangePickerProps) => {
+    const [startDef, setStartDef] = useState(args.startYear ?? 2023);
+    const [endDef, setEndDef] = useState(args.endYear ?? 2025);
+    const [startSub, setStartSub] = useState(args.startYear ?? 2023);
+    const [endSub, setEndSub] = useState(args.endYear ?? 2025);
+    return (
+      <div style={{ display: "flex", gap: 32 }}>
+        <Field label="Default">
+          <YearRangePicker {...args} startYear={startDef} endYear={endDef} onChange={(s, e) => { setStartDef(s); setEndDef(e); }} />
+        </Field>
+        <Field label="Subtle">
+          <YearRangePicker {...args} startYear={startSub} endYear={endSub} onChange={(s, e) => { setStartSub(s); setEndSub(e); }} appearance="subtle" />
+        </Field>
+      </div>
+    );
+  },
+};

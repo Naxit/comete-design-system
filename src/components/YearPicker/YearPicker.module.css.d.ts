@@ -3,6 +3,8 @@ declare const styles: {
   readonly content: string;
   readonly chevronButton: string;
   readonly yearButton: string;
+  readonly yearInput: string;
+  readonly calendarButton: string;
   readonly popover: string;
   readonly dialog: string;
 };
