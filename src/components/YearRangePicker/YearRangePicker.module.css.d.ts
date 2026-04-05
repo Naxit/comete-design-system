@@ -1,11 +1,12 @@
 declare const styles: {
-  readonly root: string;
-  readonly yearValue: string;
-  readonly yearButton: string;
-  readonly yearInput: string;
-  readonly separator: string;
-  readonly calendarButton: string;
-  readonly popover: string;
-  readonly dialog: string;
+  readonly "calendarButton": string;
+  readonly "dialog": string;
+  readonly "popover": string;
+  readonly "root": string;
+  readonly "separator": string;
+  readonly "yearButton": string;
+  readonly "yearInput": string;
+  readonly "yearValue": string;
 };
-export default styles;
+export = styles;
+
