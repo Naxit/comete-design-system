@@ -10,3 +10,4 @@ declare const styles: {
   readonly "segment": string;
 };
 export = styles;
+

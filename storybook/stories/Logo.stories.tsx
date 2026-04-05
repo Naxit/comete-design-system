@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Logo,
   type LogoAppearance,
+  type LogoProduct,
   type LogoType,
 } from "@naxit/comete-design-system/components";
 
@@ -19,6 +20,10 @@ const meta = {
   component: Logo,
   tags: ["autodocs"],
   argTypes: {
+    product: {
+      control: "select",
+      options: ["comete", "ontime", "link", "bi", "academie", "club", "mce", "mycomete"] satisfies LogoProduct[],
+    },
     appearance: {
       control: "select",
       options: ["brand", "neutral", "inverse"] satisfies LogoAppearance[],
@@ -87,13 +92,12 @@ export const Large: Story = {
   args: { size: 48 },
 };
 
-/** Toutes les apparences × types. */
-export const AllVariants: Story = {
-  name: "All variants",
+/** Tous les produits. */
+export const AllProducts: Story = {
+  name: "All products",
   render: () => {
+    const products: LogoProduct[] = ["comete", "ontime", "link", "bi", "academie", "club", "mce", "mycomete"];
     const appearances: LogoAppearance[] = ["brand", "neutral", "inverse"];
-    const types: LogoType[] = ["logo", "icon"];
-    const sizes = [16, 24, 32, 48];
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
         {appearances.map((a) => (
@@ -117,21 +121,19 @@ export const AllVariants: Story = {
             >
               appearance={a}
             </span>
-            {types.map((t) => (
-              <div key={t} style={{ display: "flex", alignItems: "center",gap: 16 }}>
+            {products.map((p) => (
+              <div key={p} style={{ display: "flex", alignItems: "center", gap: 16 }}>
                 <span
                   style={{
                     fontFamily: "monospace",
                     fontSize: 11,
-                    width: 60,
+                    width: 80,
                     color: a === "inverse" ? "var(--text-inverted)" : "var(--text-subtlest)",
                   }}
                 >
-                  {t}
+                  {p}
                 </span>
-                {sizes.map((s) => (
-                  <Logo key={s} product="comete" appearance={a} type={t} size={s} />
-                ))}
+                <Logo product={p} appearance={a} size={32} />
               </div>
             ))}
           </div>
