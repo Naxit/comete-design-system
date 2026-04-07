@@ -1,0 +1,80 @@
+/* ==========================================================================
+   WeekPicker — Comète Design System
+   Sélecteur de semaine ISO.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   ========================================================================== */
+
+/* Root */
+.root {
+  position: relative;
+  display: inline-flex;
+  width: fit-content;
+}
+
+/* Conteneur mode saisie — pas de gap, comme le DatePicker */
+.content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* Conteneur mode navigation — gap entre chevrons et bouton */
+.navigationContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+  width: 100%;
+}
+
+/* Boutons chevron ←/→ (mode navigation) */
+.chevronButton {
+  flex-shrink: 0;
+}
+
+/* Bouton semaine central (mode navigation) — occupe l'espace restant */
+.weekButton {
+  flex: 1 0 0;
+  justify-content: center;
+  font-weight: var(--font-weight-medium);
+  min-width: 0;
+  white-space: nowrap;
+}
+
+/* Champ texte saisie semaine (mode éditable) — Sem. 28 • DD/MM/YY - DD/MM/YY */
+.weekInput {
+  field-sizing: content;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-primary);
+  padding: 0;
+}
+
+.weekInput:disabled {
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+.weekInput::placeholder {
+  color: var(--text-tertiary);
+}
+
+/* Bouton calendrier (mode saisie) */
+.calendarButton {
+  flex-shrink: 0;
+}
+
+/* Popover */
+.popover {
+  min-width: auto;
+}
+
+/* Dialog — reset outline */
+.dialog {
+  outline: none;
+}

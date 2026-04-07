@@ -27,5 +27,6 @@ export * from "./Popup";
 export * from "./Tabs";
 export * from "./TextField";
 export * from "./TimePicker";
+export * from "./WeekPicker";
 export * from "./YearPicker";
 export * from "./YearRangePicker";
