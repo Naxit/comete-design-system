@@ -63,6 +63,7 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
   user-select: none;
   flex-shrink: 0;
 }

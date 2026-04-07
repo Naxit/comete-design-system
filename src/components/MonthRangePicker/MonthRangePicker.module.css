@@ -1,6 +1,6 @@
 /* ==========================================================================
-   YearRangePicker — Comète Design System
-   Sélecteur de plage d'années.
+   MonthRangePicker — Comète Design System
+   Sélecteur de plage de mois.
    Toutes les valeurs proviennent de @naxit/comete-design-tokens.
    ========================================================================== */
 
@@ -8,26 +8,32 @@
 .root {
   position: relative;
   display: inline-flex;
-  width: max-content;
+  width: fit-content;
 }
 
-/* Conteneur des deux boutons/inputs année + séparateur */
-.yearValue {
+/* Conteneur des inputs / séparateur / bouton (mode saisie) */
+.content {
   display: flex;
   align-items: center;
   gap: var(--space100);
 }
 
-/* Bouton année (mode navigation) */
-.yearButton {
+/* Conteneur des deux boutons/inputs mois + séparateur (mode navigation) */
+.monthValue {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+}
+
+/* Bouton mois (mode navigation) */
+.monthButton {
   font-weight: var(--font-weight-medium);
   min-width: 0;
 }
 
-/* Input année (mode saisie) */
-.yearInput {
-  width: 4ch;
-  min-width: 0;
+/* Input mois (mode saisie) — "Août 2025" */
+.monthInput {
+  field-sizing: content;
   border: none;
   outline: none;
   background: transparent;
@@ -37,25 +43,29 @@
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
   color: var(--text-primary);
-  text-align: center;
   padding: 0;
 }
 
-.yearInput:disabled {
+.monthInput:disabled {
   color: var(--text-disabled);
   cursor: not-allowed;
 }
 
-/* Séparateur → */
+.monthInput::placeholder {
+  color: var(--text-subtlest);
+}
+
+/* Séparateur "→" entre début et fin */
 .separator {
+  color: var(--text-primary);
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
-  color: var(--text-subtlest);
   user-select: none;
   flex-shrink: 0;
 }
+
 
 /* Bouton calendrier */
 .calendarButton {
