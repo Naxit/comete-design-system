@@ -21,6 +21,7 @@ export * from "./InputContainer";
 export * from "./Logo";
 export * from "./Menu";
 export * from "./MonthPicker";
+export * from "./MonthRangePicker";
 export * from "./Popover";
 export * from "./ProgressIndicator";
 export * from "./Popup";
