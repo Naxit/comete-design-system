@@ -52,6 +52,7 @@ export function Logo({
   className,
 }: LogoProps): ReactElement | null {
   const LogoComponent = logoRegistry[product];
+  if (!LogoComponent) return null;
 
   const ariaProps: Record<string, string | boolean> = label
     ? { "aria-label": label, role: "img" }
