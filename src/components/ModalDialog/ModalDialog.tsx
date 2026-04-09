@@ -47,7 +47,7 @@ export interface ModalDialogProps {
 const APPEARANCE_ICON: Record<string, IconName | undefined> = {
   default: undefined,
   warning: "Warning",
-  critical: "Error",
+  critical: "EmergencyHome",
 };
 
 // -----------------------------------------------------------------------
