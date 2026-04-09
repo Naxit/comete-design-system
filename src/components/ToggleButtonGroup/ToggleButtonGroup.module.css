@@ -1,0 +1,131 @@
+/* ==========================================================================
+   ToggleButtonGroup — Comete Design System
+   Groupe de boutons toggle avec selection unique ou multiple.
+   Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+   Aucune valeur hardcodee.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Group container
+   -------------------------------------------------------------------------- */
+
+.group {
+  display: inline-flex;
+  align-items: stretch;
+  overflow: clip;
+}
+
+/* --------------------------------------------------------------------------
+   Toggle button item
+   -------------------------------------------------------------------------- */
+
+.item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space050);
+  min-height: var(--size400);
+  min-width: var(--size400);
+  padding: var(--space100) var(--space150);
+  border: 1px solid var(--border-default);
+  border-left-width: 0;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+}
+
+/* First item: left border + left border-radius */
+.item:first-child {
+  border-left-width: 1px;
+  border-top-left-radius: var(--radius050);
+  border-bottom-left-radius: var(--radius050);
+}
+
+/* Last item: right border-radius */
+.item:last-child {
+  border-top-right-radius: var(--radius050);
+  border-bottom-right-radius: var(--radius050);
+}
+
+/* Only child: full border-radius */
+.item:only-child {
+  border-radius: var(--radius050);
+}
+
+/* --------------------------------------------------------------------------
+   States — Unselected
+   -------------------------------------------------------------------------- */
+
+/* Hover */
+.item[data-hovered]:not([data-selected]):not([data-disabled]) {
+  background: var(--background-neutral-subtle-hovered);
+}
+
+/* Pressed */
+.item[data-pressed]:not([data-selected]):not([data-disabled]) {
+  background: var(--background-neutral-subtle-pressed);
+}
+
+/* --------------------------------------------------------------------------
+   States — Selected
+   -------------------------------------------------------------------------- */
+
+.item[data-selected] {
+  background: var(--background-selected-bold-default);
+  border-color: var(--background-selected-bold-default);
+  border-left-width: 1px;
+}
+
+/* Collapse double border: hide left border of the sibling right after a selected item */
+.item[data-selected] + .item:not([data-selected]) {
+  border-left-width: 0;
+}
+
+/* Selected hover */
+.item[data-selected][data-hovered] {
+  background: var(--background-selected-bold-hovered);
+  border-color: var(--background-selected-bold-hovered);
+}
+
+/* Selected pressed */
+.item[data-selected][data-pressed] {
+  background: var(--background-selected-bold-pressed);
+  border-color: var(--background-selected-bold-pressed);
+}
+
+/* --------------------------------------------------------------------------
+   States — Disabled
+   -------------------------------------------------------------------------- */
+
+.item[data-disabled] {
+  background: var(--background-disabled-default);
+  border-color: var(--border-disabled);
+  cursor: default;
+}
+
+/* --------------------------------------------------------------------------
+   Label typography
+   -------------------------------------------------------------------------- */
+
+.label {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  text-align: center;
+  white-space: nowrap;
+  color: var(--text-primary);
+}
+
+/* Selected label */
+[data-selected] .label {
+  font-weight: var(--font-weight-medium);
+  color: var(--text-inverted);
+}
+
+/* Disabled label */
+[data-disabled] .label {
+  color: var(--text-disabled);
+}
