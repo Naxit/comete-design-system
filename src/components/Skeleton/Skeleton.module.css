@@ -1,0 +1,55 @@
+/* ==========================================================================
+   Skeleton — Comète Design System
+   Placeholder de chargement. Toutes les valeurs proviennent de
+   @naxit/comete-design-tokens.
+   ========================================================================== */
+
+/* Base — fond adaptatif light/dark (8% noir / 8% blanc) */
+.skeleton {
+  display: block;
+  overflow: hidden;
+  background-color: var(--black-8);
+  /* NOTE: pulse animation reproduit le subtle shimmer Atlassian */
+  animation: skeleton-pulse 1.6s ease-in-out infinite;
+}
+
+[data-theme="dark"] .skeleton {
+  background-color: var(--white-8);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .skeleton {
+    background-color: var(--white-8);
+  }
+}
+
+/* ==========================================================================
+   Forme
+   ========================================================================== */
+
+.rectangle {
+  border-radius: var(--radius050);
+}
+
+.circle {
+  border-radius: var(--radius-round);
+}
+
+/* ==========================================================================
+   Animation
+   ========================================================================== */
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}

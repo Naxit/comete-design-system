@@ -26,6 +26,7 @@ export * from "./MonthRangePicker";
 export * from "./Popover";
 export * from "./ProgressIndicator";
 export * from "./Popup";
+export * from "./Skeleton";
 export * from "./Tabs";
 export * from "./TextField";
 export * from "./TimePicker";
