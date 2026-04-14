@@ -86,7 +86,7 @@
 }
 
 /* ==========================================================================
-   Popover / Dialog
+   Popover / Dialog — mode navigation (React Aria)
    ========================================================================== */
 
 .popover {
@@ -95,4 +95,20 @@
 
 .dialog {
   outline: none;
+}
+
+/* ==========================================================================
+   Calendar popover — mode saisie (sans React Aria focus management)
+   ========================================================================== */
+
+.calendarPopover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1;
+  margin-top: var(--space050);
+  background-color: var(--background-default);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius100);
+  box-shadow: var(--shadow-lg);
 }
