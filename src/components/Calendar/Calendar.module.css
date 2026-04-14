@@ -135,62 +135,66 @@
 /* ==========================================================================
    Double calendrier lié (DualDateCalendar — calendars=2, appearance=date)
 
-   Layout CSS Grid sur 5 colonnes :
-     col 1 : bouton précédent (var(--size400))
-     col 2 : grille du mois gauche + son titre (auto — taille par contenu)
-     col 3 : espacement entre les deux calendriers (var(--space200))
-     col 4 : grille du mois droit + son titre (auto)
-     col 5 : bouton suivant (var(--size400))
+   Layout CSS Grid sur 3 colonnes :
+     col 1 : grille du mois gauche (auto)
+     col 2 : espacement entre les deux calendriers (var(--space200))
+     col 3 : grille du mois droit (auto)
 
-   Ligne 1 : boutons nav + titres des mois
+   Ligne 1 : nav + titres (flèches à côté des headings)
    Ligne 2 : les deux CalendarGrid
    ========================================================================== */
 
 .dualLinkedCalendar {
   display: inline-grid;
-  grid-template-columns: var(--size400) auto var(--space200) auto var(--size400);
+  grid-template-columns: auto var(--space200) auto;
   row-gap: var(--space050);
   padding: var(--space100);
   outline: none;
 }
 
 /* Ligne 1 — navigation + titres */
+
+/* Conteneur flex avec flèche gauche + heading gauche */
 .dualNavPrev {
   grid-column: 1;
   grid-row: 1;
   align-self: center;
+  justify-self: start;
 }
 
 .dualHeadingLeft {
-  grid-column: 2;
+  grid-column: 1;
   grid-row: 1;
   align-self: center;
+  justify-self: center;
   margin-bottom: var(--space050);
 }
 
-/* col 3 est vide (espace entre les deux panels) */
+/* col 2 est vide (espace entre les deux panels) */
 
 .dualHeadingRight {
-  grid-column: 4;
+  grid-column: 3;
   grid-row: 1;
   align-self: center;
+  justify-self: center;
   margin-bottom: var(--space050);
 }
 
 .dualNavNext {
-  grid-column: 5;
+  grid-column: 3;
   grid-row: 1;
   align-self: center;
+  justify-self: end;
 }
 
 /* Ligne 2 — grilles */
 .dualGrid1 {
-  grid-column: 2;
+  grid-column: 1;
   grid-row: 2;
 }
 
 .dualGrid2 {
-  grid-column: 4;
+  grid-column: 3;
   grid-row: 2;
 }
 

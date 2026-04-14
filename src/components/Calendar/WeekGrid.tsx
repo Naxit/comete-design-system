@@ -64,16 +64,15 @@ function getWeeksForMonth(month: CalendarDate, locale: string): WeekData[] {
   });
 }
 
-/** Retourne les labels courts des jours (ex : "LUN", "MAR"…) pour la locale donnée. */
+/** Retourne les labels d'une seule lettre des jours (ex : "L", "M"…) pour la locale donnée. */
 function getDayLabels(locale: string): string[] {
   // NOTE: On utilise le lundi 5 jan 2026 comme point de départ — semaine ISO complète.
   const monday = new Date(2026, 0, 5);
   return Array.from({ length: 7 }, (_, i) => {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
-    return new Intl.DateTimeFormat(locale, { weekday: "short" })
+    return new Intl.DateTimeFormat(locale, { weekday: "narrow" })
       .format(d)
-      .slice(0, 3)
       .toUpperCase();
   });
 }
@@ -342,8 +341,8 @@ function WeekPanel({
         <span className={styles.weekHeaderNum}>S</span>
         {/* NOTE: spacer pour aligner avec la colonne divider des lignes de données */}
         <span aria-hidden="true" />
-        {dayLabels.map((label) => (
-          <span key={label} className={[calStyles.headerCell, styles.weekHeaderDay].join(" ")}>
+        {dayLabels.map((label, i) => (
+          <span key={i} className={[calStyles.headerCell, styles.weekHeaderDay].join(" ")}>
             {label}
           </span>
         ))}

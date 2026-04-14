@@ -6,7 +6,6 @@ import type { DateValue } from "react-aria-components";
 import type { RangeValue } from "react-aria-components";
 import {
   Calendar,
-  RangeCalendar,
   type CalendarAppearance,
 } from "@naxit/comete-design-system/components";
 
@@ -39,6 +38,12 @@ const meta = {
       description: "Nombre de calendriers affichés côte à côte.",
       table: { defaultValue: { summary: "1" } },
     },
+    isRange: {
+      control: "boolean",
+      description:
+        "Active la sélection de plage (range) au lieu d'une date unique. Disponible pour appearance=date.",
+      table: { defaultValue: { summary: "false" } },
+    },
     isDisabled: {
       control: "boolean",
       description: "Désactive le composant.",
@@ -48,6 +53,7 @@ const meta = {
   args: {
     appearance: "date",
     calendars: 1,
+    isRange: false,
     isDisabled: false,
   },
 } satisfies Meta<typeof Calendar>;
@@ -62,14 +68,18 @@ export const Playground: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   // REASON: CalendarProps est une union discriminée — le render function
   // délègue à Calendar sans props value/onChange pour rester agnostique.
-  render: ({ appearance, calendars, isDisabled }) => (
-    <Calendar
-      appearance={appearance}
-      calendars={calendars}
-      isDisabled={isDisabled}
-      aria-label="Calendrier"
-    />
-  ),
+  // REASON: CalendarProps est une union discriminée — Storybook élargit les types des args.
+  // Le cast est nécessaire car TypeScript ne peut pas réduire l'union depuis des args dynamiques.
+  render: ({ appearance, calendars, isRange, isDisabled }) => {
+    const props = {
+      appearance,
+      calendars,
+      isDisabled,
+      "aria-label": "Calendrier",
+      ...(isRange ? { isRange: true as const } : {}),
+    };
+    return <Calendar {...(props as Parameters<typeof Calendar>[0])} />;
+  },
 };
 
 // -----------------------------------------------------------------------
@@ -78,124 +88,151 @@ export const Playground: Story = {
 export const Default: Story = {
   name: "Date",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => (
-    <Calendar
-      aria-label="Choisir une date"
-      defaultValue={new CalendarDate(2026, 3, 15)}
-    />
-  ),
+  render: ({ isRange }) => {
+    const props = {
+      "aria-label": "Choisir une date",
+      ...(isRange
+        ? {
+            isRange: true as const,
+            defaultValue: {
+              start: new CalendarDate(2026, 3, 10),
+              end: new CalendarDate(2026, 3, 20),
+            },
+          }
+        : { defaultValue: new CalendarDate(2026, 3, 15) }),
+    };
+    return <Calendar {...(props as Parameters<typeof Calendar>[0])} />;
+  },
 };
 
 export const Controlled: Story = {
   name: "Date — contrôlé",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => {
-    // REASON: histoire interactive nécessite un state local
-    const [value, setValue] = useState<DateValue>(
-      new CalendarDate(2026, 3, 15)
-    );
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <Calendar
-          aria-label="Choisir une date"
-          value={value}
-          onChange={setValue}
-        />
-        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
-          Sélectionné : {value.toString()}
-        </p>
-      </div>
-    );
+  render: ({ isRange }) => {
+    if (isRange) return <RangeControlledCalendar />;
+    return <SingleControlledCalendar />;
   },
 };
+
+/** Date unique contrôlée (interne). */
+function SingleControlledCalendar() {
+  const [value, setValue] = useState<DateValue>(
+    new CalendarDate(2026, 3, 15)
+  );
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <Calendar
+        aria-label="Choisir une date"
+        value={value}
+        onChange={setValue}
+      />
+      <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+        Sélectionné : {value.toString()}
+      </p>
+    </div>
+  );
+}
+
+/** Plage contrôlée (interne). */
+function RangeControlledCalendar() {
+  const [range, setRange] = useState<RangeValue<DateValue>>({
+    start: new CalendarDate(2026, 3, 10),
+    end: new CalendarDate(2026, 3, 20),
+  });
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <Calendar
+        aria-label="Choisir une plage"
+        isRange
+        value={range}
+        onChange={setRange}
+      />
+      <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+        {range.start.toString()} → {range.end.toString()}
+      </p>
+    </div>
+  );
+}
 
 export const WithMinMax: Story = {
   name: "Date — min/max",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => (
-    <Calendar
-    aria-label="Choisir une date"
-    defaultValue={new CalendarDate(2026, 3, 15)}
-    minValue={new CalendarDate(2026, 3, 10)}
-    maxValue={new CalendarDate(2026, 3, 25)}
-    />
-  ),
+  render: ({ isRange }) => {
+    const props = {
+      "aria-label": "Choisir une date",
+      minValue: new CalendarDate(2026, 3, 10),
+      maxValue: new CalendarDate(2026, 3, 25),
+      ...(isRange
+        ? {
+            isRange: true as const,
+            defaultValue: {
+              start: new CalendarDate(2026, 3, 12),
+              end: new CalendarDate(2026, 3, 18),
+            },
+          }
+        : { defaultValue: new CalendarDate(2026, 3, 15) }),
+    };
+    return <Calendar {...(props as Parameters<typeof Calendar>[0])} />;
+  },
 };
 
 export const Disabled: Story = {
   name: "Date — désactivé",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => (
-    <Calendar
-      aria-label="Calendrier désactivé"
-      defaultValue={new CalendarDate(2026, 3, 15)}
-      isDisabled
-    />
-  ),
-};
-
-// -----------------------------------------------------------------------
-// RangeCalendar (plage de dates jour-à-jour)
-
-export const Range: StoryObj<typeof RangeCalendar> = {
-  name: "Date — période",
-  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => (
-    <RangeCalendar
-      aria-label="Choisir une plage"
-      defaultValue={{
-        start: new CalendarDate(2026, 3, 10),
-        end: new CalendarDate(2026, 3, 20),
-      }}
-    />
-  ),
-};
-
-export const RangeControlled: StoryObj<typeof RangeCalendar> = {
-  name: "Date — période contrôlée",
-  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => {
-    const [range, setRange] = useState<RangeValue<DateValue>>({
-      start: new CalendarDate(2026, 3, 10),
-      end: new CalendarDate(2026, 3, 20),
-    });
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <RangeCalendar
-          aria-label="Choisir une plage"
-          value={range}
-          onChange={setRange}
-        />
-        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
-          {range.start.toString()} → {range.end.toString()}
-        </p>
-      </div>
-    );
+  render: ({ isRange }) => {
+    const props = {
+      "aria-label": "Calendrier désactivé",
+      isDisabled: true,
+      ...(isRange
+        ? {
+            isRange: true as const,
+            defaultValue: {
+              start: new CalendarDate(2026, 3, 10),
+              end: new CalendarDate(2026, 3, 20),
+            },
+          }
+        : { defaultValue: new CalendarDate(2026, 3, 15) }),
+    };
+    return <Calendar {...(props as Parameters<typeof Calendar>[0])} />;
   },
 };
 
+// -----------------------------------------------------------------------
+// appearance="date", calendars=2
+
 export const DualDate: Story = {
-  name: "Date — deux calendriers (plage)",
+  name: "Date — deux calendriers",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => (
-    <Calendar
-      aria-label="Choisir une date"
-      calendars={2}
-      defaultValue={new CalendarDate(2026, 3, 15)}
-    />
-  ),
+  render: ({ isRange }) => {
+    const props = {
+      "aria-label": "Choisir une date",
+      calendars: 2 as const,
+      ...(isRange
+        ? {
+            isRange: true as const,
+            defaultValue: {
+              start: new CalendarDate(2026, 3, 10),
+              end: new CalendarDate(2026, 3, 20),
+            },
+          }
+        : { defaultValue: new CalendarDate(2026, 3, 15) }),
+    };
+    return <Calendar {...(props as Parameters<typeof Calendar>[0])} />;
+  },
 };
 
 // -----------------------------------------------------------------------
 // appearance="week"
+// isRange=false → mode="week" (une semaine), isRange=true → mode="period" (plage de semaines)
 
 export const Week: Story = {
   name: "Semaine",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => (
+  render: ({ isRange }) => (
     <Calendar
       aria-label="Choisir une semaine"
       appearance="week"
+      mode={isRange ? "period" : "week"}
       defaultValue={{
         start: new CalendarDate(2026, 3, 9),
         end: new CalendarDate(2026, 3, 15),
@@ -207,29 +244,50 @@ export const Week: Story = {
 export const WeekControlled: Story = {
   name: "Semaine — contrôlée",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => {
-    const [range, setRange] = useState<RangeValue<CalendarDate>>({
-      start: new CalendarDate(2026, 3, 9),
-      end: new CalendarDate(2026, 3, 15),
-    });
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <Calendar aria-label="Choisir une semaine" appearance="week" value={range} onChange={setRange} />
-        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
-          {range.start.toString()} → {range.end.toString()}
-        </p>
-      </div>
-    );
+  render: ({ isRange }) => {
+    if (isRange) return <WeekPeriodControlledCalendar />;
+    return <WeekSingleControlledCalendar />;
   },
 };
+
+function WeekSingleControlledCalendar() {
+  const [range, setRange] = useState<RangeValue<CalendarDate>>({
+    start: new CalendarDate(2026, 3, 9),
+    end: new CalendarDate(2026, 3, 15),
+  });
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <Calendar aria-label="Choisir une semaine" appearance="week" value={range} onChange={setRange} />
+      <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+        {range.start.toString()} → {range.end.toString()}
+      </p>
+    </div>
+  );
+}
+
+function WeekPeriodControlledCalendar() {
+  const [range, setRange] = useState<RangeValue<CalendarDate>>({
+    start: new CalendarDate(2026, 3, 2),
+    end: new CalendarDate(2026, 3, 22),
+  });
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <Calendar aria-label="Choisir une période" appearance="week" mode="period" value={range} onChange={setRange} />
+      <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+        {range.start.toString()} → {range.end.toString()}
+      </p>
+    </div>
+  );
+}
 
 export const WeekDisabled: Story = {
   name: "Semaine — désactivé",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => (
+  render: ({ isRange }) => (
     <Calendar
       aria-label="Calendrier semaine désactivé"
       appearance="week"
+      mode={isRange ? "period" : "week"}
       defaultValue={{
         start: new CalendarDate(2026, 3, 9),
         end: new CalendarDate(2026, 3, 15),
@@ -239,30 +297,11 @@ export const WeekDisabled: Story = {
   ),
 };
 
-export const WeekPeriod: Story = {
-  name: "Semaine — période simple",
-  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => {
-    const [range, setRange] = useState<RangeValue<CalendarDate>>({
-      start: new CalendarDate(2026, 3, 2),
-      end: new CalendarDate(2026, 3, 22),
-    });
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <Calendar aria-label="Choisir une période" appearance="week" mode="period" value={range} onChange={setRange} />
-        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
-          {range.start.toString()} → {range.end.toString()}
-        </p>
-      </div>
-    );
-  },
-};
-
 // -----------------------------------------------------------------------
 // appearance="week", calendars=2
 
-export const WeekPeriodDual: Story = {
-  name: "Semaine — deux calendriers (plage)",
+export const WeekDual: Story = {
+  name: "Semaine — deux calendriers",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
   render: () => {
     const [range, setRange] = useState<RangeValue<CalendarDate>>({
@@ -288,143 +327,184 @@ export const WeekPeriodDual: Story = {
 
 // -----------------------------------------------------------------------
 // appearance="month"
+// isRange=false → mois unique, isRange=true → plage de mois (indépendant de calendars)
 
 export const Month: Story = {
   name: "Mois",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => (
-    <Calendar
-      aria-label="Choisir un mois"
-      appearance="month"
-      defaultValue={new CalendarDate(2026, 3, 1)}
-    />
-  ),
+  render: ({ isRange }) => {
+    const props = {
+      "aria-label": "Choisir un mois",
+      appearance: "month" as const,
+      ...(isRange
+        ? {
+            isRange: true as const,
+            defaultValue: {
+              start: new CalendarDate(2026, 3, 1),
+              end: new CalendarDate(2026, 8, 1),
+            },
+          }
+        : { defaultValue: new CalendarDate(2026, 3, 1) }),
+    };
+    return <Calendar {...(props as Parameters<typeof Calendar>[0])} />;
+  },
 };
 
 export const MonthControlled: Story = {
   name: "Mois — contrôlé",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => {
-    const [value, setValue] = useState<CalendarDate>(
-      new CalendarDate(2026, 3, 1)
-    );
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <Calendar aria-label="Choisir un mois" appearance="month" value={value} onChange={setValue} />
-        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
-          Sélectionné : {value.year}/{String(value.month).padStart(2, "0")}
-        </p>
-      </div>
-    );
+  render: ({ isRange }) => {
+    if (isRange) return <MonthRangeControlledCalendar />;
+    return <MonthSingleControlledCalendar />;
   },
 };
+
+function MonthSingleControlledCalendar() {
+  const [value, setValue] = useState<CalendarDate>(
+    new CalendarDate(2026, 3, 1)
+  );
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <Calendar aria-label="Choisir un mois" appearance="month" value={value} onChange={setValue} />
+      <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+        Sélectionné : {value.year}/{String(value.month).padStart(2, "0")}
+      </p>
+    </div>
+  );
+}
+
+function MonthRangeControlledCalendar() {
+  const [range, setRange] = useState<RangeValue<CalendarDate> | undefined>({
+    start: new CalendarDate(2026, 3, 1),
+    end: new CalendarDate(2026, 8, 1),
+  });
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <Calendar
+        aria-label="Choisir une période"
+        appearance="month"
+        isRange
+        value={range}
+        onChange={setRange}
+      />
+      <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+        {range
+          ? `${range.start.year}/${String(range.start.month).padStart(2, "0")} → ${range.end.year}/${String(range.end.month).padStart(2, "0")}`
+          : "–"}
+      </p>
+    </div>
+  );
+}
 
 export const MonthDisabled: Story = {
   name: "Mois — désactivé",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => (
-    <Calendar
-      aria-label="Calendrier mois désactivé"
-      appearance="month"
-      defaultValue={new CalendarDate(2026, 3, 1)}
-      isDisabled
-    />
-  ),
-};
-
-export const DualMonth: Story = {
-  name: "Mois — deux calendriers (plage)",
-  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => {
-    const [range, setRange] = useState<RangeValue<CalendarDate> | undefined>({
-      start: new CalendarDate(2026, 3, 1),
-      end: new CalendarDate(2026, 8, 1),
-    });
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <Calendar
-          aria-label="Choisir une période"
-          appearance="month"
-          calendars={2}
-          value={range}
-          onChange={setRange}
-        />
-        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
-          {range
-            ? `${range.start.year}/${String(range.start.month).padStart(2, "0")} → ${range.end.year}/${String(range.end.month).padStart(2, "0")}`
-            : "–"}
-        </p>
-      </div>
-    );
+  render: ({ isRange }) => {
+    const props = {
+      "aria-label": "Calendrier mois désactivé",
+      appearance: "month" as const,
+      isDisabled: true,
+      ...(isRange
+        ? {
+            isRange: true as const,
+            defaultValue: {
+              start: new CalendarDate(2026, 3, 1),
+              end: new CalendarDate(2026, 8, 1),
+            },
+          }
+        : { defaultValue: new CalendarDate(2026, 3, 1) }),
+    };
+    return <Calendar {...(props as Parameters<typeof Calendar>[0])} />;
   },
 };
 
 // -----------------------------------------------------------------------
 // appearance="year"
+// isRange=false → année unique, isRange=true → plage d'années (indépendant de calendars)
 
 export const Year: Story = {
   name: "Année",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => (
-    <Calendar aria-label="Choisir une année" appearance="year" defaultValue={new CalendarDate(2026, 1, 1)} />
-  ),
+  render: ({ isRange }) => {
+    const props = {
+      "aria-label": "Choisir une année",
+      appearance: "year" as const,
+      ...(isRange
+        ? {
+            isRange: true as const,
+            defaultValue: {
+              start: new CalendarDate(2024, 1, 1),
+              end: new CalendarDate(2031, 1, 1),
+            },
+          }
+        : { defaultValue: new CalendarDate(2026, 1, 1) }),
+    };
+    return <Calendar {...(props as Parameters<typeof Calendar>[0])} />;
+  },
 };
 
 export const YearControlled: Story = {
   name: "Année — contrôlée",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => {
-    const [value, setValue] = useState<CalendarDate>(
-      new CalendarDate(2026, 1, 1)
-    );
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <Calendar aria-label="Choisir une année" appearance="year" value={value} onChange={setValue} />
-        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
-          Sélectionné : {value.year}
-        </p>
-      </div>
-    );
+  render: ({ isRange }) => {
+    if (isRange) return <YearRangeControlledCalendar />;
+    return <YearSingleControlledCalendar />;
   },
 };
+
+function YearSingleControlledCalendar() {
+  const [value, setValue] = useState<CalendarDate>(
+    new CalendarDate(2026, 1, 1)
+  );
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <Calendar aria-label="Choisir une année" appearance="year" value={value} onChange={setValue} />
+      <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+        Sélectionné : {value.year}
+      </p>
+    </div>
+  );
+}
+
+function YearRangeControlledCalendar() {
+  const [range, setRange] = useState<RangeValue<CalendarDate> | undefined>({
+    start: new CalendarDate(2024, 1, 1),
+    end: new CalendarDate(2031, 1, 1),
+  });
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <Calendar
+        aria-label="Choisir une période"
+        appearance="year"
+        isRange
+        value={range}
+        onChange={setRange}
+      />
+      <p style={{ fontFamily: "monospace", fontSize: 13 }}>
+        {range ? `${range.start.year} → ${range.end.year}` : "–"}
+      </p>
+    </div>
+  );
+}
 
 export const YearDisabled: Story = {
   name: "Année — désactivée",
   parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => (
-    <Calendar
-      aria-label="Calendrier année désactivé"
-      appearance="year"
-      defaultValue={new CalendarDate(2026, 1, 1)}
-      isDisabled
-    />
-  ),
-};
-
-// -----------------------------------------------------------------------
-// appearance="year", calendars=2
-
-export const DualYear: Story = {
-  name: "Année — deux calendriers (plage)",
-  parameters: { design: { type: "figma", url: figmaUrl("3223:8583") } },
-  render: () => {
-    const [range, setRange] = useState<RangeValue<CalendarDate> | undefined>({
-      start: new CalendarDate(2024, 1, 1),
-      end: new CalendarDate(2031, 1, 1),
-    });
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <Calendar
-          aria-label="Choisir une période"
-          appearance="year"
-          calendars={2}
-          value={range}
-          onChange={setRange}
-        />
-        <p style={{ fontFamily: "monospace", fontSize: 13 }}>
-          {range ? `${range.start.year} → ${range.end.year}` : "–"}
-        </p>
-      </div>
-    );
+  render: ({ isRange }) => {
+    const props = {
+      "aria-label": "Calendrier année désactivé",
+      appearance: "year" as const,
+      isDisabled: true,
+      ...(isRange
+        ? {
+            isRange: true as const,
+            defaultValue: {
+              start: new CalendarDate(2024, 1, 1),
+              end: new CalendarDate(2031, 1, 1),
+            },
+          }
+        : { defaultValue: new CalendarDate(2026, 1, 1) }),
+    };
+    return <Calendar {...(props as Parameters<typeof Calendar>[0])} />;
   },
 };

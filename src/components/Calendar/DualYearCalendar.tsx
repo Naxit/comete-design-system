@@ -109,6 +109,120 @@ function YearPanel({
 }
 
 // -----------------------------------------------------------------------
+// YearRangeCalendar — single calendar, range selection (isRange=true, calendars=1)
+
+export interface YearRangeCalendarProps {
+  /** Plage sélectionnée (mode contrôlé). */
+  value?: RangeValue<CalendarDate>;
+  /** Valeur initiale (mode non contrôlé). */
+  defaultValue?: RangeValue<CalendarDate>;
+  /** Callback à chaque sélection de plage. */
+  onChange?: (range: RangeValue<CalendarDate>) => void;
+  /** Désactive le calendrier. */
+  isDisabled?: boolean;
+  /** Classe CSS additionnelle. */
+  className?: string;
+}
+
+/**
+ * YearRangeCalendar — Comète Design System (interne)
+ *
+ * Sélecteur de plage d'années sur un seul calendrier (20 ans).
+ * Deux clics : premier = début, deuxième = fin.
+ * Prévisualisation au survol entre les deux clics.
+ */
+export function YearRangeCalendar({
+  value,
+  defaultValue,
+  onChange,
+  isDisabled = false,
+  className,
+}: YearRangeCalendarProps): ReactElement {
+  const todayDate = today(getLocalTimeZone());
+  const initialYear = (value?.start ?? defaultValue?.start)?.year ?? todayDate.year;
+
+  const [rangeStart, setRangeStart] = useState(() => decadeStart(initialYear));
+
+  const [internalValue, setInternalValue] = useState<
+    RangeValue<CalendarDate> | undefined
+  >(defaultValue);
+  const [pending, setPending] = useState<number | undefined>(undefined);
+  const [hovered, setHovered] = useState<number | undefined>(undefined);
+
+  const controlled = value !== undefined;
+  const resolvedValue = controlled ? value : internalValue;
+
+  const displayRange = ((): RangeValue<CalendarDate> | undefined => {
+    if (pending === undefined) return resolvedValue;
+    const anchor = pending;
+    const target = hovered ?? pending;
+    const startYear = Math.min(anchor, target);
+    const endYear = Math.max(anchor, target);
+    return {
+      start: new CalendarDate(startYear, 1, 1),
+      end: new CalendarDate(endYear, 1, 1),
+    };
+  })();
+
+  const handleSelect = (year: number) => {
+    if (isDisabled) return;
+    if (pending === undefined) {
+      setPending(year);
+      setHovered(undefined);
+    } else {
+      const startYear = Math.min(pending, year);
+      const endYear = Math.max(pending, year);
+      const range: RangeValue<CalendarDate> = {
+        start: new CalendarDate(startYear, 1, 1),
+        end: new CalendarDate(endYear, 1, 1),
+      };
+      setPending(undefined);
+      setHovered(undefined);
+      if (!controlled) setInternalValue(range);
+      onChange?.(range);
+    }
+  };
+
+  const handleHover = (year: number) => {
+    if (pending !== undefined) setHovered(year);
+  };
+
+  const handleHoverLeave = () => {
+    if (pending !== undefined) setHovered(undefined);
+  };
+
+  const rangeEnd = rangeStart + GRID_SIZE - 1;
+
+  return (
+    <div
+      role="group"
+      aria-label={`Choisir une période — ${rangeStart}–${rangeEnd}`}
+      className={[calStyles.calendar, styles.yearCalendar, className]
+        .filter(Boolean)
+        .join(" ")}
+      data-disabled={isDisabled || undefined}
+      data-selecting={pending !== undefined ? true : undefined}
+    >
+      <MainHeader
+        label={`${rangeStart}–${rangeEnd}`}
+        onPrev={() => setRangeStart((s) => s - GRID_SIZE)}
+        onNext={() => setRangeStart((s) => s + GRID_SIZE)}
+        isDisabled={isDisabled}
+      />
+      <YearPanel
+        rangeStart={rangeStart}
+        todayYear={todayDate.year}
+        displayRange={displayRange}
+        isDisabled={isDisabled}
+        onSelect={handleSelect}
+        onHover={handleHover}
+        onHoverLeave={handleHoverLeave}
+      />
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------
 // Composant principal
 
 /**

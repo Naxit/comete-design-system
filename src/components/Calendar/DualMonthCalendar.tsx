@@ -123,6 +123,135 @@ function MonthPanel({
 }
 
 // -----------------------------------------------------------------------
+// MonthRangeCalendar — single calendar, range selection (isRange=true, calendars=1)
+
+export interface MonthRangeCalendarProps {
+  /** Plage sélectionnée (mode contrôlé). */
+  value?: RangeValue<CalendarDate>;
+  /** Valeur initiale (mode non contrôlé). */
+  defaultValue?: RangeValue<CalendarDate>;
+  /** Callback à chaque sélection de plage. */
+  onChange?: (range: RangeValue<CalendarDate>) => void;
+  locale?: string;
+  isDisabled?: boolean;
+  className?: string;
+}
+
+/**
+ * MonthRangeCalendar — Comète Design System (interne)
+ *
+ * Sélecteur de plage de mois sur un seul calendrier (une année).
+ * Deux clics : premier = début, deuxième = fin.
+ * Prévisualisation au survol entre les deux clics.
+ */
+export function MonthRangeCalendar({
+  value,
+  defaultValue,
+  onChange,
+  locale = "fr-FR",
+  isDisabled = false,
+  className,
+}: MonthRangeCalendarProps): ReactElement {
+  const todayDate = today(getLocalTimeZone());
+  const initialYear = (value?.start ?? defaultValue?.start)?.year ?? todayDate.year;
+
+  const [displayYear, setDisplayYear] = useState(initialYear);
+  const [drillLevel, setDrillLevel] = useState<"month" | "year">("month");
+
+  const [internalValue, setInternalValue] = useState<
+    RangeValue<CalendarDate> | undefined
+  >(defaultValue);
+  const [pending, setPending] = useState<CalendarDate | undefined>(undefined);
+  const [hovered, setHovered] = useState<CalendarDate | undefined>(undefined);
+
+  const controlled = value !== undefined;
+  const resolvedValue = controlled ? value : internalValue;
+
+  const displayRange = ((): RangeValue<CalendarDate> | undefined => {
+    if (!pending) return resolvedValue;
+    const anchor = pending;
+    const target = hovered ?? pending;
+    const start = anchor.compare(target) <= 0 ? anchor : target;
+    const end = anchor.compare(target) >= 0 ? anchor : target;
+    return { start, end };
+  })();
+
+  const handleSelect = (date: CalendarDate) => {
+    if (isDisabled) return;
+    if (!pending) {
+      setPending(date);
+      setHovered(undefined);
+    } else {
+      const start = pending.compare(date) <= 0 ? pending : date;
+      const end = pending.compare(date) >= 0 ? pending : date;
+      const range: RangeValue<CalendarDate> = { start, end };
+      setPending(undefined);
+      setHovered(undefined);
+      if (!controlled) setInternalValue(range);
+      onChange?.(range);
+    }
+  };
+
+  const handleHover = (date: CalendarDate) => {
+    if (pending) setHovered(date);
+  };
+
+  const handleHoverLeave = () => {
+    if (pending) setHovered(undefined);
+  };
+
+  const handleDrillUp = () => setDrillLevel("year");
+  const handleYearSelect = (date: CalendarDate) => {
+    setDisplayYear(date.year);
+    setDrillLevel("month");
+  };
+
+  if (drillLevel === "year") {
+    return (
+      <YearCalendar
+        defaultValue={new CalendarDate(displayYear, 1, 1)}
+        isDisabled={isDisabled}
+        className={className}
+        onChange={handleYearSelect}
+      />
+    );
+  }
+
+  const monthLabels = getMonthLabels(locale);
+
+  return (
+    <div
+      role="group"
+      aria-label={`Choisir une période — ${displayYear}`}
+      className={[calStyles.calendar, styles.monthCalendar, className]
+        .filter(Boolean)
+        .join(" ")}
+      data-disabled={isDisabled || undefined}
+      data-selecting={pending ? true : undefined}
+    >
+      <MainHeader
+        label={String(displayYear)}
+        onPrev={() => setDisplayYear((y) => y - 1)}
+        onNext={() => setDisplayYear((y) => y + 1)}
+        onHeadingPress={handleDrillUp}
+        isDisabled={isDisabled}
+      />
+      <MonthPanel
+        year={displayYear}
+        monthLabels={monthLabels}
+        displayRange={displayRange}
+        todayYear={todayDate.year}
+        todayMonth={todayDate.month}
+        isDisabled={isDisabled}
+        onSelect={handleSelect}
+        onHover={handleHover}
+        onHoverLeave={handleHoverLeave}
+      />
+    </div>
+  );
+}
+
+// -----------------------------------------------------------------------
 // Composant principal
 
 /**

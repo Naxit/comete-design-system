@@ -24,9 +24,9 @@ import { CalendarCell as CometeCalendarCell } from "./CalendarCell.js";
 import { MainHeader } from "./MainHeader.js";
 import { WeekGrid, DualWeekGrid } from "./WeekGrid.js";
 import { MonthCalendar } from "./MonthCalendar.js";
-import { DualMonthCalendar } from "./DualMonthCalendar.js";
+import { DualMonthCalendar, MonthRangeCalendar } from "./DualMonthCalendar.js";
 import { YearCalendar } from "./YearCalendar.js";
-import { DualYearCalendar } from "./DualYearCalendar.js";
+import { DualYearCalendar, YearRangeCalendar } from "./DualYearCalendar.js";
 import { TimeCalendar } from "./TimeCalendar.js";
 import type { TimeCalendarProps as TimeCalendarComponentProps } from "./TimeCalendar.js";
 import styles from "./Calendar.module.css";
@@ -49,6 +49,12 @@ interface CalendarBaseProps {
    * @default 1
    */
   calendars?: 1 | 2;
+  /**
+   * Active la sélection de plage (range) au lieu d'une date unique.
+   * Disponible pour appearance=date uniquement.
+   * @default false
+   */
+  isRange?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
 }
@@ -56,9 +62,26 @@ interface CalendarBaseProps {
 /** Props pour appearance="date" (sélection d'une date unique). */
 export interface DateCalendarProps extends CalendarBaseProps {
   appearance?: "date";
+  isRange?: false;
   value?: DateValue;
   defaultValue?: DateValue;
   onChange?: (value: DateValue) => void;
+  isDisabled?: boolean;
+  isReadOnly?: boolean;
+  minValue?: DateValue;
+  maxValue?: DateValue;
+  "aria-label"?: string;
+  "aria-labelledby"?: string;
+  autoFocus?: boolean;
+}
+
+/** Props pour appearance="date" avec sélection de plage (isRange=true). */
+export interface DateRangeCalendarProps extends CalendarBaseProps {
+  appearance?: "date";
+  isRange: true;
+  value?: RangeValue<DateValue>;
+  defaultValue?: RangeValue<DateValue>;
+  onChange?: (value: RangeValue<DateValue>) => void;
   isDisabled?: boolean;
   isReadOnly?: boolean;
   minValue?: DateValue;
@@ -87,10 +110,10 @@ export interface WeekCalendarProps extends CalendarBaseProps {
   "aria-label"?: string;
 }
 
-/** Props pour appearance="month", 1 calendrier (sélection d'un mois unique). */
+/** Props pour appearance="month", sélection d'un mois unique. */
 export interface MonthCalendarProps extends CalendarBaseProps {
   appearance: "month";
-  calendars?: 1;
+  isRange?: false;
   value?: CalendarDate;
   defaultValue?: CalendarDate;
   onChange?: (date: CalendarDate) => void;
@@ -98,10 +121,10 @@ export interface MonthCalendarProps extends CalendarBaseProps {
   locale?: string;
 }
 
-/** Props pour appearance="month", 2 calendriers (sélection d'une plage de mois). */
-export interface MonthCalendarDualProps extends CalendarBaseProps {
+/** Props pour appearance="month", sélection d'une plage de mois (isRange=true). */
+export interface MonthRangeCalendarExternalProps extends CalendarBaseProps {
   appearance: "month";
-  calendars: 2;
+  isRange: true;
   value?: RangeValue<CalendarDate>;
   defaultValue?: RangeValue<CalendarDate>;
   onChange?: (range: RangeValue<CalendarDate>) => void;
@@ -109,20 +132,20 @@ export interface MonthCalendarDualProps extends CalendarBaseProps {
   locale?: string;
 }
 
-/** Props pour appearance="year", 1 calendrier (sélection d'une année unique). */
-export interface YearCalendarProps extends CalendarBaseProps {
+/** Props pour appearance="year", sélection d'une année unique. */
+export interface YearCalendarExternalProps extends CalendarBaseProps {
   appearance: "year";
-  calendars?: 1;
+  isRange?: false;
   value?: CalendarDate;
   defaultValue?: CalendarDate;
   onChange?: (date: CalendarDate) => void;
   isDisabled?: boolean;
 }
 
-/** Props pour appearance="year", 2 calendriers (sélection d'une plage d'années). */
-export interface YearCalendarDualProps extends CalendarBaseProps {
+/** Props pour appearance="year", sélection d'une plage d'années (isRange=true). */
+export interface YearRangeCalendarExternalProps extends CalendarBaseProps {
   appearance: "year";
-  calendars: 2;
+  isRange: true;
   value?: RangeValue<CalendarDate>;
   defaultValue?: RangeValue<CalendarDate>;
   onChange?: (range: RangeValue<CalendarDate>) => void;
@@ -141,11 +164,12 @@ export interface TimeCalendarCalendarProps extends CalendarBaseProps {
 
 export type CalendarProps =
   | DateCalendarProps
+  | DateRangeCalendarProps
   | WeekCalendarProps
   | MonthCalendarProps
-  | MonthCalendarDualProps
-  | YearCalendarProps
-  | YearCalendarDualProps
+  | MonthRangeCalendarExternalProps
+  | YearCalendarExternalProps
+  | YearRangeCalendarExternalProps
   | TimeCalendarCalendarProps;
 
 // -----------------------------------------------------------------------
@@ -191,28 +215,43 @@ export function Calendar(props: CalendarProps): ReactElement {
   }
 
   if (props.appearance === "month") {
-    if (props.calendars === 2) {
-      const { appearance: _a, isOpen: _o, calendars: _c, ...dualProps } = props;
-      return <DualMonthCalendar {...dualProps} />;
+    if ("isRange" in props && props.isRange) {
+      const { appearance: _a, isOpen: _o, calendars = 1, isRange: _r, ...rangeProps } = props;
+      if (calendars === 2) {
+        return <DualMonthCalendar {...rangeProps} />;
+      }
+      return <MonthRangeCalendar {...rangeProps} />;
     }
-    const { appearance: _a, isOpen: _o, calendars: _c, ...monthProps } = props;
+    const { appearance: _a, isOpen: _o, calendars: _c, isRange: _r, ...monthProps } = props;
     return <MonthCalendar {...monthProps} />;
   }
 
   if (props.appearance === "year") {
-    if (props.calendars === 2) {
-      const { appearance: _a, isOpen: _o, calendars: _c, ...dualProps } = props;
-      return <DualYearCalendar {...dualProps} />;
+    if ("isRange" in props && props.isRange) {
+      const { appearance: _a, isOpen: _o, calendars = 1, isRange: _r, ...rangeProps } = props;
+      if (calendars === 2) {
+        return <DualYearCalendar {...rangeProps} />;
+      }
+      return <YearRangeCalendar {...rangeProps} />;
     }
-    const { appearance: _a, isOpen: _o, calendars: _c, ...yearProps } = props;
+    const { appearance: _a, isOpen: _o, calendars: _c, isRange: _r, ...yearProps } = props;
     return <YearCalendar {...yearProps} />;
   }
 
-  // appearance="date" (défaut) — TypeScript a déjà réduit à DateCalendarProps ici
+  // appearance="date" (défaut)
+  if ("isRange" in props && props.isRange) {
+    const { appearance: _a, isOpen: _o, calendars = 1, isRange: _r, ...rangeProps } = props;
+    if (calendars === 2) {
+      return <DualDateRangeCalendar {...rangeProps} />;
+    }
+    return <DateRangeGrid {...rangeProps} />;
+  }
+
   const {
     appearance: _a,
     isOpen: _o,
     calendars = 1,
+    isRange: _r,
     ...dateProps
   } = props;
   if (calendars === 2) {
@@ -318,6 +357,34 @@ function DualPanelHeadingButton({
 }
 
 // -----------------------------------------------------------------------
+// Header interne pour AriaRangeCalendar simple (lit RangeCalendarStateContext)
+
+function RangeCalendarDateHeader({
+  onDrillUp,
+  isDisabled,
+}: {
+  onDrillUp: (date: CalendarDate) => void;
+  isDisabled?: boolean;
+}): ReactElement | null {
+  const state = useContext(RangeCalendarStateContext);
+  const { locale } = useLocale();
+
+  if (!state) return null;
+
+  const visibleDate = state.visibleRange.start;
+  const label = formatVisibleMonth(visibleDate, locale);
+
+  return (
+    <MainHeader
+      label={label}
+      slotNav
+      onHeadingPress={() => onDrillUp(visibleDate)}
+      isDisabled={isDisabled}
+    />
+  );
+}
+
+// -----------------------------------------------------------------------
 // Grille date simple (interne)
 
 function DateGrid({
@@ -415,6 +482,8 @@ function DualDateCalendar({
   const [pivotDate, setPivotDate] = useState<CalendarDate | undefined>(undefined);
   // Panel ayant déclenché le drill-up : détermine quel panel est mis à jour au retour.
   const [drilledPanel, setDrilledPanel] = useState<"left" | "right">("left");
+  // Clé de remontage — force AriaRangeCalendar à se remonter avec le bon mois après drill-down.
+  const [calendarKey, setCalendarKey] = useState(0);
 
   const handleDrillUp = (date: CalendarDate, panel: "left" | "right") => {
     setPivotDate(date);
@@ -430,6 +499,7 @@ function DualDateCalendar({
       ? month.subtract({ months: 1 })
       : month;
     setPivotDate(newPivot);
+    setCalendarKey((k) => k + 1);
     setDrillLevel("date");
   };
 
@@ -446,8 +516,161 @@ function DualDateCalendar({
 
   return (
     <AriaRangeCalendar
+      key={calendarKey}
       visibleDuration={{ months: 2 }}
-      defaultFocusedValue={initialFocus}
+      defaultFocusedValue={pivotDate ?? initialFocus}
+      minValue={minValue}
+      maxValue={maxValue}
+      isDisabled={isDisabled}
+      isReadOnly={isReadOnly}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledby}
+      className={[styles.dualLinkedCalendar, className].filter(Boolean).join(" ")}
+    >
+      <AriaButton slot="previous" className={[styles.navButton, styles.dualNavPrev].join(" ")}>
+        <Icon icon="ChevronLeft" size={20} variant="filled" />
+      </AriaButton>
+      <DualPanelHeadingButton
+        offset={0}
+        className={styles.dualHeadingLeft}
+        onDrillUp={handleDrillUp}
+        isDisabled={isDisabled}
+      />
+      <DualPanelHeadingButton
+        offset={1}
+        className={styles.dualHeadingRight}
+        onDrillUp={handleDrillUp}
+        isDisabled={isDisabled}
+      />
+      <AriaButton slot="next" className={[styles.navButton, styles.dualNavNext].join(" ")}>
+        <Icon icon="ChevronRight" size={20} variant="filled" />
+      </AriaButton>
+      <CalendarGrid className={[styles.grid, styles.dualGrid1].join(" ")}>
+        <CalendarGridContent calendarDisabled={isDisabled ?? false} />
+      </CalendarGrid>
+      <CalendarGrid
+        offset={{ months: 1 }}
+        className={[styles.grid, styles.dualGrid2].join(" ")}
+      >
+        <CalendarGridContent calendarDisabled={isDisabled ?? false} />
+      </CalendarGrid>
+    </AriaRangeCalendar>
+  );
+}
+
+// -----------------------------------------------------------------------
+// Grille date range simple (isRange=true, calendars=1)
+
+function DateRangeGrid({
+  className,
+  isDisabled,
+  ...props
+}: Omit<DateRangeCalendarProps, "appearance" | "calendars" | "isOpen" | "isRange">) {
+  const [drillLevel, setDrillLevel] = useState<"date" | "month">("date");
+  const [pivotDate, setPivotDate] = useState<CalendarDate | undefined>(undefined);
+  const [calendarKey, setCalendarKey] = useState(0);
+
+  const handleDrillUp = (visibleDate: CalendarDate) => {
+    setPivotDate(visibleDate);
+    setDrillLevel("month");
+  };
+
+  const handleMonthSelect = (month: CalendarDate) => {
+    setPivotDate(month);
+    setCalendarKey((k) => k + 1);
+    setDrillLevel("date");
+  };
+
+  if (drillLevel === "month") {
+    return (
+      <MonthCalendar
+        defaultValue={pivotDate}
+        isDisabled={isDisabled}
+        className={className}
+        onChange={handleMonthSelect}
+      />
+    );
+  }
+
+  return (
+    <AriaRangeCalendar
+      key={calendarKey}
+      value={props.value}
+      defaultValue={props.defaultValue}
+      onChange={props.onChange}
+      isDisabled={isDisabled}
+      isReadOnly={props.isReadOnly}
+      minValue={props.minValue}
+      maxValue={props.maxValue}
+      defaultFocusedValue={pivotDate ?? props.defaultValue?.start ?? props.value?.start}
+      aria-label={props["aria-label"]}
+      aria-labelledby={props["aria-labelledby"]}
+      className={[styles.calendar, className].filter(Boolean).join(" ")}
+    >
+      <RangeCalendarDateHeader onDrillUp={handleDrillUp} isDisabled={isDisabled} />
+      <CalendarGrid className={styles.grid}>
+        <CalendarGridContent calendarDisabled={isDisabled ?? false} />
+      </CalendarGrid>
+    </AriaRangeCalendar>
+  );
+}
+
+// -----------------------------------------------------------------------
+// Double grille date range liée (isRange=true, calendars=2)
+
+function DualDateRangeCalendar({
+  className,
+  defaultValue,
+  value,
+  onChange,
+  minValue,
+  maxValue,
+  isDisabled,
+  isReadOnly,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledby,
+}: Omit<DateRangeCalendarProps, "appearance" | "calendars" | "isOpen" | "isRange" | "autoFocus">) {
+  const initialFocus = value?.start ?? defaultValue?.start;
+
+  const [drillLevel, setDrillLevel] = useState<"date" | "month">("date");
+  const [pivotDate, setPivotDate] = useState<CalendarDate | undefined>(undefined);
+  const [drilledPanel, setDrilledPanel] = useState<"left" | "right">("left");
+  const [calendarKey, setCalendarKey] = useState(0);
+
+  const handleDrillUp = (date: CalendarDate, panel: "left" | "right") => {
+    setPivotDate(date);
+    setDrilledPanel(panel);
+    setDrillLevel("month");
+  };
+
+  const handleMonthSelect = (month: CalendarDate) => {
+    const newPivot = drilledPanel === "right"
+      ? month.subtract({ months: 1 })
+      : month;
+    setPivotDate(newPivot);
+    setCalendarKey((k) => k + 1);
+    setDrillLevel("date");
+  };
+
+  if (drillLevel === "month") {
+    return (
+      <MonthCalendar
+        defaultValue={pivotDate}
+        isDisabled={isDisabled}
+        className={className}
+        onChange={handleMonthSelect}
+      />
+    );
+  }
+
+  return (
+    <AriaRangeCalendar
+      key={calendarKey}
+      visibleDuration={{ months: 2 }}
+      value={value}
+      defaultValue={defaultValue}
+      onChange={onChange}
+      defaultFocusedValue={pivotDate ?? initialFocus}
       minValue={minValue}
       maxValue={maxValue}
       isDisabled={isDisabled}

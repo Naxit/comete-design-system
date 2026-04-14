@@ -145,6 +145,7 @@
    ========================================================================== */
 
 .weekNumberCell {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -156,6 +157,23 @@
   color: var(--text-subtlest);
   user-select: none;
   pointer-events: none;
+}
+
+/* Indicateur vertical — semaine en cours */
+.weekRow[data-current-week] .weekNumberCell::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 20%;
+  bottom: 20%;
+  width: var(--size025);
+  border-radius: var(--radius-round);
+  background-color: var(--border-focused);
+}
+
+.weekRow[data-current-week]:not([data-state]) .weekNumberCell {
+  color: var(--text-information);
+  font-weight: var(--font-weight-semibold);
 }
 
 /* ==========================================================================
@@ -211,6 +229,26 @@
   border-radius: var(--radius-round);
   background-color: var(--border-focused);
   pointer-events: none;
+}
+
+/* Today dans une rangée sélectionnée — texte inversé pour le contraste */
+.weekRow[data-state="selected"] .weekDayCell[data-today] .weekDayText,
+.weekRow[data-state="range-start"] .weekDayCell[data-today] .weekDayText,
+.weekRow[data-state="range-end"] .weekDayCell[data-today] .weekDayText {
+  color: var(--text-inverted);
+}
+
+.weekRow[data-state="selected"] .todayIndicator,
+.weekRow[data-state="range-start"] .todayIndicator,
+.weekRow[data-state="range-end"] .todayIndicator {
+  background-color: var(--text-inverted);
+}
+
+/* Indicateur vertical — inversé quand semaine en cours est sélectionnée */
+.weekRow[data-state="selected"][data-current-week] .weekNumberCell::before,
+.weekRow[data-state="range-start"][data-current-week] .weekNumberCell::before,
+.weekRow[data-state="range-end"][data-current-week] .weekNumberCell::before {
+  background-color: var(--text-inverted);
 }
 
 /* Hors du mois courant */

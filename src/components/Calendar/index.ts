@@ -3,11 +3,12 @@ export type {
   CalendarProps,
   CalendarAppearance,
   DateCalendarProps,
+  DateRangeCalendarProps,
   WeekCalendarProps,
   MonthCalendarProps,
-  MonthCalendarDualProps,
-  YearCalendarProps,
-  YearCalendarDualProps,
+  MonthRangeCalendarExternalProps,
+  YearCalendarExternalProps,
+  YearRangeCalendarExternalProps,
 } from "./Calendar.js";
 export { RangeCalendar } from "./RangeCalendar.js";
 export type { RangeCalendarProps } from "./RangeCalendar.js";
