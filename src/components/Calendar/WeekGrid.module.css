@@ -74,6 +74,11 @@
   background-color: var(--background-neutral-subtler-pressed);
 }
 
+/* Semaine en cours (contient aujourd'hui) */
+.weekRow[data-current-week]:not([data-state]):not([data-disabled]) {
+  background-color: var(--background-neutral-subtler-default);
+}
+
 /* Désactivé */
 .weekRow[data-disabled] {
   cursor: not-allowed;

@@ -391,6 +391,9 @@ function WeekRow({
   const [isFocusVisible, setIsFocusVisible] = useState(false);
 
   const rowState = getRowState(week.weekStart, week.weekEnd, value);
+  const isCurrentWeek =
+    todayDate.compare(week.weekStart) >= 0 &&
+    todayDate.compare(week.weekEnd) <= 0;
   // NOTE: Une ligne dont tous les jours sont hors du mois visible est désactivée
   // pour éviter une sélection de semaine entièrement dans un autre mois.
   const allOutside = week.isOutsideMonth.every(Boolean);
@@ -417,6 +420,7 @@ function WeekRow({
       role="row"
       className={styles.weekRow}
       data-state={rowState}
+      data-current-week={isCurrentWeek || undefined}
       data-disabled={rowDisabled || undefined}
       tabIndex={rowDisabled ? -1 : 0}
       onClick={handleClick}
