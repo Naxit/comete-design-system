@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Radio, RadioGroup } from "@naxit/comete-design-system";
 import type { RadioGroupProps } from "@naxit/comete-design-system";
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { userEvent, within } from "storybook/test";
 
 // ----------------------------------------------------------------------
 // Figma
@@ -113,6 +114,26 @@ function ControlledDemo() {
 export const Controlled: Story = {
   render: () => <ControlledDemo />,
   parameters: { controls: { disable: true } },
+};
+
+/** Focus visible — le FocusRing s'affiche autour de l'indicateur. */
+export const Focused: Story = {
+  render: (args) => (
+    <RadioGroup {...args} defaultValue="a">
+      <Radio value="a" label="Focused (selected)" />
+      <Radio value="b" label="Option B" />
+    </RadioGroup>
+  ),
+  play: async ({
+    canvasElement,
+  }: {
+    canvasElement: HTMLElement;
+  }) => {
+    const canvas = within(canvasElement);
+    const radios = canvas.getAllByRole("radio");
+    await userEvent.tab();
+    radios[0]?.focus();
+  },
 };
 
 /** Toutes les combinaisons d'états. */
