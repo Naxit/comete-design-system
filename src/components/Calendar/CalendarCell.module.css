@@ -19,6 +19,7 @@
   transition-property: background-color, color, opacity;
   transition-duration: var(--duration-fast);
   transition-timing-function: var(--easing-default);
+  width: 100%;
 }
 
 /* sm — date grid (32 × 32 px) */
