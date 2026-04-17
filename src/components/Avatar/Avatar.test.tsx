@@ -36,6 +36,7 @@ describe("Avatar", () => {
       ["large"],
       ["xlarge"],
       ["xxlarge"],
+      ["xxxlarge"],
     ] as const)("should apply class %s when size=%s", (size) => {
       const { container } = render(<Avatar size={size} />);
       expect(container.firstElementChild).toHaveClass(size);

@@ -41,11 +41,12 @@ const meta: Meta<AvatarProps> = {
           small: "small (24px)",
           medium: "medium (32px)",
           large: "large (40px)",
-          xlarge: "xlarge (96px)",
-          xxlarge: "xxlarge (128px)",
+          xlarge: "xlarge (64px)",
+          xxlarge: "xxlarge (96px)",
+          xxxlarge: "xxxlarge (128px)",
         },
       },
-      options: ["xsmall", "small", "medium", "large", "xlarge", "xxlarge"],
+      options: ["xsmall", "small", "medium", "large", "xlarge", "xxlarge", "xxxlarge"],
     },
     isDisabled: { control: "boolean" },
     isSelected: { control: "boolean" },
@@ -194,7 +195,7 @@ function LoadingFlowDemo() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
-      <Avatar size="xxlarge" initials={initials} src={photoUrl} alt="Demo" />
+      <Avatar size="xxxlarge" initials={initials} src={photoUrl} alt="Demo" />
       <div style={{ display: "flex", gap: 8, fontSize: 14 }}>
         {FLOW_STEPS.map(({ key, label }, i) => (
           <span key={key} style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -226,181 +227,6 @@ export const LoadingFlow: Story = {
 };
 
 // ----------------------------------------------------------------------
-// Avatar Group
-
-/** Photos disponibles pour le groupe. */
-const AVAILABLE_PHOTOS = [
-  { src: "https://i.pravatar.cc/128?img=3", alt: "Alice" },
-  { src: "https://i.pravatar.cc/128?img=4", alt: "Bob" },
-  { src: "https://i.pravatar.cc/128?img=5", alt: "Carol" },
-  { src: "https://i.pravatar.cc/128?img=8", alt: "Dan" },
-  { src: "https://i.pravatar.cc/128?img=9", alt: "Eve" },
-  { src: "https://i.pravatar.cc/128?img=11", alt: "Frank" },
-  { src: "https://i.pravatar.cc/128?img=12", alt: "Grace" },
-  { src: "https://i.pravatar.cc/128?img=14", alt: "Hugo" },
-];
-
-const AVAILABLE_INITIALS = ["AB", "CD", "EF", "GH", "IJ", "KL", "MN", "OP"];
-
-/** Border width per avatar size (in px). */
-const SIZE_BORDER: Record<string, number> = {
-  xsmall: 1,
-  small: 1.5,
-  medium: 2,
-  large: 2,
-  xlarge: 3,
-  xxlarge: 4,
-};
-
-/** Tokens de spacing disponibles — clé lisible → variable CSS. */
-const SPACING_OPTIONS = [
-  "space050 (4px)",
-  "space075 (6px)",
-  "space100 (8px)",
-  "space125 (10px)",
-  "space150 (12px)",
-  "space200 (16px)",
-  "space250 (20px)",
-  "space300 (24px)",
-  "space350 (28px)",
-  "space400 (32px)",
-];
-
-const SPACING_MAPPING: Record<string, string> = {
-  "space050 (4px)": "var(--space050)",
-  "space075 (6px)": "var(--space075)",
-  "space100 (8px)": "var(--space100)",
-  "space125 (10px)": "var(--space125)",
-  "space150 (12px)": "var(--space150)",
-  "space200 (16px)": "var(--space200)",
-  "space250 (20px)": "var(--space250)",
-  "space300 (24px)": "var(--space300)",
-  "space350 (28px)": "var(--space350)",
-  "space400 (32px)": "var(--space400)",
-};
-
-type AvatarGroupContent = "photo" | "initials" | "icon";
-
-interface AvatarGroupArgs {
-  /** Nombre d'avatars affichés dans le groupe. */
-  count: number;
-  /** Nombre d'avatars supplémentaires (compteur +N). 0 = pas de compteur. */
-  overflow: number;
-  /** Contenu des avatars du groupe. */
-  content: AvatarGroupContent;
-  /** Token de spacing pour le chevauchement. */
-  spacing: string;
-  /** Taille des avatars. */
-  size: AvatarProps["size"];
-}
-
-export const AvatarGroup: StoryObj<AvatarGroupArgs> = {
-  argTypes: {
-    count: {
-      control: { type: "range", min: 1, max: 8, step: 1 },
-      description: "Nombre d'avatars affichés",
-    },
-    overflow: {
-      control: { type: "number", min: 0 },
-      description: "Nombre d'avatars supplémentaires (+N)",
-    },
-    content: {
-      control: "select",
-      options: ["photo", "initials", "icon"],
-      description: "Type de contenu des avatars",
-    },
-    spacing: {
-      control: "select",
-      options: SPACING_OPTIONS,
-      mapping: SPACING_MAPPING,
-      description: "Token de spacing pour le chevauchement",
-    },
-    size: {
-      control: "select",
-      options: ["xsmall", "small", "medium", "large", "xlarge", "xxlarge"],
-    },
-    // Masquer les argTypes du meta qui ne s'appliquent pas à AvatarGroup
-    ...(Object.fromEntries(
-      [
-        "src",
-        "alt",
-        "initials",
-        "icon",
-        "isDisabled",
-        "isSelected",
-        "notification",
-        "presence",
-        "onPress",
-      ].map((key) => [key, { table: { disable: true } }]),
-    ) as Record<string, { table: { disable: true } }>),
-  },
-  args: {
-    count: 3,
-    overflow: 2,
-    content: "photo",
-    spacing: "space100 (8px)" as unknown as string,
-    size: "large",
-  },
-  render: (args) => {
-    const {
-      count,
-      overflow,
-      content,
-      spacing,
-      size = "medium",
-    } = args as unknown as AvatarGroupArgs;
-
-    const total = count + (overflow > 0 ? 1 : 0);
-    const border = SIZE_BORDER[size] ?? 2;
-
-    /** Génère les props de contenu pour un avatar à l'index i. */
-    const contentProps = (i: number): Partial<AvatarProps> => {
-      switch (content) {
-        case "photo": {
-          const photo = AVAILABLE_PHOTOS[i % AVAILABLE_PHOTOS.length];
-          return photo ? { src: photo.src, alt: photo.alt } : {};
-        }
-        case "initials":
-          return { initials: AVAILABLE_INITIALS[i % AVAILABLE_INITIALS.length] };
-        case "icon":
-          return { icon: "Person" };
-      }
-    };
-
-    /** Style commun pour le wrapper de chaque avatar dans le groupe. */
-    const wrapperStyle = (i: number): React.CSSProperties => ({
-      marginLeft: i === 0 ? 0 : `calc(-1 * ${spacing})`,
-      zIndex: total - i,
-      borderRadius: "50%",
-      boxShadow: `0 0 0 ${border}px var(--border-invisible, #fff)`,
-      position: "relative",
-      lineHeight: 0,
-    });
-
-    return (
-      <div style={{ display: "flex", alignItems: "center" }}>
-        {Array.from({ length: count }, (_, i) => (
-          <div key={i} style={wrapperStyle(i)}>
-            <Avatar
-              {...contentProps(i)}
-              size={size}
-            />
-          </div>
-        ))}
-        {overflow > 0 && (
-          <div style={wrapperStyle(count)}>
-            <Avatar
-              initials={`+${overflow}`}
-              size={size}
-            />
-          </div>
-        )}
-      </div>
-    );
-  },
-};
-
-// ----------------------------------------------------------------------
 // Sizes
 
 const SIZE_PX: Record<string, number> = {
@@ -408,8 +234,9 @@ const SIZE_PX: Record<string, number> = {
   small: 24,
   medium: 32,
   large: 40,
-  xlarge: 96,
-  xxlarge: 128,
+  xlarge: 64,
+  xxlarge: 96,
+  xxxlarge: 128,
 };
 
 export const AllSizes: Story = {
@@ -419,7 +246,7 @@ export const AllSizes: Story = {
     return (
       <div style={{ display: "flex", gap: 16, alignItems: "flex-end" }}>
         {(
-          ["xsmall", "small", "medium", "large", "xlarge", "xxlarge"] as const
+          ["xsmall", "small", "medium", "large", "xlarge", "xxlarge", "xxxlarge"] as const
         ).map((size) => (
           <div
             key={size}

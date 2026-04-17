@@ -1,0 +1,26 @@
+/* ==========================================================================
+   AvatarGroup — Comète Design System
+   ========================================================================== */
+
+.group {
+  display: inline-flex;
+  align-items: center;
+  isolation: isolate;
+}
+
+.item {
+  position: relative;
+  line-height: 0;
+  transition: transform var(--duration-fast) var(--easing-default);
+}
+
+.item:hover {
+  z-index: 999 !important;
+  transform: scale(1.1);
+}
+
+.overflow {
+  position: relative;
+  z-index: 0;
+  line-height: 0;
+}

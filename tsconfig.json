@@ -27,7 +27,6 @@
     "declaration": true,
     "declarationMap": true,
     "emitDeclarationOnly": false,
-    "baseUrl": ".",
     "outDir": "./dist",
     "rootDir": "./",
   },
