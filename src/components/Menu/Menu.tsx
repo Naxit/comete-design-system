@@ -23,8 +23,22 @@ import styles from "./Menu.module.css";
 // -----------------------------------------------------------------------
 // Types publics
 
+/**
+ * Mode du menu.
+ * - "default"        — menu classique sans sélection
+ * - "selectSingle"   — sélection unique (radios visuels)
+ * - "selectMultiple" — sélection multiple (checkboxes visuels)
+ */
+export type MenuMode = "default" | "selectSingle" | "selectMultiple";
+
 export interface MenuProps<T extends object = object>
-  extends Omit<AriaMenuProps<T>, "className" | "style"> {
+  extends Omit<AriaMenuProps<T>, "className" | "style" | "selectionMode"> {
+  /**
+   * Mode du menu. Câble automatiquement le selectionMode React Aria
+   * et affiche les indicateurs visuels (radios / checkboxes) dans le slotBefore.
+   * @default "default"
+   */
+  mode?: MenuMode;
   /** Additional CSS class on the menu list. */
   className?: string;
 }
@@ -39,12 +53,14 @@ export interface MenuItemProps
   children: ReactNode;
   /** Description secondaire affichée sous le label. */
   description?: string;
+  /** Contenu personnalisé affiché avant iconBefore (remplacé par radio/checkbox en mode sélection). */
+  slotBefore?: ReactNode;
   /** Icône affichée avant le label. */
   iconBefore?: IconName;
-  /** Icône affichée après le label (ex : ChevronRight pour un sous-menu). */
-  iconAfter?: IconName;
   /** Contenu personnalisé affiché après le label (ex : raccourci clavier, badge). */
   slotAfter?: ReactNode;
+  /** Icône affichée après le label (ex : ChevronRight pour un sous-menu). */
+  iconAfter?: IconName;
   /** Additional CSS class on the menu item. */
   className?: string;
 }
@@ -73,7 +89,16 @@ export interface MenuPopoverProps {
 }
 
 // -----------------------------------------------------------------------
-// MenuTrigger — wraps React Aria's MenuTrigger
+// Mode → React Aria selectionMode mapping
+
+const MODE_TO_SELECTION: Record<MenuMode, "none" | "single" | "multiple"> = {
+  default: "none",
+  selectSingle: "single",
+  selectMultiple: "multiple",
+};
+
+// -----------------------------------------------------------------------
+// MenuTrigger
 
 /**
  * MenuTrigger — Comète Design System
@@ -100,26 +125,13 @@ export function MenuTrigger(props: MenuTriggerProps): ReactElement {
 MenuTrigger.displayName = "MenuTrigger";
 
 // -----------------------------------------------------------------------
-// SubmenuTrigger — wraps a MenuItem + Popover for cascading menus
+// SubmenuTrigger
 
 /**
  * SubmenuTrigger — Comète Design System
  *
  * Wraps a MenuItem (trigger) and a Popover+Menu to create a cascading
  * submenu. The submenu opens on hover or ArrowRight.
- *
- * ```tsx
- * <Menu>
- *   <SubmenuTrigger>
- *     <MenuItem>Plus d'options</MenuItem>
- *     <MenuPopover>
- *       <Menu>
- *         <MenuItem>Sous-option 1</MenuItem>
- *       </Menu>
- *     </MenuPopover>
- *   </SubmenuTrigger>
- * </Menu>
- * ```
  */
 export function SubmenuTrigger(props: SubmenuTriggerProps): ReactElement {
   return <AriaSubmenuTrigger {...props} />;
@@ -128,7 +140,7 @@ export function SubmenuTrigger(props: SubmenuTriggerProps): ReactElement {
 SubmenuTrigger.displayName = "SubmenuTrigger";
 
 // -----------------------------------------------------------------------
-// MenuPopover — popover container with elevation
+// MenuPopover
 
 /**
  * MenuPopover — Comète Design System
@@ -155,7 +167,7 @@ export function MenuPopover({
 MenuPopover.displayName = "MenuPopover";
 
 // -----------------------------------------------------------------------
-// Menu — the menu list itself
+// Menu
 
 /**
  * Menu — Comète Design System
@@ -164,45 +176,69 @@ MenuPopover.displayName = "MenuPopover";
  * la sélection et le focus automatiquement via React Aria.
  *
  * ```tsx
+ * // Menu classique
  * <Menu>
  *   <MenuItem id="edit" iconBefore="Edit">Modifier</MenuItem>
- *   <MenuDivider />
  *   <MenuItem id="delete" iconBefore="Delete">Supprimer</MenuItem>
+ * </Menu>
+ *
+ * // Sélection unique (radios)
+ * <Menu mode="selectSingle" selectedKeys={new Set(["date"])} onSelectionChange={setKeys}>
+ *   <MenuItem id="date">Par date</MenuItem>
+ *   <MenuItem id="name">Par nom</MenuItem>
+ * </Menu>
+ *
+ * // Sélection multiple (checkboxes)
+ * <Menu mode="selectMultiple" selectedKeys={selected} onSelectionChange={setSelected}>
+ *   <MenuItem id="active">Actifs</MenuItem>
+ *   <MenuItem id="archived">Archivés</MenuItem>
  * </Menu>
  * ```
  */
 export function Menu<T extends object>({
+  mode = "default",
   className,
   ...props
 }: MenuProps<T>): ReactElement {
   const classNames = [styles.menu, className].filter(Boolean).join(" ");
 
-  return <AriaMenu {...props} className={classNames} />;
+  return (
+    <AriaMenu
+      {...props}
+      selectionMode={MODE_TO_SELECTION[mode]}
+      className={classNames}
+    />
+  );
 }
 
 Menu.displayName = "Menu";
 
 // -----------------------------------------------------------------------
-// MenuItem — individual menu item
+// MenuItem
 
 /**
  * MenuItem — Comète Design System
  *
- * Item individuel du menu. Supporte icône avant/après, description
- * secondaire et slot personnalisé (raccourci clavier, badge, etc.).
+ * Item individuel du menu. Layout :
+ * `[slotBefore] [iconBefore] [content] [slotAfter] [iconAfter]`
+ *
+ * En mode sélection, le slotBefore est automatiquement remplacé par
+ * un indicateur radio (selectSingle) ou checkbox (selectMultiple).
  *
  * @param children    - Label principal
  * @param description - Texte secondaire sous le label
+ * @param slotBefore  - Contenu custom avant iconBefore (remplacé en mode sélection)
  * @param iconBefore  - Icône avant le label
- * @param iconAfter   - Icône après le label
  * @param slotAfter   - Contenu custom après le label (badge, shortcut)
+ * @param iconAfter   - Icône après le label
  */
 export function MenuItem({
   children,
   description,
+  slotBefore,
   iconBefore,
-  iconAfter,
   slotAfter,
+  iconAfter,
   className,
   ...ariaProps
 }: MenuItemProps): ReactElement {
@@ -217,23 +253,43 @@ export function MenuItem({
         className,
       ].filter(Boolean).join(" ")}
     >
-      {({ isFocusVisible, isDisabled, isSelected, hasSubmenu }) => {
+      {({ isFocusVisible, isDisabled, isSelected, hasSubmenu, selectionMode }) => {
         const trailingIcon = iconAfter ?? (hasSubmenu ? "ChevronRight" : undefined);
+        const iconColor = isDisabled ? "disabled" : isSelected ? "selected" : "default";
+        const isSelectable = selectionMode !== "none";
+
+        // Selection indicator replaces slotBefore in selection modes
+        const resolvedSlotBefore = isSelectable
+          ? (
+              <Icon
+                icon={
+                  selectionMode === "multiple"
+                    ? isSelected ? "CheckBox" : "CheckBoxOutlineBlank"
+                    : isSelected ? "RadioButtonChecked" : "RadioButtonUnchecked"
+                }
+                size={24}
+                color={iconColor}
+              />
+            )
+          : slotBefore;
 
         return (
           <>
-            {/* Container interne */}
             <span
               className={styles.itemContainer}
               data-selected={isSelected || undefined}
               data-disabled={isDisabled || undefined}
             >
+              {resolvedSlotBefore && (
+                <span className={styles.slotBefore}>{resolvedSlotBefore}</span>
+              )}
+
               {iconBefore && (
                 <Icon
                   icon={iconBefore}
                   size={24}
                   appearance="outlined"
-                  color={isDisabled ? "disabled" : isSelected ? "selected" : "default"}
+                  color={iconColor}
                   className={styles.iconBefore}
                 />
               )}
@@ -254,13 +310,12 @@ export function MenuItem({
                   icon={trailingIcon}
                   size={24}
                   appearance="outlined"
-                  color={isDisabled ? "disabled" : isSelected ? "selected" : "default"}
+                  color={iconColor}
                   className={styles.iconAfter}
                 />
               )}
             </span>
 
-            {/* Focus ring overlay */}
             {isFocusVisible && <FocusRing borderRadius={1} position="inside" />}
           </>
         );
@@ -272,25 +327,12 @@ export function MenuItem({
 MenuItem.displayName = "MenuItem";
 
 // -----------------------------------------------------------------------
-// MenuSection — grouped items with optional heading
+// MenuSection
 
 /**
  * MenuSection — Comète Design System
  *
  * Regroupe des items de menu avec un titre optionnel en majuscules.
- * Ajoute automatiquement un séparateur visuel entre les sections.
- *
- * ```tsx
- * <Menu>
- *   <MenuSection title="Navigation">
- *     <MenuItem id="home">Accueil</MenuItem>
- *     <MenuItem id="profile">Profil</MenuItem>
- *   </MenuSection>
- *   <MenuSection title="Actions">
- *     <MenuItem id="settings">Paramètres</MenuItem>
- *   </MenuSection>
- * </Menu>
- * ```
  */
 export function MenuSection({
   title,
@@ -316,7 +358,7 @@ export function MenuSection({
 MenuSection.displayName = "MenuSection";
 
 // -----------------------------------------------------------------------
-// MenuDivider — visual separator between items
+// MenuDivider
 
 /**
  * MenuDivider — Comète Design System

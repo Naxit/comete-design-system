@@ -13,6 +13,7 @@ declare const styles: {
   readonly "sectionHeading": string;
   readonly "sectionNoSeparator": string;
   readonly "slotAfter": string;
+  readonly "slotBefore": string;
   readonly "title": string;
   readonly "withDescription": string;
 };
