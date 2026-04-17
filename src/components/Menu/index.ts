@@ -9,6 +9,7 @@ export {
 } from "./Menu.js";
 
 export type {
+  MenuMode,
   MenuProps,
   MenuItemProps,
   MenuTriggerProps,

@@ -191,6 +191,59 @@ export const ThreeSections: Story = {
   render: MenuStory,
 };
 
+/** Sélection unique (radios) : un seul item peut être sélectionné. */
+export const SingleSelection: Story = {
+  render: () => (
+    <div style={{ width: 360 }}>
+      <Menu
+        aria-label="Tri"
+        mode="selectSingle"
+        defaultSelectedKeys={new Set(["date"])}
+      >
+        <MenuItem id="date" iconBefore="CalendarToday">Par date</MenuItem>
+        <MenuItem id="name" iconBefore="SortByAlpha">Par nom</MenuItem>
+        <MenuItem id="size" iconBefore="Straighten">Par taille</MenuItem>
+      </Menu>
+    </div>
+  ),
+};
+
+/** Sélection multiple (checkboxes) : plusieurs items sélectionnés. */
+export const MultipleSelection: Story = {
+  render: () => (
+    <div style={{ width: 360 }}>
+      <Menu
+        aria-label="Filtres"
+        mode="selectMultiple"
+        defaultSelectedKeys={new Set(["active", "recent"])}
+      >
+        <MenuItem id="active">Actifs</MenuItem>
+        <MenuItem id="recent">Récents</MenuItem>
+        <MenuItem id="archived">Archivés</MenuItem>
+        <MenuItem id="draft">Brouillons</MenuItem>
+      </Menu>
+    </div>
+  ),
+};
+
+/** Sélection multiple avec icônes et descriptions. */
+export const MultipleWithIcons: Story = {
+  render: () => (
+    <div style={{ width: 360 }}>
+      <Menu
+        aria-label="Colonnes visibles"
+        mode="selectMultiple"
+        defaultSelectedKeys={new Set(["name", "date"])}
+      >
+        <MenuItem id="name" iconBefore="Person" description="Nom complet">Nom</MenuItem>
+        <MenuItem id="email" iconBefore="Mail" description="Adresse email">Email</MenuItem>
+        <MenuItem id="date" iconBefore="CalendarToday" description="Date de création">Date</MenuItem>
+        <MenuItem id="status" iconBefore="Info" description="Statut actuel">Statut</MenuItem>
+      </Menu>
+    </div>
+  ),
+};
+
 /** Menu en cascade : un item ouvre un sous-menu. */
 export const Submenu: Story = {
   render: () => (
