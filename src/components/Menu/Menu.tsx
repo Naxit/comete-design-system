@@ -35,7 +35,7 @@ export interface MenuProps<T extends object = object>
   extends Omit<AriaMenuProps<T>, "className" | "style" | "selectionMode"> {
   /**
    * Mode du menu. Câble automatiquement le selectionMode React Aria
-   * et affiche les indicateurs visuels (radios / checkboxes) dans le slotBefore.
+   * et affiche les indicateurs visuels (radios / checkboxes) dans le elemBefore.
    * @default "default"
    */
   mode?: MenuMode;
@@ -54,11 +54,11 @@ export interface MenuItemProps
   /** Description secondaire affichée sous le label. */
   description?: string;
   /** Contenu personnalisé affiché avant iconBefore (remplacé par radio/checkbox en mode sélection). */
-  slotBefore?: ReactNode;
+  elemBefore?: ReactNode;
   /** Icône affichée avant le label. */
   iconBefore?: IconName;
   /** Contenu personnalisé affiché après le label (ex : raccourci clavier, badge). */
-  slotAfter?: ReactNode;
+  elemAfter?: ReactNode;
   /** Icône affichée après le label (ex : ChevronRight pour un sous-menu). */
   iconAfter?: IconName;
   /** Additional CSS class on the menu item. */
@@ -220,24 +220,24 @@ Menu.displayName = "Menu";
  * MenuItem — Comète Design System
  *
  * Item individuel du menu. Layout :
- * `[slotBefore] [iconBefore] [content] [slotAfter] [iconAfter]`
+ * `[elemBefore] [iconBefore] [content] [elemAfter] [iconAfter]`
  *
- * En mode sélection, le slotBefore est automatiquement remplacé par
+ * En mode sélection, le elemBefore est automatiquement remplacé par
  * un indicateur radio (select-single) ou checkbox (select-multiple).
  *
  * @param children    - Label principal
  * @param description - Texte secondaire sous le label
- * @param slotBefore  - Contenu custom avant iconBefore (remplacé en mode sélection)
+ * @param elemBefore  - Contenu custom avant iconBefore (remplacé en mode sélection)
  * @param iconBefore  - Icône avant le label
- * @param slotAfter   - Contenu custom après le label (badge, shortcut)
+ * @param elemAfter   - Contenu custom après le label (badge, shortcut)
  * @param iconAfter   - Icône après le label
  */
 export function MenuItem({
   children,
   description,
-  slotBefore,
+  elemBefore,
   iconBefore,
-  slotAfter,
+  elemAfter,
   iconAfter,
   className,
   ...ariaProps
@@ -258,8 +258,8 @@ export function MenuItem({
         const iconColor = isDisabled ? "disabled" : isSelected ? "selected" : "default";
         const isSelectable = selectionMode !== "none";
 
-        // Selection indicator replaces slotBefore in selection modes
-        const resolvedSlotBefore = isSelectable
+        // Selection indicator replaces elemBefore in selection modes
+        const resolvedElemBefore = isSelectable
           ? (
               <Icon
                 icon={
@@ -271,7 +271,7 @@ export function MenuItem({
                 color={iconColor}
               />
             )
-          : slotBefore;
+          : elemBefore;
 
         return (
           <>
@@ -280,8 +280,8 @@ export function MenuItem({
               data-selected={isSelected || undefined}
               data-disabled={isDisabled || undefined}
             >
-              {resolvedSlotBefore && (
-                <span className={styles.slotBefore}>{resolvedSlotBefore}</span>
+              {resolvedElemBefore && (
+                <span className={styles.elemBefore}>{resolvedElemBefore}</span>
               )}
 
               {iconBefore && (
@@ -301,8 +301,8 @@ export function MenuItem({
                 )}
               </span>
 
-              {slotAfter && (
-                <span className={styles.slotAfter}>{slotAfter}</span>
+              {elemAfter && (
+                <span className={styles.elemAfter}>{elemAfter}</span>
               )}
 
               {trailingIcon && (

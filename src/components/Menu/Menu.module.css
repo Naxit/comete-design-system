@@ -140,9 +140,9 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Slot before (selection indicator, custom content)                    */
+/* Elem before (selection indicator, custom content)                    */
 
-.slotBefore {
+.elemBefore {
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -157,9 +157,9 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Slot after (custom trailing content)                                */
+/* Elem after (custom trailing content)                                */
 
-.slotAfter {
+.elemAfter {
   display: flex;
   align-items: center;
   flex-shrink: 0;

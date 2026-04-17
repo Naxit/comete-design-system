@@ -30,7 +30,7 @@ interface MenuItemStoryArgs {
   description: boolean;
   iconBefore: IconName | "none";
   iconAfter: IconName | "none";
-  slotAfter: boolean;
+  elemAfter: boolean;
   isDisabled: boolean;
   isSelected: boolean;
 }
@@ -74,7 +74,7 @@ const meta = {
       description: "Icône après le label",
       name: "<Icon> after",
     },
-    slotAfter: {
+    elemAfter: {
       control: "boolean",
       description: "Afficher le slot après (raccourci clavier)",
     },
@@ -93,7 +93,7 @@ const meta = {
     description: true,
     iconBefore: "Star" as IconName,
     iconAfter: "ChevronRight" as IconName,
-    slotAfter: false,
+    elemAfter: false,
     isDisabled: false,
     isSelected: false,
   },
@@ -119,7 +119,7 @@ function MenuItemStory(args: MenuItemStoryArgs) {
           iconBefore={args.iconBefore !== "none" ? args.iconBefore : undefined}
           iconAfter={args.iconAfter !== "none" ? args.iconAfter : undefined}
           description={args.description ? args.descriptionText : undefined}
-          slotAfter={args.slotAfter ? <kbd>⌘K</kbd> : undefined}
+          elemAfter={args.elemAfter ? <kbd>⌘K</kbd> : undefined}
         >
           {args.title}
         </MenuItem>
@@ -138,7 +138,7 @@ export const Default: Story = {
     iconBefore: "Star" as IconName,
     isSelected: false,
     descriptionText: "Description",
-    slotAfter: false,
+    elemAfter: false,
     isDisabled: false,
   },
   parameters: {
