@@ -427,6 +427,7 @@ interface LogoCardProps {
   product: LogoProduct;
   appearance: LogoAppearance;
   type: LogoType;
+  suffix: LogoSuffix;
   size: number;
   isCopied: boolean;
   onCopy: (product: LogoProduct) => void;
@@ -436,6 +437,7 @@ function LogoCard({
   product,
   appearance,
   type,
+  suffix,
   size,
   isCopied,
   onCopy,
@@ -746,6 +748,7 @@ function LogoExplorer(): ReactElement {
               product={product}
               appearance={appearance}
               type={type}
+              suffix="right"
               size={size}
               isCopied={copied === product}
               onCopy={handleCopy}
