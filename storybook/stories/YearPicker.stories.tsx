@@ -164,6 +164,7 @@ export const WithField: Story = {
 /** YearPicker avec message d'erreur. */
 export const FieldInvalid: Story = {
   name: "Field invalid",
+  args: { isInvalid: true },
   render: (args: YearPickerProps) => {
     const [year, setYear] = useState(args.year ?? 2025);
     return (
@@ -172,7 +173,7 @@ export const FieldInvalid: Story = {
         message="L'année est invalide"
         messageType="critical"
       >
-        <YearPicker {...args} year={year} onChange={setYear} isInvalid />
+        <YearPicker {...args} year={year} onChange={setYear} />
       </Field>
     );
   },

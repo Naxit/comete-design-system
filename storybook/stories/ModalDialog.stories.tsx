@@ -54,10 +54,14 @@ function ModalStory({
   appearance = "default",
   width = "medium",
   showClose = false,
+  isDismissable,
+  title = "Confirmer l'action",
 }: {
   appearance?: ModalDialogAppearance;
   width?: ModalDialogWidth;
   showClose?: boolean;
+  isDismissable?: boolean;
+  title?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -74,7 +78,8 @@ function ModalStory({
       <ModalDialog
         isOpen={isOpen}
         onOpenChange={setIsOpen}
-        title="Confirmer l'action"
+        title={title}
+        isDismissable={isDismissable}
         appearance={appearance}
         width={width}
         onClose={showClose ? () => { setIsOpen(false); } : undefined}
@@ -104,7 +109,7 @@ function ModalStory({
 /** Modale par défaut. */
 export const Default: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("4616:7280") } },
-  render: (args) => <ModalStory appearance={args.appearance} width={args.width} />,
+  render: (args) => <ModalStory appearance={args.appearance} width={args.width} isDismissable={args.isDismissable} title={args.title} />,
 };
 
 /** Modale warning. */

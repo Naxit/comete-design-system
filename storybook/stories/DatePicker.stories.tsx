@@ -94,6 +94,7 @@ export const WithField: Story = {
 /** DatePicker avec message d'erreur. */
 export const FieldInvalid: Story = {
   name: "Field invalid",
+  args: { isInvalid: true, defaultValue: today(getLocalTimeZone()) },
   render: (args) => (
     <div style={{ width: 320 }}>
       <Field
@@ -101,7 +102,7 @@ export const FieldInvalid: Story = {
         message="La date est invalide"
         messageType="critical"
       >
-        <DatePicker {...args} aria-label="Date de fin" isInvalid defaultValue={today(getLocalTimeZone())} />
+        <DatePicker {...args} aria-label="Date de fin" defaultValue={today(getLocalTimeZone())} />
       </Field>
     </div>
   ),
