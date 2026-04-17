@@ -147,8 +147,8 @@ export const SimpleOptions: Story = {
   ),
 };
 
-/** Menu avec un bouton dans le slotAfter d'un item. */
-export const WithSlotAfterButton: Story = {
+/** Menu avec un bouton dans le elemAfter d'un item. */
+export const WithElemAfterButton: Story = {
   render: () => (
     <div style={{ width: 360 }}>
       <Menu aria-label="Menu">
@@ -156,7 +156,7 @@ export const WithSlotAfterButton: Story = {
         <MenuItem
           id="invite"
           iconBefore="PersonAdd"
-          slotAfter={<Button size="small" appearance="outlined">Inviter</Button>}
+          elemAfter={<Button size="small" appearance="outlined">Inviter</Button>}
         >
           Membres
         </MenuItem>

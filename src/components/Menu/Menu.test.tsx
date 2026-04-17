@@ -98,11 +98,11 @@ describe("Menu", () => {
     expect(item.querySelector("svg")).toBeInTheDocument();
   });
 
-  // Slot after -----------------------------------------------------------
+  // Elem after ----------------------------------------------------------
 
-  it("should render slotAfter content", async () => {
+  it("should render elemAfter content", async () => {
     await renderOpenMenu(
-      <MenuItem id="save" slotAfter={<kbd>⌘S</kbd>}>Enregistrer</MenuItem>
+      <MenuItem id="save" elemAfter={<kbd>⌘S</kbd>}>Enregistrer</MenuItem>
     );
     expect(screen.getByText("⌘S")).toBeInTheDocument();
   });
