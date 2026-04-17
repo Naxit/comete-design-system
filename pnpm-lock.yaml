@@ -29,7 +29,7 @@ importers:
         version: 0.1.0-alpha.2(react@19.2.4)
       '@naxit/comete-logos':
         specifier: latest
-        version: 0.8.6(@naxit/comete-design-tokens@0.4.9)(react@19.2.4)
+        version: 0.9.0(@naxit/comete-design-tokens@0.4.9)(react@19.2.4)
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -684,6 +684,13 @@ packages:
 
   '@naxit/comete-logos@0.8.6':
     resolution: {integrity: sha512-BPUm+eVFxf+zrkEjS4NLdjBdCosnw3oqGbX9TBvLKMtOFaFreT/xw8WrheuhjvlZScgXr1Nw3aNQdNrjVF9oaA==, tarball: https://npm.pkg.github.com/download/@naxit/comete-logos/0.8.6/d980c952629f684dbecc8e7a9041c4e1075a7327}
+    engines: {node: '>=22'}
+    peerDependencies:
+      '@naxit/comete-design-tokens': ^0.4.1
+      react: ^18.0.0 || ^19.0.0
+
+  '@naxit/comete-logos@0.9.0':
+    resolution: {integrity: sha512-egNlEMNbntZR3XQLdDHC2SMO3dayxXYMezyDmSnc3gvTtZ9AbvTEVAL3xKiT24tFVfZslydJmXdbUeSs+Si1eA==, tarball: https://npm.pkg.github.com/download/@naxit/comete-logos/0.9.0/3b4d44cc23878bd6770dbc06ff850a4121d06eaf}
     engines: {node: '>=22'}
     peerDependencies:
       '@naxit/comete-design-tokens': ^0.4.1
@@ -4520,7 +4527,7 @@ snapshots:
       '@naxit/comete-design-tokens': 0.4.5
       react: 19.2.4
 
-  '@naxit/comete-logos@0.8.6(@naxit/comete-design-tokens@0.4.9)(react@19.2.4)':
+  '@naxit/comete-logos@0.9.0(@naxit/comete-design-tokens@0.4.9)(react@19.2.4)':
     dependencies:
       '@naxit/comete-design-tokens': 0.4.9
       react: 19.2.4

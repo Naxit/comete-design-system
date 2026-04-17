@@ -572,12 +572,9 @@ function LogoExplorer(): ReactElement {
     []
   );
 
-  const filtered = ALL_PRODUCTS.filter((p) => {
-    if (!p.toLowerCase().includes(search.toLowerCase())) return false;
-    // Only "comete" supports format="icon" — hide others when icon is selected
-    if (format === "icon" && p !== "comete") return false;
-    return true;
-  });
+  const filtered = ALL_PRODUCTS.filter((p) =>
+    p.toLowerCase().includes(search.toLowerCase())
+  );
 
   function handleCopy(product: LogoProduct): void {
     const formatAttr = format !== "logo" ? ` format="${format}"` : "";
