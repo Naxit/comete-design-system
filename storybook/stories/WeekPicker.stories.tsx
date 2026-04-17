@@ -175,6 +175,7 @@ export const WithField: Story = {
 /** WeekPicker avec message d'erreur. */
 export const FieldInvalid: Story = {
   name: "Field invalid",
+  args: { isInvalid: true },
   render: (args: WeekPickerProps) => {
     const [week, setWeek] = useState(args.week ?? 28);
     const [year, setYear] = useState(args.year ?? 2025);
@@ -184,7 +185,7 @@ export const FieldInvalid: Story = {
         message="La semaine est invalide"
         messageType="critical"
       >
-        <WeekPicker {...args} week={week} year={year} onChange={(w, y) => { setWeek(w); setYear(y); }} isInvalid />
+        <WeekPicker {...args} week={week} year={year} onChange={(w, y) => { setWeek(w); setYear(y); }} />
       </Field>
     );
   },

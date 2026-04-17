@@ -213,6 +213,7 @@ export const WithField: Story = {
 /** MonthRangePicker avec message d'erreur. */
 export const FieldInvalid: Story = {
   name: "Field invalid",
+  args: { isInvalid: true },
   render: (args: MonthRangePickerProps) => {
     const [sm, setSm] = useState(args.startMonth ?? 8);
     const [sy, setSy] = useState(args.startYear ?? 2025);
@@ -236,7 +237,6 @@ export const FieldInvalid: Story = {
             setEm(nem);
             setEy(ney);
           }}
-          isInvalid
         />
       </Field>
     );

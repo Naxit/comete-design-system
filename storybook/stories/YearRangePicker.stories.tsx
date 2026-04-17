@@ -181,6 +181,7 @@ export const WithField: Story = {
 /** YearRangePicker avec message d'erreur. */
 export const FieldInvalid: Story = {
   name: "Field invalid",
+  args: { isInvalid: true },
   render: (args: YearRangePickerProps) => {
     const [start, setStart] = useState(args.startYear ?? 2023);
     const [end, setEnd] = useState(args.endYear ?? 2025);
@@ -190,7 +191,7 @@ export const FieldInvalid: Story = {
         message="La période est invalide"
         messageType="critical"
       >
-        <YearRangePicker {...args} startYear={start} endYear={end} onChange={(s, e) => { setStart(s); setEnd(e); }} isInvalid />
+        <YearRangePicker {...args} startYear={start} endYear={end} onChange={(s, e) => { setStart(s); setEnd(e); }} />
       </Field>
     );
   },

@@ -179,7 +179,7 @@ export const Large: Story = {
 export const SuffixBottom: Story = {
   name: "Suffix bottom",
   args: { suffix: "bottom", product: "ontime", size: 48 },
-  render: () => {
+  render: (args) => {
     const products: LogoProduct[] = ["comete", "ontime", "link", "bi", "academie", "club", "mce"];
     const appearances: LogoAppearance[] = ["brand", "neutral", "inverse"];
     return (
@@ -216,7 +216,7 @@ export const SuffixBottom: Story = {
                   gap: 8,
                 }}
               >
-                <Logo product={p} appearance={a} suffix="bottom" size={48} />
+                <Logo product={p} appearance={a} suffix={args.suffix} size={args.size} />
                 <span
                   style={{
                     fontFamily: "monospace",
@@ -276,7 +276,7 @@ export const AllProducts: Story = {
                 >
                   {p}
                 </span>
-                <Logo product={p} appearance={a} size={32} />
+                <Logo product={p} appearance={a} suffix="right" size={32} />
               </div>
             ))}
           </div>
@@ -560,6 +560,7 @@ function LogoExplorer(): ReactElement {
   const [search, setSearch] = useState("");
   const [appearance, setAppearance] = useState<LogoAppearance>("brand");
   const [type, setType] = useState<LogoType>("logo");
+  const [suffix, setSuffix] = useState<LogoSuffix>("right");
   const [size, setSize] = useState(28);
   const [copied, setCopied] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
@@ -577,7 +578,8 @@ function LogoExplorer(): ReactElement {
 
   function handleCopy(product: LogoProduct): void {
     const typeAttr = type !== "logo" ? ` type="${type}"` : "";
-    const jsx = `<Logo product="${product}" appearance="${appearance}"${typeAttr} size={${size}} />`;
+    const suffixAttr = suffix !== "right" ? ` suffix="${suffix}"` : "";
+    const jsx = `<Logo product="${product}" appearance="${appearance}"${typeAttr}${suffixAttr} size={${size}} />`;
     void navigator.clipboard.writeText(jsx);
     setCopied(product);
     if (timerRef.current !== null) window.clearTimeout(timerRef.current);
@@ -691,6 +693,25 @@ function LogoExplorer(): ReactElement {
           </div>
         </div>
 
+        {/* Suffix */}
+        <div>
+          <div style={labelStyle}>Suffix</div>
+          <div style={{ display: "flex", gap: 4 }}>
+            {(["none", "right", "bottom"] satisfies LogoSuffix[]).map((s) => (
+              <button
+                key={s}
+                type="button"
+                onClick={() => {
+                  setSuffix(s);
+                }}
+                style={tabBtnStyle(suffix === s)}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Taille */}
         <div>
           <div style={labelStyle}>Taille — {size}px</div>
@@ -748,7 +769,7 @@ function LogoExplorer(): ReactElement {
               product={product}
               appearance={appearance}
               type={type}
-              suffix="right"
+              suffix={suffix}
               size={size}
               isCopied={copied === product}
               onCopy={handleCopy}
