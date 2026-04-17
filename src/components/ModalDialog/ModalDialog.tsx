@@ -125,7 +125,7 @@ export function ModalDialog({
             </AriaHeading>
             {onClose && (
               <Button
-                variant="subtle"
+                appearance="subtle"
                 iconBefore="CloseSmallFaded"
                 aria-label="Fermer"
                 onPress={onClose}

@@ -349,7 +349,7 @@ export function MonthRangePicker({
             />
 
             <Button
-              variant="subtle"
+              appearance="subtle"
               iconBefore="CalendarMonth"
               className={styles.calendarButton}
               isDisabled={isDisabled}
@@ -377,7 +377,7 @@ export function MonthRangePicker({
                 }
               >
                 <Button
-                  variant="subtle"
+                  appearance="subtle"
                   className={styles.monthButton}
                   isDisabled={isDisabled}
                   aria-label={`Mois de début : ${startLabel}`}
@@ -408,7 +408,7 @@ export function MonthRangePicker({
                 }
               >
                 <Button
-                  variant="subtle"
+                  appearance="subtle"
                   className={styles.monthButton}
                   isDisabled={isDisabled}
                   aria-label={`Mois de fin : ${endLabel}`}
@@ -434,7 +434,7 @@ export function MonthRangePicker({
               onOpenChange={(open) => setOpenPopover(open ? "range" : null)}
             >
               <Button
-                variant="subtle"
+                appearance="subtle"
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}

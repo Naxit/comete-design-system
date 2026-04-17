@@ -277,7 +277,7 @@ export function MonthPicker({
             />
 
             <Button
-              variant="subtle"
+              appearance="subtle"
               iconBefore="CalendarMonth"
               className={styles.calendarButton}
               isDisabled={isDisabled}
@@ -299,7 +299,7 @@ export function MonthPicker({
           /* ---- Mode navigation : chevrons + bouton mois/année ---- */
           <div className={styles.content}>
             <Button
-              variant="subtle"
+              appearance="subtle"
               iconBefore="ChevronLeft"
               className={styles.chevronButton}
               isDisabled={isDisabled}
@@ -309,7 +309,7 @@ export function MonthPicker({
 
             <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
               <Button
-                variant="subtle"
+                appearance="subtle"
                 iconAfter="ArrowDropDown"
                 className={styles.monthButton}
                 isDisabled={isDisabled}
@@ -335,7 +335,7 @@ export function MonthPicker({
             </DialogTrigger>
 
             <Button
-              variant="subtle"
+              appearance="subtle"
               iconBefore="ChevronRight"
               className={styles.chevronButton}
               isDisabled={isDisabled}

@@ -186,7 +186,7 @@ export function YearPicker({
               aria-label={`Année : ${resolvedYear}`}
             />
             <Button
-              variant="subtle"
+              appearance="subtle"
               iconBefore="CalendarMonth"
               className={styles.calendarButton}
               isDisabled={isDisabled}
@@ -208,7 +208,7 @@ export function YearPicker({
           /* ---- Mode navigation : chevrons + bouton année ---- */
           <div className={styles.content}>
             <Button
-              variant="subtle"
+              appearance="subtle"
               iconBefore="ChevronLeft"
               className={styles.chevronButton}
               isDisabled={isDisabled}
@@ -218,7 +218,7 @@ export function YearPicker({
 
             <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
               <Button
-                variant="subtle"
+                appearance="subtle"
                 iconAfter="ArrowDropDown"
                 className={styles.yearButton}
                 isDisabled={isDisabled}
@@ -244,7 +244,7 @@ export function YearPicker({
             </DialogTrigger>
 
             <Button
-              variant="subtle"
+              appearance="subtle"
               iconBefore="ChevronRight"
               className={styles.chevronButton}
               isDisabled={isDisabled}

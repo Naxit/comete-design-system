@@ -352,7 +352,7 @@ export function WeekPicker({
             />
 
             <Button
-              variant="subtle"
+              appearance="subtle"
               iconBefore="CalendarMonth"
               className={styles.calendarButton}
               isDisabled={isDisabled}
@@ -374,7 +374,7 @@ export function WeekPicker({
           /* ---- Mode navigation : chevrons + bouton semaine ---- */
           <div className={styles.navigationContent}>
             <Button
-              variant="subtle"
+              appearance="subtle"
               iconBefore="ChevronLeft"
               className={styles.chevronButton}
               isDisabled={isDisabled}
@@ -384,7 +384,7 @@ export function WeekPicker({
 
             <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
               <Button
-                variant="subtle"
+                appearance="subtle"
                 iconAfter="ArrowDropDown"
                 className={styles.weekButton}
                 isDisabled={isDisabled}
@@ -410,7 +410,7 @@ export function WeekPicker({
             </DialogTrigger>
 
             <Button
-              variant="subtle"
+              appearance="subtle"
               iconBefore="ChevronRight"
               className={styles.chevronButton}
               isDisabled={isDisabled}

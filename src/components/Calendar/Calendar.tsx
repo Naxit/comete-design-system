@@ -347,7 +347,7 @@ function DualPanelHeadingButton({
           onPress={() => onDrillUp(date, panel)}
           isDisabled={isDisabled}
           aria-label={`Niveau supérieur — ${label}`}
-          variant="subtle"
+          appearance="subtle"
         >
           <span>{label}</span>
         </Button>

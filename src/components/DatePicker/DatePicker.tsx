@@ -234,7 +234,7 @@ function EditableDatePicker<T extends DateValue = DateValue>({
                 )}
               </AriaDateInput>
               <Button
-                variant="subtle"
+                appearance="subtle"
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
@@ -334,7 +334,7 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
       >
         <div className={styles.navigationContent}>
           <Button
-            variant="subtle"
+            appearance="subtle"
             iconBefore="ChevronLeft"
             className={styles.chevronButton}
             isDisabled={isDisabled}
@@ -344,7 +344,7 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
 
           <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
             <Button
-              variant="subtle"
+              appearance="subtle"
               iconAfter="ArrowDropDown"
               className={styles.dateButton}
               isDisabled={isDisabled}
@@ -370,7 +370,7 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
           </DialogTrigger>
 
           <Button
-            variant="subtle"
+            appearance="subtle"
             iconBefore="ChevronRight"
             className={styles.chevronButton}
             isDisabled={isDisabled}
