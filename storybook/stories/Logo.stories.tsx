@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import {
   Logo,
-  type LogoAlign,
+  type LogoSuffix,
   type LogoAppearance,
   type LogoProduct,
   type LogoType,
@@ -35,9 +35,9 @@ const meta = {
       control: "select",
       options: ["icon", "logo"] satisfies LogoType[],
     },
-    align: {
+    suffix: {
       control: "select",
-      options: ["default", "inline", "column"] satisfies LogoAlign[],
+      options: ["none", "right", "bottom"] satisfies LogoSuffix[],
     },
     size: {
       // ── Slider, identique à l'Icon Explorer ──────────────────────────
@@ -48,7 +48,7 @@ const meta = {
     product: "comete",
     appearance: "brand",
     type: "logo",
-    align: "default",
+    suffix: "right",
     size: 32,
   },
   parameters: {
@@ -173,10 +173,10 @@ export const Large: Story = {
   args: { size: 48 },
 };
 
-/** Layout column : nom produit sous le wordmark. */
-export const AlignColumn: Story = {
-  name: "Align column",
-  args: { align: "column", product: "ontime", size: 48 },
+/** Suffix bottom : nom produit sous le wordmark. */
+export const SuffixBottom: Story = {
+  name: "Suffix bottom",
+  args: { suffix: "bottom", product: "ontime", size: 48 },
   render: () => {
     const products: LogoProduct[] = ["comete", "ontime", "link", "bi", "academie", "club", "mce"];
     const appearances: LogoAppearance[] = ["brand", "neutral", "inverse"];
@@ -202,7 +202,7 @@ export const AlignColumn: Story = {
                 color: a === "inverse" ? "var(--text-inverted)" : "var(--text-subtlest)",
               }}
             >
-              appearance={a} align=&quot;column&quot;
+              appearance={a} suffix=&quot;bottom&quot;
             </span>
             {products.map((p) => (
               <div
@@ -214,7 +214,7 @@ export const AlignColumn: Story = {
                   gap: 8,
                 }}
               >
-                <Logo product={p} appearance={a} align="column" size={48} />
+                <Logo product={p} appearance={a} suffix="bottom" size={48} />
                 <span
                   style={{
                     fontFamily: "monospace",
