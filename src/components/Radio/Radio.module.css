@@ -50,7 +50,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--border-default);
+  color: var(--background-neutral-bold-default);
 }
 
 .iconWrapper {
@@ -93,29 +93,29 @@
    Couleurs par état — pilotées par `color` sur .indicator
    ========================================================================== */
 
-/* Selected — brand */
+/* Selected — information */
 .radio[data-selected] .indicator {
-  color: var(--background-brand-bold-default);
+  color: var(--background-information-bold-default);
 }
 
 /* Hover — unselected */
 .radio:not([data-disabled]):not([data-selected])[data-hovered] .indicator {
-  color: var(--border-bold);
+  color: var(--background-neutral-bold-hovered);
 }
 
 /* Hover — selected */
 .radio[data-selected]:not([data-disabled])[data-hovered] .indicator {
-  color: var(--background-brand-bold-hovered);
+  color: var(--background-information-bold-hovered);
 }
 
 /* Pressed — unselected */
 .radio:not([data-disabled]):not([data-selected])[data-pressed] .indicator {
-  color: var(--border-bold);
+  color: var(--background-neutral-bold-pressed);
 }
 
 /* Pressed — selected */
 .radio[data-selected]:not([data-disabled])[data-pressed] .indicator {
-  color: var(--background-brand-bold-pressed);
+  color: var(--background-information-bold-pressed);
 }
 
 /* ==========================================================================
@@ -135,23 +135,16 @@
 }
 
 /* ==========================================================================
-   Focus visible — override tout en brand (même si invalid)
+   Focus visible — pas d'override de .indicator : le FocusRing (halo bleu)
+   signale le focus. L'indicateur garde sa couleur d'état.
    ========================================================================== */
-
-.radio[data-focus-visible] .indicator {
-  color: var(--border-brand);
-}
-
-.radio[data-focus-visible][data-selected] .indicator {
-  color: var(--background-brand-bold-default);
-}
 
 /* ==========================================================================
    Disabled — priorité maximale, déclaré en dernier
    ========================================================================== */
 
 .radio[data-disabled] .indicator {
-  color: var(--icon-disabled);
+  color: var(--background-disabled-default);
 }
 
 /* ==========================================================================

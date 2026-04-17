@@ -39,7 +39,7 @@
   justify-content: center;
   width: var(--size300);
   height: var(--size300);
-  color: var(--border-default);
+  color: var(--background-neutral-bold-default);
 }
 
 .iconWrapper {
@@ -55,32 +55,32 @@
   fill: var(--checkbox-surface, var(--background-surface-default));
 }
 
-/* Checked / Indeterminate — brand */
+/* Checked / Indeterminate — information */
 .checkbox[data-selected] .indicator,
 .checkbox[data-indeterminate] .indicator {
-  color: var(--background-brand-bold-default);
+  color: var(--background-information-bold-default);
 }
 
 /* Hover — unchecked */
 .checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-hovered] .indicator {
-  color: var(--border-bold);
+  color: var(--background-neutral-bold-hovered);
 }
 
 /* Hover — checked / indeterminate */
 .checkbox[data-selected]:not([data-disabled])[data-hovered] .indicator,
 .checkbox[data-indeterminate]:not([data-disabled])[data-hovered] .indicator {
-  color: var(--background-brand-bold-hovered);
+  color: var(--background-information-bold-hovered);
 }
 
 /* Pressed — unchecked */
 .checkbox:not([data-disabled]):not([data-selected]):not([data-indeterminate])[data-pressed] .indicator {
-  color: var(--border-bold);
+  color: var(--background-neutral-bold-pressed);
 }
 
 /* Pressed — checked / indeterminate */
 .checkbox[data-selected]:not([data-disabled])[data-pressed] .indicator,
 .checkbox[data-indeterminate]:not([data-disabled])[data-pressed] .indicator {
-  color: var(--background-brand-bold-pressed);
+  color: var(--background-information-bold-pressed);
 }
 
 /* ==========================================================================
@@ -102,24 +102,16 @@
 }
 
 /* ==========================================================================
-   Focus visible — override tout en brand (même si invalid)
+   Focus visible — pas d'override de .indicator : le FocusRing (halo bleu)
+   signale le focus. L'indicateur garde sa couleur d'état.
    ========================================================================== */
-
-.checkbox[data-focus-visible] .indicator {
-  color: var(--border-brand);
-}
-
-.checkbox[data-focus-visible][data-selected] .indicator,
-.checkbox[data-focus-visible][data-indeterminate] .indicator {
-  color: var(--background-brand-bold-default);
-}
 
 /* ==========================================================================
    Disabled — priorité maximale, déclaré en dernier
    ========================================================================== */
 
 .checkbox[data-disabled] .indicator {
-  color: var(--icon-disabled);
+  color: var(--background-disabled-default);
 }
 
 /* ==========================================================================
