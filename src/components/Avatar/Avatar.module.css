@@ -70,31 +70,38 @@
   width: var(--size300);
   height: var(--size300);
   border-radius: var(--radius0375);
-  font-size: var(--font-size-ui-xs);
+  font-size: var(--font-size-ui-xxs);
 }
 
 .medium {
   width: var(--size400);
   height: var(--size400);
   border-radius: var(--radius050);
-  font-size: var(--font-size-ui-s);
+  font-size: var(--font-size-ui-xs);
 }
 
 .large {
   width: var(--size500);
   height: var(--size500);
   border-radius: var(--radius075);
-  font-size: var(--font-size-ui-m);
+  font-size: var(--font-size-ui-s);
 }
 
 .xlarge {
-  width: var(--size1200);
-  height: var(--size1200);
+  width: var(--size800);
+  height: var(--size800);
   border-radius: var(--radius100);
-  font-size: var(--font-size-ui-xxl);
+  font-size: var(--font-size-ui-m);
 }
 
 .xxlarge {
+  width: var(--size1200);
+  height: var(--size1200);
+  border-radius: var(--radius125);
+  font-size: var(--font-size-ui-xl);
+}
+
+.xxxlarge {
   width: var(--size1600);
   height: var(--size1600);
   border-radius: var(--radius150);
@@ -111,7 +118,8 @@
 .rounded.medium,
 .rounded.large,
 .rounded.xlarge,
-.rounded.xxlarge {
+.rounded.xxlarge,
+.rounded.xxxlarge {
   border-radius: var(--radius-round);
 }
 
@@ -212,10 +220,7 @@
   transform: translate(-50%, -50%) scale(1.25);
 }
 
-.xlarge ~ .notificationSlot {
-  left: calc(93.75% - 3px);
-  transform: translate(-50%, -50%) scale(1.5);
-}
+.xlarge ~ .notificationSlot,
 .xlarge ~ .presenceSlot {
   transform: translate(-50%, -50%) scale(1.5);
 }
@@ -226,4 +231,12 @@
 }
 .xxlarge ~ .presenceSlot {
   transform: translate(-50%, -50%) scale(1.75);
+}
+
+.xxxlarge ~ .notificationSlot {
+  left: calc(93.75% - 3px);
+  transform: translate(-50%, -50%) scale(2);
+}
+.xxxlarge ~ .presenceSlot {
+  transform: translate(-50%, -50%) scale(2);
 }

@@ -18,7 +18,8 @@ export type AvatarSize =
   | "medium"
   | "large"
   | "xlarge"
-  | "xxlarge";
+  | "xxlarge"
+  | "xxxlarge";
 
 export interface AvatarProps {
   /** Size. @default "medium" */
@@ -44,20 +45,27 @@ export interface AvatarProps {
    * When omitted the avatar renders as a display-only <div>.
    */
   onPress?: AriaButtonProps["onPress"];
+  /**
+   * Border colour applied as a box-shadow ring around the avatar.
+   * Used by `AvatarGroup` to match the container background.
+   * When omitted no ring is rendered.
+   */
+  borderColor?: string;
   /** Additional CSS class names. */
   className?: string;
 }
 
 // ----------------------------------------------------------------------
 
-/** Maps each avatar size to the icon size in pixels. */
+/** Maps each avatar size to the icon size in pixels (matching size tokens). */
 const SIZE_ICON_MAP: Record<AvatarSize, number> = {
-  xsmall: 10,
-  small: 14,
-  medium: 16,
-  large: 20,
-  xlarge: 48,
-  xxlarge: 64,
+  xsmall: 10,   // --size125
+  small: 14,    // --size175
+  medium: 16,   // --size200
+  large: 20,    // --size250
+  xlarge: 32,   // --size400
+  xxlarge: 48,  // --size600
+  xxxlarge: 64, // --size800
 };
 
 // ----------------------------------------------------------------------
@@ -91,6 +99,7 @@ export function Avatar({
   notification,
   presence,
   onPress,
+  borderColor,
   className,
 }: AvatarProps): React.ReactElement {
   const [imageLoaded, setImageLoaded] = React.useState(false);
@@ -102,6 +111,10 @@ export function Avatar({
   const classNames = [styles.avatar, styles.rounded, styles[size], className]
     .filter(Boolean)
     .join(" ");
+
+  const borderStyle: React.CSSProperties | undefined = borderColor
+    ? { boxShadow: `0 0 0 2px ${borderColor}` }
+    : undefined;
 
   // --- Content resolution ---
   // Default fallback is always the Person icon (or custom icon prop).
@@ -166,6 +179,7 @@ export function Avatar({
     avatarElement = (
       <AriaButton
         className={classNames}
+        style={borderStyle}
         onPress={onPress}
         isDisabled={isDisabled}
         data-selected={isSelected || undefined}
@@ -186,6 +200,7 @@ export function Avatar({
     avatarElement = (
       <div
         className={classNames}
+        style={borderStyle}
         data-disabled={isDisabled || undefined}
         data-selected={isSelected || undefined}
         role={ariaLabel ? "img" : undefined}

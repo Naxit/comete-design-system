@@ -7,7 +7,6 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "noUncheckedIndexedAccess": false,
-    "baseUrl": ".",
     "paths": {
       "@/*": ["../src/*"],
       "@naxit/comete-design-system": ["../src/index.ts"],

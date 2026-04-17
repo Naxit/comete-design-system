@@ -14,6 +14,7 @@ declare const styles: {
   readonly "xlarge": string;
   readonly "xsmall": string;
   readonly "xxlarge": string;
+  readonly "xxxlarge": string;
 };
 export = styles;
 
