@@ -260,7 +260,7 @@ export function YearRangePicker({
             />
 
             <Button
-              variant="subtle"
+              appearance="subtle"
               iconBefore="CalendarMonth"
               className={styles.calendarButton}
               isDisabled={isDisabled}
@@ -297,7 +297,7 @@ export function YearRangePicker({
                 }
               >
                 <Button
-                  variant="subtle"
+                  appearance="subtle"
                   className={styles.yearButton}
                   isDisabled={isDisabled}
                   aria-label={`Année de début : ${resolvedStart}`}
@@ -337,7 +337,7 @@ export function YearRangePicker({
                 }
               >
                 <Button
-                  variant="subtle"
+                  appearance="subtle"
                   className={styles.yearButton}
                   isDisabled={isDisabled}
                   aria-label={`Année de fin : ${resolvedEnd}`}
@@ -372,7 +372,7 @@ export function YearRangePicker({
               onOpenChange={(open) => setOpenPopover(open ? "range" : null)}
             >
               <Button
-                variant="subtle"
+                appearance="subtle"
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}

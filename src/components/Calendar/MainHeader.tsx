@@ -107,7 +107,7 @@ export function MainHeader({
       className={styles.navButton}
       isDisabled={isDisabled}
       aria-label="Précédent"
-      variant="subtle"
+      appearance="subtle"
     >
       <Icon icon="ChevronLeft" />
     </Button>
@@ -117,7 +117,7 @@ export function MainHeader({
       onPress={onPrev}
       isDisabled={isDisabled}
       aria-label="Précédent"
-      variant="subtle"
+      appearance="subtle"
     >
       <Icon icon="ChevronLeft" />
     </Button>
@@ -132,7 +132,7 @@ export function MainHeader({
       className={styles.navButton}
       isDisabled={isDisabled}
       aria-label="Suivant"
-      variant="subtle"
+      appearance="subtle"
     >
       <Icon icon="ChevronRight" />
     </Button>
@@ -142,7 +142,7 @@ export function MainHeader({
       onPress={onNext}
       isDisabled={isDisabled}
       aria-label="Suivant"
-      variant="subtle"
+      appearance="subtle"
     >
       <Icon icon="ChevronRight" />
     </Button>
@@ -157,7 +157,7 @@ export function MainHeader({
         onPress={onHeadingPress}
         isDisabled={isDisabled}
         aria-label={`Niveau supérieur — ${label}`}
-        variant="subtle"
+        appearance="subtle"
       >
         <span>{label}</span>
         <Icon icon="ArrowDropDown" size={16} />

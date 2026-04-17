@@ -264,7 +264,7 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
               </AriaDateInput>
 
               <Button
-                variant="subtle"
+                appearance="subtle"
                 iconBefore="Schedule"
                 className={styles.clockButton}
                 isDisabled={isDisabled}
@@ -361,7 +361,7 @@ function NonEditableTimePicker({
 
           <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
             <Button
-              variant="subtle"
+              appearance="subtle"
               iconBefore="Schedule"
               className={styles.clockButton}
               isDisabled={isDisabled}
