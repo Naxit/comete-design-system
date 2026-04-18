@@ -1,0 +1,32 @@
+declare const styles: {
+  readonly "body": string;
+  readonly "bottom": string;
+  readonly "closeButton": string;
+  readonly "drawer": string;
+  readonly "extended": string;
+  readonly "footer": string;
+  readonly "full": string;
+  readonly "header": string;
+  readonly "left": string;
+  readonly "medium": string;
+  readonly "modal": string;
+  readonly "narrow": string;
+  readonly "overlay": string;
+  readonly "overlay-fade-in": string;
+  readonly "overlay-fade-out": string;
+  readonly "right": string;
+  readonly "slide-in-bottom": string;
+  readonly "slide-in-left": string;
+  readonly "slide-in-right": string;
+  readonly "slide-in-top": string;
+  readonly "slide-out-bottom": string;
+  readonly "slide-out-left": string;
+  readonly "slide-out-right": string;
+  readonly "slide-out-top": string;
+  readonly "swipeHandle": string;
+  readonly "title": string;
+  readonly "top": string;
+  readonly "wide": string;
+};
+export = styles;
+
