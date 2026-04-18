@@ -124,11 +124,10 @@ export function Drawer({
     : undefined;
 
   // Overlay mode: card-stack effect — drawers behind the topmost are
-  // offset toward the edge and slightly scaled down, creating depth.
-  const overlayStyle: CSSProperties | undefined =
-    drawersAboveMe > 0 && !pusher
-      ? buildOverlayDepthStyle(placement, drawersAboveMe)
-      : undefined;
+  // inset on their free edges so a subtle strip peeks out.
+  const depthInset = drawersAboveMe > 0 && !pusher
+    ? drawersAboveMe * STACK_INSET
+    : 0;
 
   // Size: preset class or custom CSS value
   const isPreset = SIZE_PRESETS.has(size);
@@ -209,7 +208,11 @@ export function Drawer({
         <AriaDialog
           ref={drawerRef}
           className={drawerClasses}
-          style={{ ...customSizeStyle, ...pushStyle, ...overlayStyle }}
+          style={{
+            ...customSizeStyle,
+            ...pushStyle,
+            "--_depth-inset": depthInset > 0 ? `${depthInset}px` : undefined,
+          } as CSSProperties}
           aria-label={ariaLabel}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
@@ -327,36 +330,3 @@ function buildPushTransform(
   };
 }
 
-/**
- * Card-stack depth effect for overlay stacking.
- *
- * Drawers behind the topmost are slightly inset on their free edges
- * so that ~10px of their edge peeks out behind the front drawer,
- * creating a subtle stacked-card look.
- *
- * For a left drawer with depth=1:
- *   → top/bottom inset by 10px, making it slightly shorter
- * For a top drawer with depth=1:
- *   → left/right inset by 10px, making it slightly narrower
- *
- * The anchored edge (the one stuck to the viewport edge) does NOT move.
- */
-function buildOverlayDepthStyle(
-  placement: DrawerPlacement,
-  depth: number,
-): CSSProperties {
-  const inset = depth * STACK_INSET;
-  const px = `${inset}px`;
-
-  // Inset the free edges (the ones perpendicular to the placement axis)
-  switch (placement) {
-    case "left":
-    case "right":
-      // Horizontal drawer: shrink vertically
-      return { top: px, bottom: px, transition: "top 200ms ease-out, bottom 200ms ease-out" };
-    case "top":
-    case "bottom":
-      // Vertical drawer: shrink horizontally
-      return { left: px, right: px, transition: "left 200ms ease-out, right 200ms ease-out" };
-  }
-}
