@@ -240,24 +240,29 @@ export const WithStructure: Story = {
 /** Drawers stackés en mode overlay — chaque drawer peut en ouvrir un autre. */
 export const StackedOverlay: Story = {
   name: "Stacked (overlay)",
-  render: () => {
+  render: (args) => {
     return (
       <div style={{ padding: 24 }}>
-        <RecursiveDrawerTrigger depth={1} placement="left" />
+        <StackableDrawer
+          depth={1}
+          placement={args.placement ?? "left"}
+          size={args.size ?? "medium"}
+        />
       </div>
     );
   },
 };
 
-function RecursiveDrawerTrigger({
+function StackableDrawer({
   depth,
   placement,
+  size,
 }: {
   depth: number;
   placement: DrawerPlacement;
+  size: DrawerSize | string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [childOpen, setChildOpen] = useState(false);
 
   return (
     <>
@@ -268,7 +273,7 @@ function RecursiveDrawerTrigger({
         isOpen={isOpen}
         onOpenChange={setIsOpen}
         placement={placement}
-        size="medium"
+        size={size}
         aria-label={`Drawer ${depth}`}
       >
         <DrawerHeader onClose={() => setIsOpen(false)}>
@@ -277,26 +282,7 @@ function RecursiveDrawerTrigger({
         <DrawerBody>
           <p>Drawer de niveau {depth}.</p>
           <div style={{ marginTop: 16 }}>
-            <Button onPress={() => setChildOpen(true)}>
-              Empiler drawer {depth + 1}
-            </Button>
-          </div>
-        </DrawerBody>
-      </Drawer>
-      <Drawer
-        isOpen={childOpen}
-        onOpenChange={setChildOpen}
-        placement={placement}
-        size="medium"
-        aria-label={`Drawer ${depth + 1}`}
-      >
-        <DrawerHeader onClose={() => setChildOpen(false)}>
-          Drawer {depth + 1}
-        </DrawerHeader>
-        <DrawerBody>
-          <p>Drawer de niveau {depth + 1}.</p>
-          <div style={{ marginTop: 16 }}>
-            <RecursiveDrawerTrigger depth={depth + 2} placement={placement} />
+            <StackableDrawer depth={depth + 1} placement={placement} size={size} />
           </div>
         </DrawerBody>
       </Drawer>
@@ -304,20 +290,22 @@ function RecursiveDrawerTrigger({
   );
 }
 
-/** Deux drawers stackés en mode push. */
+/** Drawers stackés en mode push. */
 export const StackedPush: Story = {
   name: "Stacked (push)",
-  render: () => {
+  render: (args) => {
     const [first, setFirst] = useState(false);
     const [second, setSecond] = useState(false);
+    const p = args.placement ?? "left";
+    const s = args.size ?? "medium";
     return (
       <div style={{ padding: 24 }}>
         <Button onPress={() => setFirst(true)}>Ouvrir 1er drawer</Button>
         <Drawer
           isOpen={first}
           onOpenChange={setFirst}
-          placement="left"
-          size="medium"
+          placement={p}
+          size={s}
           aria-label="Premier drawer"
         >
           <DrawerHeader onClose={() => setFirst(false)}>Drawer 1</DrawerHeader>
@@ -329,7 +317,7 @@ export const StackedPush: Story = {
         <Drawer
           isOpen={second}
           onOpenChange={setSecond}
-          placement="left"
+          placement={p}
           size="narrow"
           stacking="push"
           aria-label="Second drawer"

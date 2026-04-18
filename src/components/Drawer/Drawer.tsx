@@ -1,6 +1,6 @@
 // Drawer — Comète Design System
 // Panneau latéral accessible avec slide-in/out, stacking et swipe.
-import { useCallback, useEffect, useId, useRef } from "react";
+import { useCallback, useId, useLayoutEffect, useRef } from "react";
 import type { CSSProperties, ReactElement, ReactNode } from "react";
 import {
   Modal as AriaModal,
@@ -96,8 +96,8 @@ export function Drawer({
   const uid = useId();
   const { stack, register, unregister } = useDrawerStack();
 
-  // Register/unregister in the drawer stack
-  useEffect(() => {
+  // Register/unregister in the drawer stack (layout effect for synchronous updates)
+  useLayoutEffect(() => {
     if (isOpen) {
       register({ id: uid, placement, stacking, size });
     } else {
