@@ -42,9 +42,14 @@ export interface DrawerProps {
 }
 
 // -----------------------------------------------------------------------
-// Size presets
+// Size presets & stacking constants
 
 const SIZE_PRESETS = new Set<string>(["narrow", "medium", "wide", "extended", "full"]);
+
+/** Pixel offset per stack depth for the overlay card-stack effect. */
+const STACK_OFFSET = 12;
+/** Scale reduction per stack depth. */
+const STACK_SCALE_STEP = 0.03;
 
 // -----------------------------------------------------------------------
 // Swipe helpers
@@ -107,8 +112,11 @@ export function Drawer({
   const isFirstInStack = stack.length === 0 || stack[0]?.id === uid;
   const showBlanket = isFirstInStack;
 
-  // Push mode: compute offset for this drawer if a newer drawer pushes it
+  // Stacking: compute visual offset for this drawer
   const myIndex = stack.findIndex((e) => e.id === uid);
+  const drawersAboveMe = myIndex >= 0 ? stack.length - 1 - myIndex : 0;
+
+  // Push mode: offset if a newer drawer pushes this one
   const pusher = myIndex >= 0 && myIndex < stack.length - 1
     ? stack.find((e, i) => i > myIndex && e.stacking === "push")
     : undefined;
@@ -116,6 +124,13 @@ export function Drawer({
   const pushStyle: CSSProperties | undefined = pusher
     ? buildPushTransform(placement, pusher.size)
     : undefined;
+
+  // Overlay mode: card-stack effect — drawers behind the topmost are
+  // offset toward the edge and slightly scaled down, creating depth.
+  const overlayStyle: CSSProperties | undefined =
+    drawersAboveMe > 0 && !pusher
+      ? buildOverlayDepthStyle(placement, drawersAboveMe)
+      : undefined;
 
   // Size: preset class or custom CSS value
   const isPreset = SIZE_PRESETS.has(size);
@@ -192,7 +207,7 @@ export function Drawer({
         <AriaDialog
           ref={drawerRef}
           className={drawerClasses}
-          style={{ ...customSizeStyle, ...pushStyle }}
+          style={{ ...customSizeStyle, ...pushStyle, ...overlayStyle }}
           aria-label={ariaLabel}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
@@ -301,12 +316,37 @@ function buildPushTransform(
   placement: DrawerPlacement,
   pusherSize: string,
 ): CSSProperties {
-  // Offset this drawer by the pusher's size in the opposite direction
   const sign = placement === "left" || placement === "top" ? "" : "-";
   const isHorizontal = placement === "left" || placement === "right";
   const prop = isHorizontal ? "translateX" : "translateY";
   return {
     transform: `${prop}(${sign}${pusherSize})`,
     transition: "transform 200ms ease-out",
+  };
+}
+
+/**
+ * Card-stack depth effect for overlay stacking.
+ * Drawers behind the topmost are offset toward the edge and scaled down.
+ *
+ * For a left drawer with depth=1:
+ *   → translateX(-12px) scale(0.97) — pushed left, slightly smaller
+ * For a right drawer with depth=1:
+ *   → translateX(12px) scale(0.97)
+ */
+function buildOverlayDepthStyle(
+  placement: DrawerPlacement,
+  depth: number,
+): CSSProperties {
+  const offset = depth * STACK_OFFSET;
+  const scale = 1 - depth * STACK_SCALE_STEP;
+  const isHorizontal = placement === "left" || placement === "right";
+  const sign = placement === "left" || placement === "top" ? -1 : 1;
+  const prop = isHorizontal ? "translateX" : "translateY";
+
+  return {
+    transform: `${prop}(${sign * offset}px) scale(${scale})`,
+    transition: "transform 200ms ease-out, scale 200ms ease-out",
+    transformOrigin: placement,
   };
 }
