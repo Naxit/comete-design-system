@@ -13,11 +13,40 @@ describe("Text", () => {
   });
 
   // -------------------------------------------------------------------
-  // Balise HTML par défaut selon la variante
+  // Balise HTML par défaut — Hero
+  // -------------------------------------------------------------------
+
+  it("should render an h1 for hero-xxl", () => {
+    render(<Text variant="hero-xxl">Hero</Text>);
+    expect(screen.getByText("Hero").tagName).toBe("H1");
+  });
+
+  it("should render an h1 for hero-xxl-semibold", () => {
+    render(<Text variant="hero-xxl-semibold">Hero</Text>);
+    expect(screen.getByText("Hero").tagName).toBe("H1");
+  });
+
+  it("should render an h2 for hero-s", () => {
+    render(<Text variant="hero-s">Hero</Text>);
+    expect(screen.getByText("Hero").tagName).toBe("H2");
+  });
+
+  it("should render an h2 for hero-s-bold", () => {
+    render(<Text variant="hero-s-bold">Hero</Text>);
+    expect(screen.getByText("Hero").tagName).toBe("H2");
+  });
+
+  // -------------------------------------------------------------------
+  // Balise HTML par défaut — Heading
   // -------------------------------------------------------------------
 
   it("should render an h1 for heading-h1", () => {
     render(<Text variant="heading-h1">Title</Text>);
+    expect(screen.getByText("Title").tagName).toBe("H1");
+  });
+
+  it("should render an h1 for heading-h1-bold", () => {
+    render(<Text variant="heading-h1-bold">Title</Text>);
     expect(screen.getByText("Title").tagName).toBe("H1");
   });
 
@@ -41,23 +70,37 @@ describe("Text", () => {
     expect(screen.getByText("Title").tagName).toBe("H5");
   });
 
-  it("should render an h1 for hero-xxl", () => {
-    render(<Text variant="hero-xxl">Hero</Text>);
-    expect(screen.getByText("Hero").tagName).toBe("H1");
+  it("should render an h6 for heading-xs", () => {
+    render(<Text variant="heading-xs">Title</Text>);
+    expect(screen.getByText("Title").tagName).toBe("H6");
   });
 
-  it("should render an h2 for hero-s", () => {
-    render(<Text variant="hero-s">Hero</Text>);
-    expect(screen.getByText("Hero").tagName).toBe("H2");
+  it("should render an h6 for heading-xxs", () => {
+    render(<Text variant="heading-xxs">Title</Text>);
+    expect(screen.getByText("Title").tagName).toBe("H6");
   });
+
+  it("should render an h6 for heading-xs-bold", () => {
+    render(<Text variant="heading-xs-bold">Title</Text>);
+    expect(screen.getByText("Title").tagName).toBe("H6");
+  });
+
+  // -------------------------------------------------------------------
+  // Balise HTML par défaut — Body
+  // -------------------------------------------------------------------
 
   it("should render a p for body-m", () => {
     render(<Text variant="body-m">Body</Text>);
     expect(screen.getByText("Body").tagName).toBe("P");
   });
 
-  it("should render a p for body-l-medium", () => {
-    render(<Text variant="body-l-medium">Body</Text>);
+  it("should render a p for body-l-bold", () => {
+    render(<Text variant="body-l-bold">Body</Text>);
+    expect(screen.getByText("Body").tagName).toBe("P");
+  });
+
+  it("should render a p for body-xs", () => {
+    render(<Text variant="body-xs">Body</Text>);
     expect(screen.getByText("Body").tagName).toBe("P");
   });
 
@@ -66,14 +109,23 @@ describe("Text", () => {
     expect(screen.getByText("Label").tagName).toBe("SPAN");
   });
 
-  it("should render a code element for code-m", () => {
-    render(<Text variant="code-m">const x = 1</Text>);
+  // -------------------------------------------------------------------
+  // Balise HTML par défaut — Code
+  // -------------------------------------------------------------------
+
+  it("should render a code element for code-value", () => {
+    render(<Text variant="code-value">const x = 1</Text>);
     expect(screen.getByText("const x = 1").tagName).toBe("CODE");
   });
 
-  it("should render a code element for code-s", () => {
-    render(<Text variant="code-s">x</Text>);
-    expect(screen.getByText("x").tagName).toBe("CODE");
+  it("should render a code element for code-operator", () => {
+    render(<Text variant="code-operator">=&gt;</Text>);
+    expect(screen.getByText("=>").tagName).toBe("CODE");
+  });
+
+  it("should render a code element for code-label", () => {
+    render(<Text variant="code-label">function</Text>);
+    expect(screen.getByText("function").tagName).toBe("CODE");
   });
 
   // -------------------------------------------------------------------
@@ -112,9 +164,19 @@ describe("Text", () => {
     expect(screen.getByText("Hero").className).toContain("hero-xxl");
   });
 
+  it("should apply the heading-xs variant class", () => {
+    render(<Text variant="heading-xs">Heading</Text>);
+    expect(screen.getByText("Heading").className).toContain("heading-xs");
+  });
+
   it("should apply the label variant class", () => {
     render(<Text variant="label">Label</Text>);
     expect(screen.getByText("Label").className).toContain("label");
+  });
+
+  it("should apply the code-value variant class", () => {
+    render(<Text variant="code-value">code</Text>);
+    expect(screen.getByText("code").className).toContain("code-value");
   });
 
   // -------------------------------------------------------------------
@@ -199,6 +261,42 @@ describe("Text", () => {
   });
 
   // -------------------------------------------------------------------
+  // Underline
+  // -------------------------------------------------------------------
+
+  it("should not apply underline by default", () => {
+    render(<Text variant="body-m">Text</Text>);
+    expect(screen.getByText("Text").className).not.toContain("underline");
+  });
+
+  it("should apply underline class when underline is true", () => {
+    render(
+      <Text variant="body-m" underline>
+        Text
+      </Text>,
+    );
+    expect(screen.getByText("Text").className).toContain("underline");
+  });
+
+  // -------------------------------------------------------------------
+  // Italic
+  // -------------------------------------------------------------------
+
+  it("should not apply italic by default", () => {
+    render(<Text variant="body-m">Text</Text>);
+    expect(screen.getByText("Text").className).not.toContain("italic");
+  });
+
+  it("should apply italic class when italic is true", () => {
+    render(
+      <Text variant="body-m" italic>
+        Text
+      </Text>,
+    );
+    expect(screen.getByText("Text").className).toContain("italic");
+  });
+
+  // -------------------------------------------------------------------
   // className passthrough
   // -------------------------------------------------------------------
 
@@ -231,9 +329,9 @@ describe("Text", () => {
   // Combinaisons
   // -------------------------------------------------------------------
 
-  it("should combine variant, color, align, and className", () => {
+  it("should combine variant, color, align, underline, italic and className", () => {
     render(
-      <Text variant="heading-h2" color="brand" align="center" className="extra">
+      <Text variant="heading-h2" color="brand" align="center" underline italic className="extra">
         Combined
       </Text>,
     );
@@ -242,6 +340,8 @@ describe("Text", () => {
     expect(el.className).toContain("heading-h2");
     expect(el.className).toContain("color-brand");
     expect(el.className).toContain("align-center");
+    expect(el.className).toContain("underline");
+    expect(el.className).toContain("italic");
     expect(el.className).toContain("extra");
   });
 

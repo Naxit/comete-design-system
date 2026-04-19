@@ -10,6 +10,50 @@ const figmaUrl = (nodeId: string) =>
   `${FIGMA_FILE}?node-id=${nodeId.replace(":", "-")}`;
 
 // -----------------------------------------------------------------------
+// Variant lists
+
+const ALL_VARIANTS: TextVariant[] = [
+  "hero-xxl", "hero-xxl-semibold", "hero-xl", "hero-xl-semibold",
+  "hero-l", "hero-l-semibold", "hero-m", "hero-m-bold",
+  "hero-s", "hero-s-bold", "hero-xs", "hero-xs-bold",
+  "hero-xxs", "hero-xxs-bold",
+  "heading-h1", "heading-h1-bold", "heading-h2", "heading-h2-bold",
+  "heading-h3", "heading-h3-bold", "heading-h4", "heading-h4-bold",
+  "heading-h5", "heading-h5-bold", "heading-xs", "heading-xs-bold",
+  "heading-xxs", "heading-xxs-bold",
+  "body-l", "body-l-medium", "body-l-bold",
+  "body-m", "body-m-medium", "body-m-bold",
+  "body-s", "body-s-medium", "body-s-bold",
+  "body-xs", "body-xs-bold",
+  "label",
+  "code-value", "code-operator", "code-label",
+];
+
+const HERO_VARIANTS: TextVariant[] = [
+  "hero-xxl", "hero-xxl-semibold", "hero-xl", "hero-xl-semibold",
+  "hero-l", "hero-l-semibold", "hero-m", "hero-m-bold",
+  "hero-s", "hero-s-bold", "hero-xs", "hero-xs-bold",
+  "hero-xxs", "hero-xxs-bold",
+];
+
+const HEADING_VARIANTS: TextVariant[] = [
+  "heading-h1", "heading-h1-bold", "heading-h2", "heading-h2-bold",
+  "heading-h3", "heading-h3-bold", "heading-h4", "heading-h4-bold",
+  "heading-h5", "heading-h5-bold", "heading-xs", "heading-xs-bold",
+  "heading-xxs", "heading-xxs-bold",
+];
+
+const BODY_VARIANTS: TextVariant[] = [
+  "body-l", "body-l-medium", "body-l-bold",
+  "body-m", "body-m-medium", "body-m-bold",
+  "body-s", "body-s-medium", "body-s-bold",
+  "body-xs", "body-xs-bold",
+  "label",
+];
+
+const CODE_VARIANTS: TextVariant[] = ["code-value", "code-operator", "code-label"];
+
+// -----------------------------------------------------------------------
 // Meta
 
 const meta = {
@@ -22,20 +66,14 @@ const meta = {
     docs: {
       description: {
         component:
-          "Composant typographique unifié. Applique automatiquement le style de texte et la balise HTML sémantique correspondant à la variante choisie. Couvre les 21 styles Comète : Hero, Heading, Body, Label et Code.",
+          "Composant typographique unifié. Applique automatiquement le style de texte et la balise HTML sémantique correspondant à la variante choisie. Couvre les 44 styles Comète : Hero, Heading, Body, Label et Code.",
       },
     },
   },
   argTypes: {
     variant: {
       control: "select",
-      options: [
-        "hero-xxl", "hero-xl", "hero-l", "hero-m", "hero-s", "hero-xs", "hero-xxs",
-        "heading-h1", "heading-h2", "heading-h3", "heading-h4", "heading-h5",
-        "body-l", "body-l-medium", "body-m", "body-m-medium", "body-s", "body-s-medium",
-        "label",
-        "code-m", "code-s",
-      ] satisfies TextVariant[],
+      options: ALL_VARIANTS,
     },
     color: {
       control: "select",
@@ -48,12 +86,16 @@ const meta = {
       control: "inline-radio",
       options: [undefined, "left", "center", "right"] as (TextAlign | undefined)[],
     },
+    underline: { control: "boolean" },
+    italic: { control: "boolean" },
     as: { control: "text" },
     children: { control: "text" },
   },
   args: {
     variant: "body-m",
     color: "default",
+    underline: false,
+    italic: false,
     children: "Le texte de corps structure le contenu et guide l'utilisateur à travers l'interface.",
   },
 } satisfies Meta<typeof Text>;
@@ -68,10 +110,6 @@ export const Playground: Story = {};
 
 // -----------------------------------------------------------------------
 // Hero
-
-const HERO_VARIANTS: TextVariant[] = [
-  "hero-xxl", "hero-xl", "hero-l", "hero-m", "hero-s", "hero-xs", "hero-xxs",
-];
 
 export const Hero: Story = {
   render: () => (
@@ -88,13 +126,9 @@ export const Hero: Story = {
 // -----------------------------------------------------------------------
 // Heading
 
-const HEADING_VARIANTS: TextVariant[] = [
-  "heading-h1", "heading-h2", "heading-h3", "heading-h4", "heading-h5",
-];
-
 export const Heading: Story = {
   render: () => (
-    <Stack gap="300">
+    <Stack gap="200">
       {HEADING_VARIANTS.map((v) => (
         <Text key={v} variant={v}>
           {v} — Titre de section
@@ -106,10 +140,6 @@ export const Heading: Story = {
 
 // -----------------------------------------------------------------------
 // Body
-
-const BODY_VARIANTS: TextVariant[] = [
-  "body-l", "body-l-medium", "body-m", "body-m-medium", "body-s", "body-s-medium", "label",
-];
 
 export const Body: Story = {
   render: () => (
@@ -129,8 +159,25 @@ export const Body: Story = {
 export const Code: Story = {
   render: () => (
     <Stack gap="200">
-      <Text variant="code-m">const theme = useTheme();</Text>
-      <Text variant="code-s">--font-size-ui-xs</Text>
+      <Text variant="code-value">code-value — const theme = useTheme();</Text>
+      <Text variant="code-operator">code-operator — =&gt; &#123;&#125; [] ()</Text>
+      <Text variant="code-label">code-label — function Component()</Text>
+    </Stack>
+  ),
+};
+
+// -----------------------------------------------------------------------
+// Underline & Italic
+
+export const UnderlineAndItalic: Story = {
+  render: () => (
+    <Stack gap="200">
+      <Text variant="body-m">Normal</Text>
+      <Text variant="body-m" underline>Underline</Text>
+      <Text variant="body-m" italic>Italic</Text>
+      <Text variant="body-m" underline italic>Underline + Italic</Text>
+      <Text variant="body-m-medium" underline>Medium Underline</Text>
+      <Text variant="body-m-medium" underline color="subtle">Medium Underline Subtle</Text>
     </Stack>
   ),
 };
@@ -217,13 +264,13 @@ const css = {
   } satisfies CSSProperties,
   row: {
     display: "grid",
-    gridTemplateColumns: "160px 1fr",
+    gridTemplateColumns: "200px 1fr",
     alignItems: "baseline",
     gap: 16,
     padding: "8px 0",
     borderBottom: "1px solid var(--border-subtle)",
   } satisfies CSSProperties,
-  label: {
+  variantLabel: {
     fontSize: 11,
     fontFamily: "monospace",
     color: "var(--text-subtlest)",
@@ -233,7 +280,7 @@ const css = {
 function VariantRow({ variant, sample }: { variant: TextVariant; sample: string }): ReactElement {
   return (
     <div style={css.row}>
-      <span style={css.label}>{variant}</span>
+      <span style={css.variantLabel}>{variant}</span>
       <Text variant={variant}>{sample}</Text>
     </div>
   );
@@ -241,7 +288,7 @@ function VariantRow({ variant, sample }: { variant: TextVariant; sample: string 
 
 export const AllVariants: Story = {
   render: () => (
-    <div style={{ maxWidth: 800 }}>
+    <div style={{ maxWidth: 900 }}>
       <div style={css.section}>
         <div style={css.sectionTitle}>Hero</div>
         {HERO_VARIANTS.map((v) => (
@@ -262,8 +309,9 @@ export const AllVariants: Story = {
       </div>
       <div style={css.section}>
         <div style={css.sectionTitle}>Code</div>
-        <VariantRow variant="code-m" sample="const theme = useTheme();" />
-        <VariantRow variant="code-s" sample="--font-size-ui-xs" />
+        {CODE_VARIANTS.map((v) => (
+          <VariantRow key={v} variant={v} sample="const theme = useTheme();" />
+        ))}
       </div>
     </div>
   ),

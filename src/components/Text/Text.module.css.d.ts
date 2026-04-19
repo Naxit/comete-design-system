@@ -14,7 +14,9 @@ declare const styles: {
   readonly "color-subtlest": string;
   readonly "color-success": string;
   readonly "color-warning": string;
+  readonly "italic": string;
   readonly "text": string;
+  readonly "underline": string;
 };
 export = styles;
 

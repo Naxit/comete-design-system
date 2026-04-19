@@ -1,4 +1,4 @@
-/* Text.module.css — Couleurs et alignement pour le composant Text */
+/* Text.module.css — Couleurs, alignement et décoration pour le composant Text */
 
 .text {
   margin: 0;
@@ -70,4 +70,16 @@
 
 .align-right {
   text-align: right;
+}
+
+/* -----------------------------------------------------------------------
+ * Decoration
+ * --------------------------------------------------------------------- */
+
+.underline {
+  text-decoration: underline;
+}
+
+.italic {
+  font-style: italic;
 }
