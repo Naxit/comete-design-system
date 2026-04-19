@@ -164,7 +164,7 @@ export function YearPicker({
       aria-label={ariaLabel ?? `Sélecteur d'année : ${resolvedYear}`}
       data-invalid={isInvalid || undefined}
     >
-      <InputContainer
+      <InputContainer isBorderless={!isEditable}
         appearance={appearance}
         isDisabled={isDisabled}
         isInvalid={isInvalid}

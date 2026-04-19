@@ -310,7 +310,7 @@ export function MonthRangePicker({
       data-disabled={isDisabled || undefined}
       data-invalid={isInvalid || undefined}
     >
-      <InputContainer
+      <InputContainer isBorderless={!isEditable}
         appearance={appearance}
         isDisabled={isDisabled}
         isInvalid={isInvalid}

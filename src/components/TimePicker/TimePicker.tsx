@@ -353,6 +353,7 @@ function NonEditableTimePicker({
     >
       <InputContainer
         appearance={appearance}
+        isBorderless
         isCompact={isCompact}
         isDisabled={isDisabled}
         isInvalid={isInvalid}

@@ -92,16 +92,16 @@ describe("DatePicker", () => {
       expect(container.firstElementChild).toHaveClass("datePicker");
     });
 
-    it("should render bordered InputContainer by default", () => {
+    it("should render borderless InputContainer in navigation mode", () => {
       const { container } = render(<DatePicker aria-label="Date" isEditable={false} />);
-      expect(container.querySelector(".inputContainer")).toHaveClass("bordered");
+      expect(container.querySelector(".inputContainer")).toHaveClass("borderless");
     });
 
-    it("should apply subtle class on InputContainer", () => {
+    it("should render borderless InputContainer even with subtle appearance", () => {
       const { container } = render(
         <DatePicker aria-label="Date" isEditable={false} appearance="subtle" />,
       );
-      expect(container.querySelector(".inputContainer")).toHaveClass("subtle");
+      expect(container.querySelector(".inputContainer")).toHaveClass("borderless");
     });
 
     it("should set data-disabled when isDisabled", () => {

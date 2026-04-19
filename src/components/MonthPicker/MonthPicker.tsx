@@ -234,6 +234,7 @@ export function MonthPicker({
     >
       <InputContainer
         appearance={appearance}
+        isBorderless={!isEditable}
         isDisabled={isDisabled}
         isInvalid={isInvalid}
       >

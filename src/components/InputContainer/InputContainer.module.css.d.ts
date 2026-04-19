@@ -1,5 +1,6 @@
 declare const styles: {
   readonly "bordered": string;
+  readonly "borderless": string;
   readonly "compact": string;
   readonly "disabled": string;
   readonly "inputContainer": string;

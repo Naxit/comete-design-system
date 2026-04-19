@@ -329,6 +329,7 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
     >
       <InputContainer
         appearance={appearance}
+        isBorderless
         isCompact={isCompact}
         isDisabled={isDisabled}
         isInvalid={isInvalid}

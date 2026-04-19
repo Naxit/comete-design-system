@@ -331,7 +331,7 @@ export function WeekPicker({
       aria-label={ariaLabel ?? `Sélecteur de semaine : ${weekLabel}`}
       data-invalid={isInvalid || undefined}
     >
-      <InputContainer
+      <InputContainer isBorderless={!isEditable}
         appearance={appearance}
         isDisabled={isDisabled}
         isInvalid={isInvalid}

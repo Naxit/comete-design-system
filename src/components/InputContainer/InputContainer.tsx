@@ -13,6 +13,8 @@ export interface InputContainerProps {
   appearance?: InputContainerAppearance;
   /** Taille compacte (padding réduit). @default false */
   isCompact?: boolean;
+  /** Supprime toute bordure (utilisé par les pickers en mode navigation). @default false */
+  isBorderless?: boolean;
   /** État désactivé (visuel uniquement). @default false */
   isDisabled?: boolean;
   /** État invalide (visuel uniquement). @default false */
@@ -46,6 +48,7 @@ export interface InputContainerProps {
 export function InputContainer({
   appearance = "default",
   isCompact = false,
+  isBorderless = false,
   isDisabled = false,
   isInvalid = false,
   children,
@@ -53,7 +56,11 @@ export function InputContainer({
 }: InputContainerProps): ReactElement {
   const classNames = [
     styles.inputContainer,
-    appearance === "default" ? styles.bordered : styles.subtle,
+    isBorderless
+      ? styles.borderless
+      : appearance === "default"
+        ? styles.bordered
+        : styles.subtle,
     isCompact ? styles.compact : undefined,
     isDisabled ? styles.disabled : undefined,
     isInvalid ? styles.invalid : undefined,
