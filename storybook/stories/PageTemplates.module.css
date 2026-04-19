@@ -36,6 +36,21 @@
 .gutters {
   padding-inline: var(--space300);
   min-height: 100vh;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media (max-width: 599px) {
+  .gutters {
+    padding-inline: var(--space100);
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1199px) {
+  .gutters {
+    padding-inline: var(--space200);
+  }
 }
 
 /* Force Card children to stack vertically and take full width.
