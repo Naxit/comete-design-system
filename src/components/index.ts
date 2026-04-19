@@ -36,6 +36,7 @@ export * from "./ProgressIndicator";
 export * from "./Popup";
 export * from "./Radio";
 export * from "./SectionMessage";
+export * from "./Select";
 export * from "./Skeleton";
 export * from "./Stack";
 export * from "./Tabs";
