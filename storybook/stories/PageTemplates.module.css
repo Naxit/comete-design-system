@@ -1,0 +1,210 @@
+/* ==========================================================================
+   Page layout templates — responsive helpers
+   These classes handle responsive behavior that inline styles cannot.
+   ========================================================================== */
+
+/* ---- Layout grid overlay (like Figma "Show layout grid") ---- */
+
+.gridOverlayContainer {
+  position: relative;
+}
+
+.gridOverlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  padding-inline: var(--space300);
+}
+
+.gridOverlayInner {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space200);
+  height: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.gridOverlayCol {
+  background: rgba(255, 0, 76, 0.06);
+  border-inline: 1px solid rgba(255, 0, 76, 0.12);
+}
+
+/* ---- Shared ---- */
+
+.gutters {
+  padding-inline: var(--space300);
+  min-height: 100vh;
+}
+
+/* Force Card children to stack vertically and take full width.
+   Card uses display:flex (row) by default. */
+.cardColumn {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---- Collection: desktop-only filter sidebar ---- */
+
+.filterSidebar {
+  display: block;
+}
+
+@media (max-width: 1199px) {
+  .filterSidebar {
+    display: none;
+  }
+}
+
+/* ---- Collection: mobile card list vs desktop table ---- */
+
+.tableDesktopOnly {
+  display: block;
+}
+
+.cardsMobileOnly {
+  display: none;
+}
+
+@media (max-width: 599px) {
+  .tableDesktopOnly {
+    display: none;
+  }
+  .cardsMobileOnly {
+    display: block;
+  }
+}
+
+/* ---- Entity: actions bar under header on mobile ---- */
+
+.entityActions {
+  display: none;
+}
+
+@media (max-width: 599px) {
+  .entityActions {
+    display: block;
+  }
+  .entityActionsDesktop {
+    display: none;
+  }
+}
+
+/* ---- Page title: allow wrapping on narrow viewports ---- */
+
+.wrapTitle {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  word-break: break-word;
+}
+
+/* ---- Placeholder ---- */
+
+.placeholder {
+  background: var(--background-neutral-subtler-default);
+  border-radius: var(--radius050);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  color: var(--text-subtlest);
+}
+
+/* ---- Table row ---- */
+
+.tableRow {
+  gap: var(--space100);
+  padding: var(--space100) var(--space200);
+  border-bottom: 1px solid var(--border-default);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  color: var(--text-default);
+  min-width: 0;
+}
+
+.tableRow[data-header] {
+  font-weight: 600;
+  color: var(--text-subtlest);
+}
+
+.tableRow:not([data-header]) {
+  cursor: pointer;
+}
+
+.tableCell {
+  display: flex;
+  align-items: center;
+  gap: var(--space075);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* ---- Metric tile ---- */
+
+.metricTile {
+  padding: var(--space150);
+  background: var(--background-neutral-subtlest-default);
+  border-radius: var(--radius050);
+}
+
+/* ---- KPI icon puck ---- */
+
+.iconPuck {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius050);
+  background: var(--background-neutral-subtlest-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ---- Activity feed icon ---- */
+
+.activityIcon {
+  composes: iconPuck;
+  width: 36px;
+  height: 36px;
+}
+
+/* ---- Progress bar ---- */
+
+.progressTrack {
+  height: 4px;
+  border-radius: 2px;
+  background: var(--background-neutral-subtler-default);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 2px;
+}
+
+/* ---- Metrics grid (always 2 cols) ---- */
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space150);
+}
+
+.metricsGridFull {
+  grid-column: 1 / -1;
+}
+
+/* ---- Site card stats ---- */
+
+.siteStats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space100);
+}
