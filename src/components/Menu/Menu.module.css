@@ -6,8 +6,6 @@
 .menuPopover {
   width: var(--menu-popover-width, 320px);
   max-width: calc(100vw - var(--space200));
-  border: 1px solid var(--border-default);
-  overflow: hidden;
 }
 
 /* ------------------------------------------------------------------ */

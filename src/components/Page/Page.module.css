@@ -6,11 +6,20 @@
    ========================================================================== */
 
 .page {
+  --page-gutter: var(--space300);
   display: flex;
   flex-direction: column;
   min-height: 100%;
   width: 100%;
   min-width: 0;
+  padding-inline: var(--page-gutter);
+  box-sizing: border-box;
+}
+
+@media (max-width: 1199px) {
+  .page {
+    --page-gutter: var(--space200);
+  }
 }
 
 /* ==========================================================================
