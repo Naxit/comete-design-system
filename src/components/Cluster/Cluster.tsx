@@ -28,6 +28,8 @@ export interface ClusterProps {
   align?: ClusterAlign;
   /** Justification principale (justify-content). @default "start" */
   justify?: ClusterJustify;
+  /** Padding interne (token `--space{N}`). */
+  padding?: StackGap;
   /** Contenu du cluster. */
   children: ReactNode;
   /** Classe CSS additionnelle. */
@@ -65,12 +67,14 @@ export function Cluster({
   columnGap,
   align = "center",
   justify = "start",
+  padding,
   children,
   className,
 }: ClusterProps): ReactElement {
   const style = {
     "--_cluster-row-gap": `var(--space${rowGap ?? gap})`,
     "--_cluster-column-gap": `var(--space${columnGap ?? gap})`,
+    ...(padding !== undefined && { padding: `var(--space${padding})` }),
   } as CSSProperties;
 
   const classNames = [
