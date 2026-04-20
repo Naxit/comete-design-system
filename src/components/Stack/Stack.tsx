@@ -51,6 +51,8 @@ export interface StackProps {
   justify?: StackJustify;
   /** Autoriser le wrap des enfants. @default false */
   wrap?: boolean;
+  /** Padding interne (token `--space{N}`). */
+  padding?: StackGap;
   /** Contenu du stack. */
   children: ReactNode;
   /** Classe CSS additionnelle. */
@@ -89,11 +91,13 @@ export function Stack({
   align = "stretch",
   justify = "start",
   wrap = false,
+  padding,
   children,
   className,
 }: StackProps): ReactElement {
   const style = {
     "--_stack-gap": `var(--space${gap})`,
+    ...(padding !== undefined && { padding: `var(--space${padding})` }),
   } as CSSProperties;
 
   const classNames = [
