@@ -31,6 +31,11 @@
   }
 }
 
+/* Match trigger width — le popover prend la largeur de son trigger */
+.matchTriggerWidth {
+  width: var(--trigger-width);
+}
+
 /* Themed scrollbar — Chrome / Edge / Safari */
 .popover::-webkit-scrollbar {
   width: var(--size100);

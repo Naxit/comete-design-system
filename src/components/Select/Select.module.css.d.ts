@@ -9,7 +9,6 @@ declare const styles: {
   readonly "option": string;
   readonly "optionContent": string;
   readonly "optionLabel": string;
-  readonly "popover": string;
   readonly "select": string;
   readonly "spinner": string;
   readonly "spinner-rotate": string;
