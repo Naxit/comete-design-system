@@ -593,7 +593,7 @@ export const Dashboard: Story = {
         <Page.Body>
           <Stack gap="400">
             {/* Greeting */}
-            <Card appearance="neutral">
+            <Card appearance="default">
               <CC padding="var(--space300)">
                 <Stack gap="200">
                   <Stack gap="050">

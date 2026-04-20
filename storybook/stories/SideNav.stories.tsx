@@ -49,7 +49,7 @@ export const Default: Story = {
     <Wrapper>
       <SideNav>
         <SideNav.Header
-          logo={<Logo />}
+          logo={<Logo format="icon" />}
           appName="Pro Sécurité"
           subtitle="Main Courante"
         />

@@ -59,7 +59,7 @@ export const Default: Story = {
       <Page>
         <Page.Header
           title="Agents"
-          trailing={<Avatar size="small" initials="AC" />}
+          trailing={<Avatar initials="AC" />}
         />
         <Page.Toolbar
           start={
@@ -139,7 +139,7 @@ export const WithoutToolbar: Story = {
       <Page>
         <Page.Header
           title="Paramètres du compte"
-          trailing={<Avatar size="small" initials="AC" />}
+          trailing={<Avatar initials="AC" />}
         />
         <Page.Body>
           <Cluster gap="200">
@@ -183,7 +183,7 @@ export const LongTitle: Story = {
       <Page>
         <Page.Header
           title="Un titre de page extrêmement long qui doit être tronqué avec une ellipse quand l'espace disponible n'est pas suffisant"
-          trailing={<Avatar size="small" initials="AC" />}
+          trailing={<Avatar initials="AC" />}
         />
         <Page.Body>
           <p>Contenu…</p>
@@ -232,11 +232,11 @@ export const HeaderWithActions: Story = {
           title="Tableau de bord"
           trailing={
             <Stack direction="row" gap="100" align="center">
-              <Button appearance="subtle" size="small" iconBefore="ChevronLeft" aria-label="Mois précédent" />
+              <Button appearance="subtle" iconBefore="ChevronLeft" aria-label="Mois précédent" />
               <span style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-xs)", fontWeight: 500, color: "var(--text-default)", whiteSpace: "nowrap" }}>
                 Avril 2026
               </span>
-              <Button appearance="subtle" size="small" iconBefore="ChevronRight" aria-label="Mois suivant" />
+              <Button appearance="subtle" iconBefore="ChevronRight" aria-label="Mois suivant" />
               <Avatar size="medium" initials="AC" />
             </Stack>
           }
