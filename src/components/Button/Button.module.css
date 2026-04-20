@@ -438,8 +438,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--button-icon-size, var(--size250));
-  height: var(--button-icon-size, var(--size250));
   flex-shrink: 0;
 }
 
