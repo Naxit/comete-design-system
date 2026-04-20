@@ -7,7 +7,7 @@ const meta = {
   component: SearchField,
   tags: ["autodocs"],
   parameters: {
-    layout: "padded",
+    layout: "centered",
     docs: {
       description: {
         component:

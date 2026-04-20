@@ -42,8 +42,8 @@ const config: StorybookConfig = {
       },
       server: {
         watch: {
-          usePolling: true,
-          interval: 500,
+          useFsEvents: false,
+          usePolling: false,
         },
         fs: {
           allow: [resolve(__dirname, "../.."), resolve(__dirname, "..")],

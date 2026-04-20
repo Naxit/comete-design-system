@@ -19,11 +19,11 @@ const meta = {
     design: { type: "figma", url: figmaUrl("2984:15878") },
   },
   argTypes: {
-    appearance: {
+    color: {
       control: "select",
       options: ["neutral", "brand", "success", "warning", "critical", "information", "accent"],
     },
-    tagStyle: {
+    appearance: {
       control: "inline-radio",
       options: ["bold", "subtle", "outlined"],
     },
@@ -36,9 +36,9 @@ const meta = {
   },
   args: {
     label: "Tag",
-    appearance: "neutral",
-    tagStyle: "bold",
-    shape: "rounded",
+    color: "neutral",
+    appearance: "subtle",
+    shape: "square",
     isDisabled: false,
   },
 } satisfies Meta<typeof Tag>;
@@ -49,50 +49,50 @@ type Story = StoryObj<typeof Tag>;
 // -----------------------------------------------------------------------
 // Stories
 
-/** Tag par défaut : neutral, bold, rounded. */
+/** Tag par défaut : neutral, subtle, square. */
 export const Default: Story = {
   parameters: { design: { type: "figma", url: figmaUrl("2991:38480") } },
 };
 
-/** Toutes les apparences en style bold + rounded. */
-export const AllAppearances: Story = {
-  name: "All appearances",
+/** Toutes les couleurs en style subtle + square. */
+export const AllColors: Story = {
+  name: "All colors",
   parameters: { design: { type: "figma", url: figmaUrl("466:3917") } },
   render: () => (
     <Cluster gap="100">
-      <Tag label="Neutral" appearance="neutral" />
-      <Tag label="Brand" appearance="brand" />
-      <Tag label="Success" appearance="success" />
-      <Tag label="Warning" appearance="warning" />
-      <Tag label="Critical" appearance="critical" />
-      <Tag label="Information" appearance="information" />
-      <Tag label="Accent" appearance="accent" />
+      <Tag label="Neutral" color="neutral" />
+      <Tag label="Brand" color="brand" />
+      <Tag label="Success" color="success" />
+      <Tag label="Warning" color="warning" />
+      <Tag label="Critical" color="critical" />
+      <Tag label="Information" color="information" />
+      <Tag label="Accent" color="accent" />
     </Cluster>
   ),
 };
 
-/** Comparaison des 3 styles : bold, subtle, outlined. */
-export const AllStyles: Story = {
-  name: "All styles",
+/** Comparaison des 3 apparences : bold, subtle, outlined. */
+export const AllAppearances: Story = {
+  name: "All appearances",
   render: () => (
     <Stack gap="200">
       <Cluster gap="100">
-        <Tag label="Bold" tagStyle="bold" />
-        <Tag label="Bold" tagStyle="bold" appearance="brand" />
-        <Tag label="Bold" tagStyle="bold" appearance="success" />
-        <Tag label="Bold" tagStyle="bold" appearance="critical" />
+        <Tag label="Bold" appearance="bold" />
+        <Tag label="Bold" appearance="bold" color="brand" />
+        <Tag label="Bold" appearance="bold" color="success" />
+        <Tag label="Bold" appearance="bold" color="critical" />
       </Cluster>
       <Cluster gap="100">
-        <Tag label="Subtle" tagStyle="subtle" />
-        <Tag label="Subtle" tagStyle="subtle" appearance="brand" />
-        <Tag label="Subtle" tagStyle="subtle" appearance="success" />
-        <Tag label="Subtle" tagStyle="subtle" appearance="critical" />
+        <Tag label="Subtle" appearance="subtle" />
+        <Tag label="Subtle" appearance="subtle" color="brand" />
+        <Tag label="Subtle" appearance="subtle" color="success" />
+        <Tag label="Subtle" appearance="subtle" color="critical" />
       </Cluster>
       <Cluster gap="100">
-        <Tag label="Outlined" tagStyle="outlined" />
-        <Tag label="Outlined" tagStyle="outlined" appearance="brand" />
-        <Tag label="Outlined" tagStyle="outlined" appearance="success" />
-        <Tag label="Outlined" tagStyle="outlined" appearance="critical" />
+        <Tag label="Outlined" appearance="outlined" />
+        <Tag label="Outlined" appearance="outlined" color="brand" />
+        <Tag label="Outlined" appearance="outlined" color="success" />
+        <Tag label="Outlined" appearance="outlined" color="critical" />
       </Cluster>
     </Stack>
   ),
@@ -104,18 +104,18 @@ export const Shapes: Story = {
     <Cluster gap="100">
       <Tag label="Square" shape="square" />
       <Tag label="Rounded" shape="rounded" />
-      <Tag label="Square" shape="square" appearance="brand" />
-      <Tag label="Rounded" shape="rounded" appearance="brand" />
+      <Tag label="Square" shape="square" color="brand" />
+      <Tag label="Rounded" shape="rounded" color="brand" />
     </Cluster>
   ),
 };
 
-/** Tag avec bouton de suppression (×). */
+/** Tag avec bouton de suppression. */
 export const Removable: Story = {
   args: {
     label: "Ile de France",
-    appearance: "neutral",
-    tagStyle: "subtle",
+    color: "neutral",
+    appearance: "subtle",
   },
   render: (args) => (
     <Tag {...args} onRemove={() => undefined} />
@@ -129,16 +129,16 @@ export const WithElemBefore: Story = {
     <Cluster gap="100">
       <Tag
         label="En ligne"
-        appearance="success"
-        tagStyle="subtle"
+        color="success"
+        appearance="subtle"
         elemBefore={
           <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--background-success-bold-default)" }} />
         }
       />
       <Tag
         label="Hors ligne"
-        appearance="critical"
-        tagStyle="subtle"
+        color="critical"
+        appearance="subtle"
         elemBefore={
           <span style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--background-critical-bold-default)" }} />
         }
@@ -151,22 +151,22 @@ export const WithElemBefore: Story = {
 export const Interactive: Story = {
   render: () => (
     <Cluster gap="100">
-      <Tag label="Cliquez-moi" appearance="brand" onPress={() => undefined} />
-      <Tag label="Filtrer" appearance="neutral" tagStyle="outlined" onPress={() => undefined} />
+      <Tag label="Cliquez-moi" color="brand" onPress={() => undefined} />
+      <Tag label="Filtrer" color="neutral" appearance="outlined" onPress={() => undefined} />
     </Cluster>
   ),
 };
 
-/** Tag removable avec focus ring sur le bouton ×. Tabulez pour voir le focus. */
+/** Tag removable avec focus ring sur le bouton. */
 export const RemovableFocusRing: Story = {
   name: "Removable — focus ring",
   parameters: { design: { type: "figma", url: figmaUrl("2991:38494") } },
   render: () => (
     <Cluster gap="100">
       <Tag label="Neutral" onRemove={() => undefined} />
-      <Tag label="Brand" appearance="brand" onRemove={() => undefined} />
-      <Tag label="Success" appearance="success" tagStyle="subtle" onRemove={() => undefined} />
-      <Tag label="Outlined" tagStyle="outlined" onRemove={() => undefined} />
+      <Tag label="Brand" color="brand" onRemove={() => undefined} />
+      <Tag label="Success" color="success" appearance="subtle" onRemove={() => undefined} />
+      <Tag label="Outlined" appearance="outlined" onRemove={() => undefined} />
     </Cluster>
   ),
 };
@@ -175,21 +175,21 @@ export const RemovableFocusRing: Story = {
 export const Disabled: Story = {
   render: () => (
     <Cluster gap="100">
-      <Tag label="Bold" isDisabled />
-      <Tag label="Subtle" tagStyle="subtle" isDisabled />
-      <Tag label="Outlined" tagStyle="outlined" isDisabled />
-      <Tag label="Brand" appearance="brand" isDisabled />
+      <Tag label="Bold" appearance="bold" isDisabled />
+      <Tag label="Subtle" appearance="subtle" isDisabled />
+      <Tag label="Outlined" appearance="outlined" isDisabled />
+      <Tag label="Brand" color="brand" isDisabled />
     </Cluster>
   ),
 };
 
-/** Matrice complète : 7 apparences × 3 styles × 2 shapes. */
+/** Matrice complète : 7 couleurs × 3 apparences × 2 shapes. */
 export const FullMatrix: Story = {
   name: "Full matrix",
   parameters: { design: { type: "figma", url: figmaUrl("2984:15878") } },
   render: () => {
-    const appearances = ["neutral", "brand", "success", "warning", "critical", "information", "accent"] as const;
-    const tagStyles = ["bold", "subtle", "outlined"] as const;
+    const colors = ["neutral", "brand", "success", "warning", "critical", "information", "accent"] as const;
+    const appearances = ["bold", "subtle", "outlined"] as const;
     const shapes = ["square", "rounded"] as const;
     return (
       <Stack gap="400">
@@ -198,14 +198,14 @@ export const FullMatrix: Story = {
             <span style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-xs)", fontWeight: 600, color: "var(--text-default)" }}>
               {shape}
             </span>
-            {tagStyles.map((s) => (
-              <Stack key={s} gap="075">
+            {appearances.map((a) => (
+              <Stack key={a} gap="075">
                 <span style={{ fontFamily: "var(--font-family-primary)", fontSize: "var(--font-size-ui-xxs)", color: "var(--text-subtlest)", textTransform: "uppercase" }}>
-                  {s}
+                  {a}
                 </span>
                 <Cluster gap="100">
-                  {appearances.map((a) => (
-                    <Tag key={`${shape}-${s}-${a}`} label={a} appearance={a} tagStyle={s} shape={shape} />
+                  {colors.map((c) => (
+                    <Tag key={`${shape}-${a}-${c}`} label={c} color={c} appearance={a} shape={shape} />
                   ))}
                 </Cluster>
               </Stack>
