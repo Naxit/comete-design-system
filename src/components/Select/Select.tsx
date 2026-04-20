@@ -254,7 +254,7 @@ export function Select({
                 />
               </InputContainer>
             </div>
-            <Popover placement="bottom start" triggerRef={containerRef} className={styles.popover}>
+            <Popover placement="bottom start" triggerRef={containerRef} matchTriggerWidth>
               <AriaListBox className={styles.listBox}>
                 {allOptions.length === 0 && !isLoading ? (
                   <AriaListBoxItem id="__empty__" isDisabled textValue={emptyMessage} className={styles.stateItem}>

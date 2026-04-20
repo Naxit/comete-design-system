@@ -18,6 +18,8 @@ export interface PopoverProps
   className?: string;
   /** Inline styles (ex : CSS custom properties pour la largeur). */
   style?: CSSProperties;
+  /** Aligne la largeur du popover sur celle du trigger. @default false */
+  matchTriggerWidth?: boolean;
 }
 
 // -----------------------------------------------------------------------
@@ -46,11 +48,12 @@ export function Popover({
   className,
   style,
   offset = 4,
+  matchTriggerWidth = false,
   ...ariaProps
 }: PopoverProps): ReactElement {
   return (
     <AriaPopover
-      className={[styles.popover, className].filter(Boolean).join(" ")}
+      className={[styles.popover, matchTriggerWidth && styles.matchTriggerWidth, className].filter(Boolean).join(" ")}
       style={style}
       offset={offset}
       shouldFlip
