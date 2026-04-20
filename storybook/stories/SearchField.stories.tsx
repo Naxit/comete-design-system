@@ -7,7 +7,7 @@ const meta = {
   component: SearchField,
   tags: ["autodocs"],
   parameters: {
-    layout: "centered",
+    layout: "padded",
     docs: {
       description: {
         component:
@@ -38,6 +38,7 @@ export const Default: Story = {};
 export const CustomPlaceholder: Story = {
   name: "Custom placeholder",
   args: { placeholder: "Rechercher un agent…" },
+  decorators: [(Story) => <div style={{ width: 300 }}><Story /></div>],
 };
 
 /** Mode compact pour les toolbars. */
@@ -55,11 +56,11 @@ export const Disabled: Story = {
   args: { isDisabled: true },
 };
 
-/** Dans un Field avec label. */
+/** Dans un Field avec label. Les controls isCompact et isDisabled fonctionnent. */
 export const InField: Story = {
-  render: () => (
+  render: (args) => (
     <Field label="Recherche">
-      <SearchField placeholder="Rechercher un site…" />
+      <SearchField placeholder="Rechercher un site…" {...args} />
     </Field>
   ),
 };
@@ -68,11 +69,13 @@ export const InField: Story = {
 export const AllVariants: Story = {
   name: "All variants",
   render: () => (
+    <div style={{ width: 300 }}>
     <Stack gap="200">
       <SearchField placeholder="Default" />
       <SearchField placeholder="Compact" isCompact />
       <SearchField placeholder="Subtle" appearance="subtle" />
       <SearchField placeholder="Disabled" isDisabled />
     </Stack>
+    </div>
   ),
 };
