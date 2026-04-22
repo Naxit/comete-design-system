@@ -62,6 +62,33 @@
   flex-shrink: 0;
 }
 
+/* ==========================================================================
+   Mode range (isRange=true)
+   ========================================================================== */
+
+/* Conteneur des deux boutons/inputs année + séparateur */
+.rangeValue {
+  display: flex;
+  align-items: center;
+  gap: var(--space100);
+  flex: 1 1 0%;
+}
+
+/* Séparateur "→" entre début et fin (mode range) */
+.rangeSeparator {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-ui-xs);
+  line-height: var(--line-height-ui-xs);
+  letter-spacing: var(--letter-spacing-negative-tight);
+  color: var(--text-subtlest);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.root[data-disabled] .rangeSeparator {
+  color: var(--text-disabled);
+}
+
 /* Dialog — reset outline */
 .dialog {
   outline: none;

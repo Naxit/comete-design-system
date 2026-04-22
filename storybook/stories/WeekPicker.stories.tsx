@@ -2,7 +2,11 @@
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { WeekPicker, Field } from "@naxit/comete-design-system/components";
-import type { WeekPickerProps } from "@naxit/comete-design-system/components";
+import type {
+  WeekPickerProps,
+  SingleWeekPickerProps,
+  RangeWeekPickerProps,
+} from "@naxit/comete-design-system/components";
 
 // -----------------------------------------------------------------------
 // Figma
@@ -29,11 +33,11 @@ const meta = {
   argTypes: {
     week: {
       control: { type: "number", min: 1, max: 53 },
-      description: "Numéro de semaine ISO (1-53)",
+      description: "Numéro de semaine ISO (1-53) — mode single",
     },
     year: {
       control: { type: "number" },
-      description: "Année ISO de la semaine",
+      description: "Année ISO de la semaine — mode single",
     },
     isEditable: {
       control: "boolean",
@@ -59,11 +63,13 @@ export default meta;
 type Story = StoryObj<typeof WeekPicker>;
 
 // -----------------------------------------------------------------------
-// Render helper — contrôlé via useState
+// Render helpers
 
+/** Render contrôlé pour le mode simple (single). */
 function ControlledRender(args: WeekPickerProps) {
-  const [week, setWeek] = useState(args.week ?? 28);
-  const [year, setYear] = useState(args.year ?? 2025);
+  const single = args as SingleWeekPickerProps;
+  const [week, setWeek] = useState(single.week ?? 28);
+  const [year, setYear] = useState(single.year ?? 2025);
   return (
     <div
       style={{
@@ -74,7 +80,8 @@ function ControlledRender(args: WeekPickerProps) {
       }}
     >
       <WeekPicker
-        {...args}
+        {...(args as Record<string, unknown>)}
+        isRange={false}
         week={week}
         year={year}
         onChange={(w, y) => {
@@ -95,10 +102,53 @@ function ControlledRender(args: WeekPickerProps) {
   );
 }
 
+/** Render contrôlé pour le mode plage (range). */
+function ControlledRangeRender(args: WeekPickerProps) {
+  const range = args as RangeWeekPickerProps;
+  const [startWeek, setStartWeek] = useState(range.startWeek ?? 28);
+  const [startYear, setStartYear] = useState(range.startYear ?? 2025);
+  const [endWeek, setEndWeek] = useState(range.endWeek ?? 32);
+  const [endYear, setEndYear] = useState(range.endYear ?? 2025);
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 16,
+        alignItems: "center",
+      }}
+    >
+      <WeekPicker
+        {...(args as Record<string, unknown>)}
+        isRange
+        startWeek={startWeek}
+        startYear={startYear}
+        endWeek={endWeek}
+        endYear={endYear}
+        onChange={(sw, sy, ew, ey) => {
+          setStartWeek(sw);
+          setStartYear(sy);
+          setEndWeek(ew);
+          setEndYear(ey);
+        }}
+      />
+      <p
+        style={{
+          fontFamily: "var(--font-family-primary)",
+          fontSize: "var(--font-size-ui-xs)",
+          color: "var(--text-subtlest)",
+        }}
+      >
+        Sélection : S{startWeek}/{startYear} → S{endWeek}/{endYear}
+      </p>
+    </div>
+  );
+}
+
 // -----------------------------------------------------------------------
 // Stories
 
-/** Mode saisie (défaut) — inputs semaine/année + icône calendrier. */
+/** Mode saisie (défaut) — input semaine + icône calendrier. */
 export const Default: Story = {
   render: ControlledRender,
   parameters: {
@@ -162,11 +212,21 @@ export const Disabled: Story = {
 export const WithField: Story = {
   name: "With Field wrapper",
   render: (args: WeekPickerProps) => {
-    const [week, setWeek] = useState(args.week ?? 28);
-    const [year, setYear] = useState(args.year ?? 2025);
+    const single = args as SingleWeekPickerProps;
+    const [week, setWeek] = useState(single.week ?? 28);
+    const [year, setYear] = useState(single.year ?? 2025);
     return (
       <Field label="Semaine" isRequired>
-        <WeekPicker {...args} week={week} year={year} onChange={(w, y) => { setWeek(w); setYear(y); }} />
+        <WeekPicker
+          {...(args as Record<string, unknown>)}
+          isRange={false}
+          week={week}
+          year={year}
+          onChange={(w, y) => {
+            setWeek(w);
+            setYear(y);
+          }}
+        />
       </Field>
     );
   },
@@ -177,35 +237,91 @@ export const FieldInvalid: Story = {
   name: "Field invalid",
   args: { isInvalid: true },
   render: (args: WeekPickerProps) => {
-    const [week, setWeek] = useState(args.week ?? 28);
-    const [year, setYear] = useState(args.year ?? 2025);
+    const single = args as SingleWeekPickerProps;
+    const [week, setWeek] = useState(single.week ?? 28);
+    const [year, setYear] = useState(single.year ?? 2025);
     return (
       <Field
         label="Semaine"
         message="La semaine est invalide"
         messageType="critical"
       >
-        <WeekPicker {...args} week={week} year={year} onChange={(w, y) => { setWeek(w); setYear(y); }} />
+        <WeekPicker
+          {...(args as Record<string, unknown>)}
+          isRange={false}
+          week={week}
+          year={year}
+          onChange={(w, y) => {
+            setWeek(w);
+            setYear(y);
+          }}
+        />
       </Field>
     );
   },
+};
+
+/** Mode plage saisie — "Sem. 28 • ... → Sem. 32 • ..." + icône calendrier. */
+export const Range: Story = {
+  render: ControlledRangeRender,
+  args: {
+    isRange: true,
+    startWeek: 28,
+    startYear: 2025,
+    endWeek: 32,
+    endYear: 2025,
+  } as never,
+};
+
+/** Mode plage navigation — deux boutons semaine cliquables + icône calendrier. */
+export const RangeNonEditable: Story = {
+  name: "Range — non editable",
+  render: ControlledRangeRender,
+  args: {
+    isRange: true,
+    isEditable: false,
+    startWeek: 28,
+    startYear: 2025,
+    endWeek: 32,
+    endYear: 2025,
+  } as never,
 };
 
 /** Toutes les apparences. */
 export const AllAppearances: Story = {
   name: "All appearances",
   render: (args: WeekPickerProps) => {
-    const [weekDef, setWeekDef] = useState(args.week ?? 28);
-    const [yearDef, setYearDef] = useState(args.year ?? 2025);
-    const [weekSub, setWeekSub] = useState(args.week ?? 28);
-    const [yearSub, setYearSub] = useState(args.year ?? 2025);
+    const single = args as SingleWeekPickerProps;
+    const [weekDef, setWeekDef] = useState(single.week ?? 28);
+    const [yearDef, setYearDef] = useState(single.year ?? 2025);
+    const [weekSub, setWeekSub] = useState(single.week ?? 28);
+    const [yearSub, setYearSub] = useState(single.year ?? 2025);
     return (
       <div style={{ display: "flex", gap: 32 }}>
         <Field label="Default">
-          <WeekPicker {...args} week={weekDef} year={yearDef} onChange={(w, y) => { setWeekDef(w); setYearDef(y); }} />
+          <WeekPicker
+            {...(args as Record<string, unknown>)}
+            isRange={false}
+            week={weekDef}
+            year={yearDef}
+            onChange={(w, y) => {
+              setWeekDef(w);
+              setYearDef(y);
+            }}
+          />
         </Field>
         <Field label="Subtle">
-          <WeekPicker {...args} week={weekSub} year={yearSub} onChange={(w, y) => { setWeekSub(w); setYearSub(y); }} appearance="subtle" />
+          <WeekPicker
+            {...(args as Record<string, unknown>)}
+            isRange={false}
+            week={weekSub}
+            year={yearSub}
+            onChange={(w, y) => {
+              setWeekSub(w);
+              setYearSub(y);
+            }}
+            appearance="subtle"
+          />
         </Field>
       </div>
     );
