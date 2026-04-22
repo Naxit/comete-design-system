@@ -245,7 +245,7 @@ export const AllVariants: Story = {
         description="Illustration, description et action."
         image={<Illustration illustration="Empty" size={128} />}
         actions={
-          <ButtonGroup>
+          <ButtonGroup aria-label="Actions — Complet">
             <Button color="brand">Action</Button>
           </ButtonGroup>
         }
@@ -254,7 +254,7 @@ export const AllVariants: Story = {
         title="Sans illustration"
         description="Description et action uniquement."
         actions={
-          <ButtonGroup>
+          <ButtonGroup aria-label="Actions — Sans illustration">
             <Button color="brand">Action</Button>
           </ButtonGroup>
         }
@@ -263,7 +263,7 @@ export const AllVariants: Story = {
         title="Sans description"
         image={<Illustration illustration="Empty" size={128} />}
         actions={
-          <ButtonGroup>
+          <ButtonGroup aria-label="Actions — Sans description">
             <Button color="brand">Action</Button>
           </ButtonGroup>
         }
@@ -279,9 +279,9 @@ export const AllVariants: Story = {
         description="Aucun élément à afficher."
         image={<Illustration illustration="Empty" size={128} />}
         actions={
-          <ButtonGroup>
-            <Button color="brand">Créer</Button>
+          <ButtonGroup aria-label="Actions — Vide">
             <Button appearance="subtle">Annuler</Button>
+            <Button color="brand">Créer</Button>
           </ButtonGroup>
         }
       />
