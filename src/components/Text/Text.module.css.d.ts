@@ -15,6 +15,7 @@ declare const styles: {
   readonly "color-success": string;
   readonly "color-warning": string;
   readonly "italic": string;
+  readonly "noWrap": string;
   readonly "text": string;
   readonly "truncate": string;
   readonly "underline": string;

@@ -140,79 +140,6 @@ export const DragLeft: Story = {
 };
 
 // -----------------------------------------------------------------------
-// Couleurs × apparences
-
-/** Toutes les couleurs pour chaque apparence. */
-export const AllColors: Story = {
-  name: "All colors",
-  render: () => (
-    <Stack gap="400">
-      {ALL_APPEARANCES.map((a) => (
-        <Stack key={a} gap="200">
-          <Text size="small" weight="medium" as="span" color="subtlest">
-            appearance=&quot;{a}&quot;
-          </Text>
-          <Cluster gap="150">
-            {ALL_COLORS.map((c) => (
-              <Card key={`${a}-${c}`} appearance={a} color={c}>
-                <CC>
-                  <Stack gap="050">
-                    <Heading size="xsmall" as="span">{c}</Heading>
-                    <Text size="small" as="span" color="subtlest">{a}</Text>
-                  </Stack>
-                </CC>
-              </Card>
-            ))}
-          </Cluster>
-        </Stack>
-      ))}
-    </Stack>
-  ),
-};
-
-// -----------------------------------------------------------------------
-// États
-
-/** Tous les états (default, actionable, selected, disabled, drag) par apparence. */
-export const States: Story = {
-  render: () => {
-    const states: { label: string; props: Partial<React.ComponentProps<typeof Card>> }[] = [
-      { label: "Default", props: {} },
-      { label: "Actionable", props: { onPress: () => {} } },
-      { label: "Selected", props: { isSelected: true } },
-      { label: "Disabled", props: { isDisabled: true } },
-    ];
-
-    return (
-      <Stack gap="400">
-        {ALL_APPEARANCES.map((a) => (
-          <Stack key={a} gap="150">
-            <Text size="small" weight="medium" as="span" color="subtlest">
-              appearance=&quot;{a}&quot;
-            </Text>
-            <Cluster gap="150" align="start">
-              {states.map((s) => (
-                <Stack key={`${a}-${s.label}`} gap="075" align="center">
-                  <Card appearance={a} color="neutral" {...s.props}>
-                    <CC>
-                      <Stack gap="050">
-                        <Heading size="xsmall" as="span">{s.label}</Heading>
-                        <Text size="small" as="span" color="subtlest">{a}</Text>
-                      </Stack>
-                    </CC>
-                  </Card>
-                  <Text size="xsmall" as="span" color="subtlest">{s.label}</Text>
-                </Stack>
-              ))}
-            </Cluster>
-          </Stack>
-        ))}
-      </Stack>
-    );
-  },
-};
-
-// -----------------------------------------------------------------------
 // Composition réaliste
 
 /** Carte avec contenu riche (icône, tags, divider). */
@@ -269,5 +196,78 @@ export const KeyboardNavigation: Story = {
     card.focus();
     await userEvent.keyboard("{Enter}");
     await expect(args.onPress).toHaveBeenCalledOnce();
+  },
+};
+
+// -----------------------------------------------------------------------
+// Couleurs × apparences
+
+/** Toutes les couleurs pour chaque apparence. */
+export const AllColors: Story = {
+  name: "All colors",
+  render: () => (
+    <Stack gap="400">
+      {ALL_APPEARANCES.map((a) => (
+        <Stack key={a} gap="200">
+          <Text size="small" weight="medium" as="span" color="subtlest">
+            appearance=&quot;{a}&quot;
+          </Text>
+          <Cluster gap="150">
+            {ALL_COLORS.map((c) => (
+              <Card key={`${a}-${c}`} appearance={a} color={c}>
+                <CC>
+                  <Stack gap="050">
+                    <Heading size="xsmall" as="span">{c}</Heading>
+                    <Text size="small" as="span" color="subtlest">{a}</Text>
+                  </Stack>
+                </CC>
+              </Card>
+            ))}
+          </Cluster>
+        </Stack>
+      ))}
+    </Stack>
+  ),
+};
+
+// -----------------------------------------------------------------------
+// États
+
+/** Tous les états (default, actionable, selected, disabled, drag) par apparence. */
+export const AllStates: Story = {
+  render: () => {
+    const states: { label: string; props: Partial<React.ComponentProps<typeof Card>> }[] = [
+      { label: "Default", props: {} },
+      { label: "Actionable", props: { onPress: () => {} } },
+      { label: "Selected", props: { isSelected: true } },
+      { label: "Disabled", props: { isDisabled: true } },
+    ];
+
+    return (
+      <Stack gap="400">
+        {ALL_APPEARANCES.map((a) => (
+          <Stack key={a} gap="150">
+            <Text size="small" weight="medium" as="span" color="subtlest">
+              appearance=&quot;{a}&quot;
+            </Text>
+            <Cluster gap="150" align="start">
+              {states.map((s) => (
+                <Stack key={`${a}-${s.label}`} gap="075" align="center">
+                  <Card appearance={a} color="neutral" {...s.props}>
+                    <CC>
+                      <Stack gap="050">
+                        <Heading size="xsmall" as="span">{s.label}</Heading>
+                        <Text size="small" as="span" color="subtlest">{a}</Text>
+                      </Stack>
+                    </CC>
+                  </Card>
+                  <Text size="xsmall" as="span" color="subtlest">{s.label}</Text>
+                </Stack>
+              ))}
+            </Cluster>
+          </Stack>
+        ))}
+      </Stack>
+    );
   },
 };

@@ -6,3 +6,5 @@
 
 .color-default { color: var(--text-default); }
 .color-inverse { color: var(--text-inverted); }
+
+.noWrap { white-space: nowrap; }
