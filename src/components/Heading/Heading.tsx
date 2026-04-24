@@ -21,10 +21,14 @@ export interface HeadingProps {
   color?: HeadingColor;
   /** Override la balise HTML déduite de la taille. */
   as?: HeadingAs;
+  /** Empêche le retour à la ligne (white-space: nowrap). @default false */
+  noWrap?: boolean;
   /** Contenu textuel. */
   children?: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
   /** Identifiant HTML. */
   id?: string;
 }
@@ -63,9 +67,11 @@ export function Heading({
   size,
   color = "default",
   as,
+  noWrap = false,
   children,
   className,
   id,
+  style,
 }: HeadingProps): ReactElement {
   const Component = as ?? DEFAULT_AS[size];
   const cssKey = `heading-${size}` as keyof typeof typographyStyles;
@@ -74,13 +80,14 @@ export function Heading({
     styles.heading,
     typographyStyles[cssKey],
     styles[`color-${color}` as keyof typeof styles],
+    noWrap ? styles.noWrap : undefined,
     className,
   ]
     .filter(Boolean)
     .join(" ");
 
   return (
-    <Component className={classNames} id={id}>
+    <Component className={classNames} id={id} style={style}>
       {children}
     </Component>
   );
