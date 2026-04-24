@@ -93,9 +93,21 @@ export const IconsBefore: Story = {
         <Tab id="tab2" iconBefore="Person">Profil</Tab>
         <Tab id="tab3" iconBefore="Settings">Paramètres</Tab>
       </TabList>
-      <TabPanel id="tab1">Contenu accueil</TabPanel>
-      <TabPanel id="tab2">Contenu profil</TabPanel>
-      <TabPanel id="tab3">Contenu paramètres</TabPanel>
+      <TabPanel id="tab1">
+        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+          <p>Contenu accueil</p>
+        </div>
+      </TabPanel>
+      <TabPanel id="tab2">
+        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+          <p>Contenu profil</p>
+        </div>
+      </TabPanel>
+      <TabPanel id="tab3">
+        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+          <p>Contenu paramètres</p>
+        </div>
+      </TabPanel>
     </Tabs>
   ),
 };
@@ -106,13 +118,25 @@ export const IconsAfter: Story = {
   render: () => (
     <Tabs>
       <TabList>
-        <Tab id="tab1" iconAfter="ChevronRight">Tab 1</Tab>
-        <Tab id="tab2" iconAfter="ChevronRight">Tab 2</Tab>
-        <Tab id="tab3" iconAfter="ChevronRight">Tab 3</Tab>
+        <Tab id="tab1" iconAfter="KeyboardArrowDown">Tab 1</Tab>
+        <Tab id="tab2">Tab 2</Tab>
+        <Tab id="tab3">Tab 3</Tab>
       </TabList>
-      <TabPanel id="tab1">Content 1</TabPanel>
-      <TabPanel id="tab2">Content 2</TabPanel>
-      <TabPanel id="tab3">Content 3</TabPanel>
+      <TabPanel id="tab1">
+        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+          <p>Contenu 1</p>
+        </div>
+      </TabPanel>
+      <TabPanel id="tab2">
+        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+          <p>Contenu 2</p>
+        </div>
+      </TabPanel>
+      <TabPanel id="tab3">
+        <div style={{ padding: "16px", backgroundColor: "var(--background-neutral-subtlest-default)" }}>
+          <p>Contenu 3</p>
+        </div>
+      </TabPanel>
     </Tabs>
   ),
 };

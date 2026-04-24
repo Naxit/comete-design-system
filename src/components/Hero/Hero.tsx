@@ -1,5 +1,5 @@
 // Hero — Comète Design System
-// Texte d'accroche à très grande échelle (marketing, dashboards, landing).
+// Texte d'accroche à très grande échelle (marketing, Homes, landing).
 import type { ReactElement, ReactNode } from "react";
 import typographyStyles from "../../styles/typography.module.css";
 import styles from "./Hero.module.css";
@@ -21,10 +21,14 @@ export interface HeroProps {
   color?: HeroColor;
   /** Override la balise HTML déduite de la taille. */
   as?: HeroAs;
+  /** Empêche le retour à la ligne (white-space: nowrap). @default false */
+  noWrap?: boolean;
   /** Contenu textuel. */
   children?: ReactNode;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
   /** Identifiant HTML. */
   id?: string;
 }
@@ -49,7 +53,7 @@ const DEFAULT_AS: Record<HeroSize, HeroAs> = {
  * Hero — Comète Design System
  *
  * Texte d'accroche à très grande échelle. Réservé aux pages marketing,
- * dashboards de métriques clés ou écrans de bienvenue.
+ * Homes de métriques clés ou écrans de bienvenue.
  *
  * ```tsx
  * import { Hero } from "@naxit/comete-design-system";
@@ -62,9 +66,11 @@ export function Hero({
   size,
   color = "default",
   as,
+  noWrap = false,
   children,
   className,
   id,
+  style,
 }: HeroProps): ReactElement {
   const Component = as ?? DEFAULT_AS[size];
   const cssKey = `hero-${size}` as keyof typeof typographyStyles;
@@ -73,13 +79,14 @@ export function Hero({
     styles.hero,
     typographyStyles[cssKey],
     styles[`color-${color}` as keyof typeof styles],
+    noWrap ? styles.noWrap : undefined,
     className,
   ]
     .filter(Boolean)
     .join(" ");
 
   return (
-    <Component className={classNames} id={id}>
+    <Component className={classNames} id={id} style={style}>
       {children}
     </Component>
   );

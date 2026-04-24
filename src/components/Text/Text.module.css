@@ -35,6 +35,7 @@
 
 .underline { text-decoration: underline; }
 .italic { font-style: italic; }
+.noWrap { white-space: nowrap; }
 
 /* -----------------------------------------------------------------------
  * Truncation (maxLines)

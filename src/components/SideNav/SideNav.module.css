@@ -1,14 +1,26 @@
-/* SideNav — Comete Design System */
+/* SideNav — Comete Design System
+   Animation collapse/expand : hauteurs explicites + overflow:hidden.
+   Le flex-direction snap est masqué par la transition de height. */
 
 /* ------------------------------------------------------------------ */
-/* SideNav container                                                   */
+/* Container                                                           */
 
 .sideNav {
   display: flex;
   flex-direction: column;
-  width: 256px;
+  width: 240px;
   min-height: 100%;
+  padding: 0 var(--space100);
   background: var(--background-surface-default);
+  border-right: 1px solid var(--border-subtle);
+  overflow: hidden;
+  transition: width var(--duration-fast) var(--easing-default),
+              padding var(--duration-fast) var(--easing-default);
+}
+
+.sideNav[data-collapsed] {
+  width: 72px;
+  padding: 0 var(--space050);
 }
 
 /* ------------------------------------------------------------------ */
@@ -18,20 +30,48 @@
   display: flex;
   align-items: center;
   gap: var(--space150);
-  padding: var(--space100);
+  min-height: 72px;
+  padding: var(--space300) var(--space100) var(--space100) var(--space100);
+  transition: padding var(--duration-fast) var(--easing-default),
+              gap var(--duration-fast) var(--easing-default);
+}
+
+.headerLogo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  opacity: 1;
+  max-width: 100px;
+  overflow: hidden;
+  /* Expand : max-width révèle progressivement, opacity suit */
+  transition: opacity var(--duration-fast) var(--easing-default),
+              max-width var(--duration-fast) var(--easing-default);
 }
 
 .headerContent {
   display: flex;
   flex-direction: column;
+  flex: 1;
   min-width: 0;
+  opacity: 1;
+  max-width: 200px;
+  overflow: hidden;
+  /* Expand : max-width révèle, opacity suit */
+  transition: opacity var(--duration-fast) var(--easing-default),
+              max-width var(--duration-fast) var(--easing-default);
+}
+
+.collapseButton {
+  flex-shrink: 0;
+  margin-left: auto;
+  transition: margin var(--duration-fast) var(--easing-default);
 }
 
 .headerAppName {
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-medium);
-  line-height: var(--line-height-ui-xs);
+  line-height: var(--line-height-ui-s);
   color: var(--text-default);
   letter-spacing: var(--letter-spacing-negative-tight);
   white-space: nowrap;
@@ -50,16 +90,6 @@
 }
 
 /* ------------------------------------------------------------------ */
-/* Content area (wraps sections / items)                               */
-
-.content {
-  display: flex;
-  flex-direction: column;
-  padding: var(--space075) var(--space100);
-  flex: 1;
-}
-
-/* ------------------------------------------------------------------ */
 /* Item                                                                */
 
 .item {
@@ -67,10 +97,11 @@
   display: flex;
   align-items: center;
   gap: var(--space150);
-  padding: var(--space100) var(--space200);
-  min-height: 32px;
+  padding: var(--space075) var(--space150);
+  /* Hauteur explicite expanded = icon + 2*padding-vertical */
+  height: calc(var(--size300) + 2 * var(--space075));
   border: none;
-  border-radius: var(--border-radius-1);
+  border-radius: var(--radius0375);
   background: transparent;
   cursor: pointer;
   text-decoration: none;
@@ -78,7 +109,12 @@
   width: 100%;
   text-align: start;
   box-sizing: border-box;
-  transition: background-color 100ms ease;
+  overflow: hidden;
+  transition: background-color 100ms ease,
+              height var(--duration-fast) var(--easing-default),
+              padding var(--duration-fast) var(--easing-default),
+              gap var(--duration-fast) var(--easing-default),
+              border-radius var(--duration-fast) var(--easing-default);
 }
 
 .item:hover {
@@ -92,7 +128,6 @@
 /* Selected */
 .itemSelected {
   background: var(--background-selected-subtlest-default);
-  box-shadow: inset 4px 0 0 0 var(--border-selected);
 }
 
 .itemSelected:hover {
@@ -103,28 +138,39 @@
   background: var(--background-selected-subtlest-pressed);
 }
 
+/* Selection indicator */
+/* .itemSelected::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 20px;
+  background: var(--border-selected);
+  border-radius: 0 4px 4px 0;
+} */
+
 /* Disabled */
 .itemDisabled {
-  background: var(--background-disabled-default);
   color: var(--text-disabled);
-  cursor: default;
+  cursor: not-allowed;
 }
 
 .itemDisabled:hover {
-  background: var(--background-disabled-default);
+  background: var(--background-surface-default);
 }
 
 .itemDisabled:active {
-  background: var(--background-disabled-default);
+  background: var(--background-surface-default);
 }
 
 /* ------------------------------------------------------------------ */
-/* Item content (title + description)                                  */
+/* Item content                                                        */
 
 .itemContent {
   display: flex;
   flex-direction: column;
-  gap: var(--space050);
   flex: 1;
   min-width: 0;
 }
@@ -133,11 +179,12 @@
   font-size: var(--font-size-ui-xs);
   font-weight: var(--font-weight-regular);
   line-height: var(--line-height-ui-xs);
-  color: var(--text-default);
+  color: var(--text-subtle);
   letter-spacing: var(--letter-spacing-negative-tight);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: opacity var(--duration-fast) var(--easing-default);
 }
 
 .itemSelected .itemTitle {
@@ -157,6 +204,10 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  opacity: 1;
+  max-height: var(--line-height-ui-xs);
+  transition: opacity var(--duration-fast) var(--easing-default) var(--duration-fast),
+              max-height var(--duration-fast) var(--easing-default);
 }
 
 .itemDisabled .itemDescription {
@@ -169,6 +220,105 @@
 .iconBefore,
 .iconAfter {
   flex-shrink: 0;
+}
+
+.iconAfter {
+  opacity: 1;
+  overflow: hidden;
+  max-width: 24px;
+  transition: opacity var(--duration-fast) var(--easing-default) var(--duration-fast),
+              max-width var(--duration-fast) var(--easing-default);
+}
+
+/* ------------------------------------------------------------------ */
+/* Collapsed mode                                                      */
+
+.sideNav[data-collapsed] .item {
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space025);
+  padding: var(--space100) var(--space050);
+  /* Hauteur explicite collapsed = icon + gap + title-lineheight + 2*padding */
+  height: calc(var(--size300) + var(--space025) + var(--line-height-ui-xxs) + 2 * var(--space100));
+  border-radius: var(--radius150);
+}
+
+.sideNav[data-collapsed] .itemContent {
+  align-items: center;
+}
+
+.sideNav[data-collapsed] .itemTitle {
+  font-size: var(--font-size-ui-xxxs);
+  line-height: var(--line-height-ui-xxs);
+  text-align: center;
+}
+
+.sideNav[data-collapsed] .itemDescription {
+  opacity: 0;
+  max-height: 0;
+  transition: opacity var(--duration-fast) var(--easing-default) 0ms,
+              max-height var(--duration-fast) var(--easing-default);
+}
+
+.sideNav[data-collapsed] .iconAfter {
+  opacity: 0;
+  max-width: 0;
+  transition: opacity var(--duration-fast) var(--easing-default) 0ms,
+              max-width var(--duration-fast) var(--easing-default);
+}
+
+/* Selection indicator collapsed */
+.sideNav[data-collapsed] .itemSelected::before {
+  left: 50%;
+  top: auto;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 4px;
+  border-radius: 4px 4px 0 0;
+}
+
+/* Header collapsed */
+.sideNav[data-collapsed] .header {
+  padding: var(--space300) var(--space050) var(--space100);
+  gap: 0;
+  justify-content: center;
+}
+
+.sideNav[data-collapsed] .headerLogo {
+  opacity: 0;
+  max-width: 0;
+  transition: opacity var(--duration-fast) var(--easing-default),
+              max-width var(--duration-fast) var(--easing-default);
+}
+
+.sideNav[data-collapsed] .headerContent {
+  opacity: 0;
+  flex: 0;
+  max-width: 0;
+  transition: opacity var(--duration-fast) var(--easing-default),
+              flex var(--duration-fast) var(--easing-default),
+              max-width var(--duration-fast) var(--easing-default);
+}
+
+.sideNav[data-collapsed] .collapseButton {
+  margin-left: 0;
+}
+
+.sideNav[data-collapsed] .sectionHeading {
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition: opacity var(--duration-instant) var(--easing-default),
+              max-height var(--duration-fast) var(--easing-default),
+              padding var(--duration-fast) var(--easing-default);
+}
+
+/* Footer collapsed */
+.sideNav[data-collapsed] .footer {
+  padding: var(--space100) var(--space050);
+  align-items: center;
 }
 
 /* ------------------------------------------------------------------ */
@@ -184,10 +334,16 @@
   font-family: var(--font-family-primary);
   font-size: var(--font-size-ui-xxxs);
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-ui-xxxs);
+  line-height: var(--line-height-ui-xxs);
   color: var(--text-subtle);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--letter-spacing-normal);
+  overflow: hidden;
+  max-height: 50px;
+  opacity: 1;
+  transition: opacity var(--duration-fast) var(--easing-default) var(--duration-fast),
+              max-height var(--duration-fast) var(--easing-default),
+              padding var(--duration-fast) var(--easing-default);
 }
 
 /* ------------------------------------------------------------------ */
@@ -195,7 +351,7 @@
 
 .divider {
   height: 2px;
-  margin: var(--space075) 0;
+  margin: var(--space075) var(--space150);
   background: var(--border-subtle);
   border: none;
   border-radius: 1px;
@@ -205,6 +361,9 @@
 /* Footer                                                              */
 
 .footer {
+  display: flex;
+  flex-direction: column;
   padding: var(--space200);
   margin-top: auto;
+  transition: padding var(--duration-fast) var(--easing-default);
 }

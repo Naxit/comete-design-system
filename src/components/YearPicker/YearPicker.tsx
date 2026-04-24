@@ -1,6 +1,6 @@
 // YearPicker — Comète Design System
 // Sélecteur d'année : deux modes (saisie / navigation) × (single / range).
-import { useEffect, useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
 import {
   CalendarDate,
   today,
@@ -37,6 +37,8 @@ interface YearPickerBaseProps {
   isDisabled?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
   /** Label accessible. */
   "aria-label"?: string;
 }
@@ -121,6 +123,7 @@ function SingleYearPicker({
   isInvalid = false,
   isDisabled = false,
   className,
+  style,
   "aria-label": ariaLabel,
 }: Omit<SingleYearPickerProps, "isRange">): ReactElement {
   const currentYear = today(getLocalTimeZone()).year;
@@ -207,6 +210,7 @@ function SingleYearPicker({
       ref={containerRef}
       aria-label={ariaLabel ?? `Sélecteur d'année : ${resolvedYear}`}
       data-invalid={isInvalid || undefined}
+      style={style}
     >
       <InputContainer isBorderless={!isEditable}
         appearance={appearance}
@@ -314,6 +318,7 @@ function RangeYearPicker({
   isInvalid = false,
   isDisabled = false,
   className,
+  style,
   "aria-label": ariaLabel,
 }: Omit<RangeYearPickerProps, "isRange">): ReactElement {
   const currentYear = today(getLocalTimeZone()).year;
@@ -472,6 +477,7 @@ function RangeYearPicker({
       }
       data-disabled={isDisabled || undefined}
       data-invalid={effectiveInvalid || undefined}
+      style={style}
     >
       <InputContainer isBorderless={!isEditable}
         appearance={appearance}

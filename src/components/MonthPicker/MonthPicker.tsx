@@ -1,6 +1,6 @@
 // MonthPicker — Comète Design System
 // Sélecteur de mois : deux modes (saisie / navigation) × (single / range).
-import { useEffect, useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement, type CSSProperties } from "react";
 import {
   CalendarDate,
   today,
@@ -41,6 +41,8 @@ interface MonthPickerBaseProps {
   isDisabled?: boolean;
   /** Classe CSS additionnelle. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
   /** Label accessible. */
   "aria-label"?: string;
 }
@@ -208,6 +210,7 @@ function SingleMonthPicker({
   isInvalid = false,
   isDisabled = false,
   className,
+  style,
   "aria-label": ariaLabel,
 }: Omit<SingleMonthPickerProps, "isRange">): ReactElement {
   const { locale } = useLocale();
@@ -325,6 +328,7 @@ function SingleMonthPicker({
       aria-label={ariaLabel ?? `Sélecteur de mois : ${formattedLabel}`}
       data-disabled={isDisabled || undefined}
       data-invalid={isInvalid || undefined}
+      style={style}
     >
       <InputContainer
         appearance={appearance}
@@ -458,6 +462,7 @@ function RangeMonthPicker({
   isInvalid = false,
   isDisabled = false,
   className,
+  style,
   "aria-label": ariaLabel,
 }: Omit<RangeMonthPickerProps, "isRange">): ReactElement {
   const { locale } = useLocale();
@@ -645,6 +650,7 @@ function RangeMonthPicker({
       }
       data-disabled={isDisabled || undefined}
       data-invalid={effectiveInvalid || undefined}
+      style={style}
     >
       <InputContainer
         isBorderless={!isEditable}

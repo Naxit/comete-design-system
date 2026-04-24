@@ -9,7 +9,7 @@ import styles from "./Button.module.css";
 // ----------------------------------------------------------------------
 
 export type ButtonAppearance = "contained" | "outlined" | "subtle" | "link" | "link-subtle";
-export type ButtonColor = "default" | "brand" | "success" | "critical" | "warning" | "information";
+export type ButtonColor = "default" | "subtle" | "subtlest" | "brand" | "success" | "critical" | "warning" | "information";
 /**
  * Densité — dimension + padding, alignée sur les variantes Figma.
  * - `default` — hauteur 32 px, padding 4/12, icône 24 px
@@ -33,8 +33,12 @@ export interface ButtonProps extends Omit<AriaButtonProps, "className" | "style"
   isLoading?: boolean;
   /** État sélectionné/actif — applique un style visuel persistant. @default false */
   isSelected?: boolean;
+  /** Étire le bouton sur toute la largeur du parent. @default false */
+  isFullWidth?: boolean;
   /** Additional CSS class names. */
   className?: string;
+  /** Styles inline additionnels. */
+  style?: React.CSSProperties;
   /** Label du bouton. Optionnel pour un bouton icon-only. */
   children?: React.ReactNode;
 }
@@ -54,6 +58,7 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
   if (appearance === "link-subtle") return "subtle";
 
   if (appearance === "contained") {
+    if (color === "subtle" || color === "subtlest") return color;
     // NOTE: warning bold background is light/yellow — needs dark icons, not white
     if (color === "warning") return "on-warning";
     // brand, success, critical, information render bold backgrounds with inverted (white) text
@@ -64,6 +69,8 @@ function resolveIconColor(appearance: ButtonAppearance, color: ButtonColor): Ico
   // outlined, subtle, link: icon follows the semantic color of the button text
   const semanticColorMap: Record<ButtonColor, IconColor> = {
     default: "default",
+    subtle: "subtle",
+    subtlest: "subtlest",
     brand: "brand",
     success: "success",
     critical: "critical",
@@ -102,7 +109,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       iconAfter,
       isLoading = false,
       isSelected = false,
+      isFullWidth = false,
       className,
+      style,
       children,
       ...ariaProps
     },
@@ -126,6 +135,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     // Map color to CSS class
     const colorClassMap: Record<ButtonColor, string> = {
       default: styles.default,
+      subtle: styles["color-subtle"],
+      subtlest: styles["color-subtlest"],
       brand: styles.brand,
       success: styles.success,
       critical: styles.critical,
@@ -154,6 +165,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       spacingClass,
       isIconOnly ? styles.iconOnly : undefined,
       isLoading ? styles.loading : undefined,
+      isFullWidth ? styles.fullWidth : undefined,
       className,
     ]
       .filter(Boolean)
@@ -165,6 +177,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <AriaButton
         ref={ref}
         className={classNames}
+        style={style}
         isDisabled={isLoading || effectiveDisabled}
         data-selected={isSelected || undefined}
         {...ariaProps}

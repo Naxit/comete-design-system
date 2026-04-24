@@ -28,6 +28,8 @@ export interface TextProps {
   underline?: boolean;
   /** Applique une mise en italique. @default false */
   italic?: boolean;
+  /** Empêche le retour à la ligne (white-space: nowrap). @default false */
+  noWrap?: boolean;
   /** Limite le nombre de lignes avec troncature (ellipsis). */
   maxLines?: number;
   /** Balise HTML. @default "p" */
@@ -67,6 +69,7 @@ export function Text({
   align,
   underline,
   italic,
+  noWrap = false,
   maxLines,
   as: Component = "p",
   children,
@@ -83,6 +86,7 @@ export function Text({
     align ? styles[`align-${align}` as keyof typeof styles] : undefined,
     underline ? styles.underline : undefined,
     italic ? styles.italic : undefined,
+    noWrap ? styles.noWrap : undefined,
     maxLines ? styles.truncate : undefined,
     className,
   ]

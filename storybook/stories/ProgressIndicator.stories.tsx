@@ -133,22 +133,6 @@ export const Inverted: Story = {
   },
 };
 
-/** Petits points. */
-export const Small: Story = {
-  args: { size: "small" },
-  parameters: {
-    design: { type: "figma", url: figmaUrl("4713:10914") },
-  },
-};
-
-/** Grands points. */
-export const Large: Story = {
-  args: { size: "large" },
-  parameters: {
-    design: { type: "figma", url: figmaUrl("4713:10894") },
-  },
-};
-
 /** Espacement cozy. */
 export const SpacingCozy: Story = {
   name: "Spacing cozy",

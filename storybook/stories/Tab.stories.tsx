@@ -129,29 +129,6 @@ export const Default: Story = {
   render: TabStory,
 };
 
-// -----------------------------------------------------------------------
-// Stories — state = hover
-
-/** state=hover, isSelected=false — survolez le tab pour voir l'état hover. */
-export const Hover: Story = {
-  parameters: {
-    pseudo: { hover: true },
-    design: { type: "figma", url: figmaUrl("5107:63434") },
-  },
-  render: TabStory,
-};
-
-// -----------------------------------------------------------------------
-// Stories — state = press
-
-/** state=press, isSelected=false — cliquez et maintenez pour voir l'état press. */
-export const Press: Story = {
-  parameters: {
-    pseudo: { active: true },
-    design: { type: "figma", url: figmaUrl("5107:63437") },
-  },
-  render: TabStory,
-};
 
 // -----------------------------------------------------------------------
 // Stories — state = selected

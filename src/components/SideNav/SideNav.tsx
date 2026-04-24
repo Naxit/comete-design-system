@@ -1,33 +1,69 @@
 // SideNav — Comete Design System
-// Composant de navigation latérale pour les applications.
-import type { ReactElement, ReactNode } from "react";
+import { createContext,
+  useContext,
+  type ReactElement,
+  type ReactNode, type CSSProperties } from "react";
 import type { IconName } from "@naxit/comete-icons";
 import { Icon } from "../Icon/index.js";
+import { Button } from "../Button/index.js";
+import { Divider } from "../Divider/index.js";
 import styles from "./SideNav.module.css";
+
+// -----------------------------------------------------------------------
+// Context interne
+
+interface SideNavContextValue {
+  isCollapsed: boolean;
+  onToggleCollapse?: () => void;
+}
+
+const SideNavContext = createContext<SideNavContextValue>({ isCollapsed: false });
+
+/** Hook pour accéder à l'état collapsed du SideNav parent. */
+export function useSideNav(): SideNavContextValue {
+  return useContext(SideNavContext);
+}
 
 // -----------------------------------------------------------------------
 // Types publics
 
 export interface SideNavProps {
   children: ReactNode;
+  /** Mode réduit : icône au-dessus du label, largeur minimale. @default false */
+  isCollapsed?: boolean;
+  /** Callback déclenché par le bouton collapse/expand du Header. */
+  onCollapsedChange?: (collapsed: boolean) => void;
   className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
 }
 
 export interface SideNavHeaderProps {
+  /** Logo affiché à gauche. */
   logo?: ReactNode;
-  appName?: string;
-  subtitle?: string;
+  /** Nom de la société / application. */
+  companyName?: string;
+  /** Description courte sous le nom. */
+  description?: string;
   className?: string;
 }
 
 export interface SideNavItemProps {
+  /** Libellé principal de l'item. */
   label: string;
+  /** Texte secondaire sous le label. */
   description?: string;
-  icon?: IconName;
+  /** Icône avant le label. */
+  iconBefore?: IconName;
+  /** Icône après le label. */
   iconAfter?: IconName;
+  /** Item sélectionné (page courante). */
   isSelected?: boolean;
+  /** Item désactivé. */
   isDisabled?: boolean;
+  /** URL de navigation (rend un <a>). Sans href, rend un <button>. */
   href?: string;
+  /** Callback de clic. */
   onClick?: () => void;
   className?: string;
 }
@@ -50,36 +86,48 @@ export interface SideNavFooterProps {
 // -----------------------------------------------------------------------
 // SideNavHeader
 
-function SideNavHeader({
+export function SideNavHeader({
   logo,
-  appName,
-  subtitle,
+  companyName,
+  description,
   className,
 }: SideNavHeaderProps): ReactElement {
+  const { isCollapsed, onToggleCollapse } = useContext(SideNavContext);
+
   return (
     <div className={[styles.header, className].filter(Boolean).join(" ")}>
-      {logo}
-      {(appName || subtitle) && (
+      {logo && <span className={styles.headerLogo}>{logo}</span>}
+      {(companyName || description) && (
         <div className={styles.headerContent}>
-          {appName && <span className={styles.headerAppName}>{appName}</span>}
-          {subtitle && (
-            <span className={styles.headerSubtitle}>{subtitle}</span>
+          {companyName && <span className={styles.headerAppName}>{companyName}</span>}
+          {description && (
+            <span className={styles.headerSubtitle}>{description}</span>
           )}
         </div>
+      )}
+      {onToggleCollapse && (
+        <Button
+          appearance="subtle"
+          color="subtlest"
+          iconBefore={isCollapsed ? "LeftPanelOpen" : "LeftPanelClose"}
+          onPress={onToggleCollapse}
+          aria-label={isCollapsed ? "Développer la navigation" : "Réduire la navigation"}
+          className={styles.collapseButton}
+        />
       )}
     </div>
   );
 }
 
-SideNavHeader.displayName = "SideNavHeader";
+SideNavHeader.displayName = "SideNav.Header";
 
 // -----------------------------------------------------------------------
 // SideNavItem
 
-function SideNavItem({
+export function SideNavItem({
   label,
   description,
-  icon,
+  iconBefore,
   iconAfter,
   isSelected = false,
   isDisabled = false,
@@ -101,9 +149,9 @@ function SideNavItem({
 
   const content = (
     <>
-      {icon && (
+      {iconBefore && (
         <Icon
-          icon={icon}
+          icon={iconBefore}
           size={24}
           appearance={iconAppearance}
           color={iconColor}
@@ -157,12 +205,12 @@ function SideNavItem({
   );
 }
 
-SideNavItem.displayName = "SideNavItem";
+SideNavItem.displayName = "SideNav.Item";
 
 // -----------------------------------------------------------------------
 // SideNavSection
 
-function SideNavSection({
+export function SideNavSection({
   title,
   children,
   className,
@@ -175,25 +223,23 @@ function SideNavSection({
   );
 }
 
-SideNavSection.displayName = "SideNavSection";
+SideNavSection.displayName = "SideNav.Section";
 
 // -----------------------------------------------------------------------
 // SideNavDivider
 
-function SideNavDivider({ className }: SideNavDividerProps): ReactElement {
+export function SideNavDivider({ className }: SideNavDividerProps): ReactElement {
   return (
-    <hr
-      className={[styles.divider, className].filter(Boolean).join(" ")}
-    />
+    <Divider className={[styles.divider, className].filter(Boolean).join(" ")} />
   );
 }
 
-SideNavDivider.displayName = "SideNavDivider";
+SideNavDivider.displayName = "SideNav.Divider";
 
 // -----------------------------------------------------------------------
 // SideNavFooter
 
-function SideNavFooter({
+export function SideNavFooter({
   children,
   className,
 }: SideNavFooterProps): ReactElement {
@@ -204,7 +250,7 @@ function SideNavFooter({
   );
 }
 
-SideNavFooter.displayName = "SideNavFooter";
+SideNavFooter.displayName = "SideNav.Footer";
 
 // -----------------------------------------------------------------------
 // SideNav (main)
@@ -212,31 +258,42 @@ SideNavFooter.displayName = "SideNavFooter";
 /**
  * SideNav — Comete Design System
  *
- * Navigation latérale composable. Utilise des sous-composants attachés
- * pour structurer le contenu : Header, Item, Section, Divider, Footer.
+ * Navigation latérale composable avec mode collapsed.
+ * La transition collapse/expand utilise des hauteurs explicites
+ * et overflow:hidden pour masquer le changement de flex-direction.
  *
  * ```tsx
- * <SideNav>
- *   <SideNav.Header appName="Mon App" subtitle="v1.0" />
+ * const [collapsed, setCollapsed] = useState(false);
+ *
+ * <SideNav isCollapsed={collapsed} onCollapsedChange={setCollapsed}>
+ *   <SideNav.Header companyName="Mon App" logo={<Logo format="icon" />} />
  *   <SideNav.Section title="Navigation">
- *     <SideNav.Item label="Accueil" icon="Home" isSelected />
- *     <SideNav.Item label="Paramètres" icon="Settings" />
+ *     <SideNav.Item label="Accueil" iconBefore="Home" isSelected />
  *   </SideNav.Section>
- *   <SideNav.Divider />
- *   <SideNav.Footer>
- *     <Logo />
- *   </SideNav.Footer>
  * </SideNav>
  * ```
  */
 export function SideNav({
   children,
+  isCollapsed = false,
+  onCollapsedChange,
   className,
+  style,
 }: SideNavProps): ReactElement {
+  const toggleCollapse = onCollapsedChange
+    ? () => { onCollapsedChange(!isCollapsed); }
+    : undefined;
+
   return (
-    <nav className={[styles.sideNav, className].filter(Boolean).join(" ")}>
-      {children}
-    </nav>
+    <SideNavContext.Provider value={{ isCollapsed, onToggleCollapse: toggleCollapse }}>
+      <nav
+        className={[styles.sideNav, className].filter(Boolean).join(" ")}
+        data-collapsed={isCollapsed || undefined}
+        style={style}
+      >
+        {children}
+      </nav>
+    </SideNavContext.Provider>
   );
 }
 

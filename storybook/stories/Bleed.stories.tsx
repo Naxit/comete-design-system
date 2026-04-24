@@ -13,8 +13,8 @@ import {
   TopNav,
   SideNav,
   Logo,
-  BottomNavigation,
-  BottomNavigationItem,
+  BottomNav,
+  BottomNavItem,
   Avatar,
   Button,
   Icon,
@@ -31,10 +31,33 @@ const meta = {
   parameters: {
     layout: "fullscreen",
   },
+  argTypes: {
+    isFull: { control: "boolean" },
+    isBordered: { control: "boolean" },
+    color: {
+      control: "select",
+      options: [undefined, "neutral", "brand", "success", "warning", "critical", "information", "accent", "subtlest", "subtler", "bold"],
+    },
+    inline: {
+      control: "select",
+      options: [undefined, "0", "050", "100", "150", "200", "300"],
+    },
+    block: {
+      control: "select",
+      options: [undefined, "0", "050", "100", "150", "200", "300"],
+    },
+  },
+  args: {
+    isFull: true,
+    isBordered: false,
+    color: undefined,
+    inline: undefined,
+    block: undefined,
+  },
 } satisfies Meta<typeof Bleed>;
 
 export default meta;
-type Story = StoryObj<typeof Bleed>;
+type Story = StoryObj<typeof meta>;
 
 // -----------------------------------------------------------------------
 // Shared helpers
@@ -68,10 +91,40 @@ function BleedBanner() {
 }
 
 // -----------------------------------------------------------------------
-// 1. MOBILE — TopNav + Page + BottomNavigation
+// Default — interactive controls
+
+/** Story interactive : testez les props via le panneau Controls. */
+export const Default: Story = {
+  parameters: { layout: "fullscreen" },
+  render: (args) => (
+    <div style={{ display: "flex", height: "100vh" }}>
+      <Page style={{ flex: 1 }}>
+        <Page.Header title="Bleed playground" />
+        <Page.Body>
+          <Stack gap="200">
+            <Text as="span" color="subtle">
+              Contenu standard — respecte les gouttières de Page.
+            </Text>
+
+            <SampleCard title="Carte normale" subtitle="Dans les gouttières" />
+
+            <Bleed {...args}>
+              <BleedBanner />
+            </Bleed>
+
+            <SampleCard title="Autre carte" subtitle="Toujours dans les gouttières" />
+          </Stack>
+        </Page.Body>
+      </Page>
+    </div>
+  ),
+};
+
+// -----------------------------------------------------------------------
+// 1. MOBILE — TopNav + Page + BottomNav
 
 /**
- * **BleedMobile** — Layout mobile complet avec TopNav et BottomNavigation.
+ * **BleedMobile** — Layout mobile complet avec TopNav et BottomNav.
  *
  * Le `<Bleed isFull>` traverse les gouttières de `<Page>` pour aller
  * bord-à-bord dans la zone de contenu. En mobile, cela correspond
@@ -89,7 +142,7 @@ export const BleedMobile: Story = {
   },
   render: () => (
     <div style={{ width: 402, height: 874, border: "3px solid var(--border-default)", borderRadius: "58px", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-      <TopNav title="Tableau de bord" onBack={() => undefined}>
+      <TopNav title="Accueil" onBack={() => undefined}>
         <Avatar size="small" initials="AC" />
       </TopNav>
 
@@ -145,12 +198,12 @@ export const BleedMobile: Story = {
         </Page.Body>
       </Page>
 
-      <BottomNavigation>
-        <BottomNavigationItem label="Accueil" icon="Home" isSelected />
-        <BottomNavigationItem label="Agents" icon="Agent" />
-        <BottomNavigationItem label="Sites" icon="LocationOn" />
-        <BottomNavigationItem label="Profil" icon="Person" />
-      </BottomNavigation>
+      <BottomNav>
+        <BottomNavItem label="Accueil" icon="Home" isSelected />
+        <BottomNavItem label="Agents" icon="Agent" />
+        <BottomNavItem label="Sites" icon="LocationOn" />
+        <BottomNavItem label="Profil" icon="Person" />
+      </BottomNav>
     </div>
   ),
 };
@@ -180,18 +233,18 @@ export const BleedDesktop: Story = {
       <SideNav>
         <SideNav.Header
           logo={<Logo format="icon" />}
-          appName="Pro Sécurité"
-          subtitle="Main Courante"
+          companyName="Pro Sécurité"
+          description="Main Courante"
         />
         <SideNav.Section title="Manager">
-          <SideNav.Item label="Tableau de bord" icon="Dashboard" isSelected href="/" />
-          <SideNav.Item label="Agents" icon="Agent" href="/agents" />
-          <SideNav.Item label="Sites" icon="LocationOn" href="/sites" />
+          <SideNav.Item label="Accueil" iconBefore="Home" isSelected href="/" />
+          <SideNav.Item label="Agents" iconBefore="Agent" href="/agents" />
+          <SideNav.Item label="Sites" iconBefore="LocationOn" href="/sites" />
         </SideNav.Section>
         <SideNav.Divider />
         <SideNav.Section title="Administration">
-          <SideNav.Item label="Utilisateurs" icon="Group" href="/users" />
-          <SideNav.Item label="Permissions" icon="ManageAccounts" href="/permissions" />
+          <SideNav.Item label="Utilisateurs" iconBefore="Group" href="/users" />
+          <SideNav.Item label="Permissions" iconBefore="ManageAccounts" href="/permissions" />
         </SideNav.Section>
         <SideNav.Footer>
           <Logo />
@@ -200,7 +253,7 @@ export const BleedDesktop: Story = {
 
       <Page style={{ flex: 1, minHeight: 0 }}>
         <Page.Header
-          title="Tableau de bord"
+          title="Accueil"
           trailing={
             <Stack direction="row" gap="100" align="center">
               <Button appearance="subtle" spacing="compact" iconBefore="Notifications" aria-label="Notifications" />
@@ -275,62 +328,5 @@ export const BleedDesktop: Story = {
         </Page.Body>
       </Page>
     </div>
-  ),
-};
-
-// -----------------------------------------------------------------------
-// 3. RELATIVE — démonstration du mode inline/block
-
-/**
- * **Relative** — Mode relatif (`inline` / `block`) pour compenser
- * le padding d'un parent direct.
- *
- * Contrairement à `isFull`, le bleed relatif ne traverse pas les
- * gouttières de Page — il compense uniquement le padding de son
- * parent immédiat.
- */
-export const Relative: Story = {
-  name: "Relative (inline/block)",
-  parameters: {
-    layout: "padded",
-  },
-  render: () => (
-    <Stack gap="300">
-      <Stack gap="050">
-        <Heading size="small" as="span">Bleed inline</Heading>
-        <Text size="small" as="span" color="subtlest">
-          Compense le padding du parent. Ici le Stack a padding=&quot;300&quot;,
-          et le Bleed a inline=&quot;300&quot;.
-        </Text>
-      </Stack>
-
-      <Card appearance="outlined">
-        <Stack padding="300" gap="200">
-          <Text as="span">Contenu normal (dans le padding)</Text>
-
-          <Bleed inline="300">
-            <Card appearance="outlined" color="neutral">
-              <Stack padding="200" align="center">
-                <Text weight="medium" as="span">
-                  Bleed inline=&quot;300&quot; — compense le padding parent
-                </Text>
-              </Stack>
-            </Card>
-          </Bleed>
-
-          <Text as="span">Contenu normal (dans le padding)</Text>
-
-          <Bleed inline="300" block="300">
-            <Card appearance="subtle" color="neutral">
-              <Stack padding="200" align="center">
-                <Text weight="medium" as="span">
-                  Bleed inline=&quot;300&quot; block=&quot;300&quot; — compense les deux axes
-                </Text>
-              </Stack>
-            </Card>
-          </Bleed>
-        </Stack>
-      </Card>
-    </Stack>
   ),
 };

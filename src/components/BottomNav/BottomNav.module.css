@@ -1,10 +1,11 @@
 /* ==========================================================================
-   BottomNavigation — Comète Design System
+   BottomNav — Comète Design System
    Toutes les valeurs proviennent de @naxit/comete-design-tokens.
    Aucune valeur hardcodée.
    ========================================================================== */
 
 .nav {
+  position: relative;
   display: flex;
   width: 100%;
   background-color: var(--background-surface-default);
