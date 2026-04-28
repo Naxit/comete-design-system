@@ -6,10 +6,15 @@ import {
   today,
   getLocalTimeZone,
 } from "@internationalized/date";
-import { Dialog as AriaDialog, DialogTrigger } from "react-aria-components";
+import {
+  Dialog as AriaDialog,
+  DialogTrigger,
+  Button as AriaButton,
+} from "react-aria-components";
 import type { RangeValue } from "react-aria-components";
 import { Button } from "../Button/Button.js";
 import { Calendar } from "../Calendar/Calendar.js";
+import { Icon } from "../Icon/Icon.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
 import { Popover } from "../Popover/Popover.js";
@@ -35,6 +40,13 @@ interface YearPickerBaseProps {
   isInvalid?: boolean;
   /** Désactive le composant. */
   isDisabled?: boolean;
+  /**
+   * Affiche un bouton clear (×) en mode éditable quand une valeur est saisie.
+   * @default true
+   */
+  isClearable?: boolean;
+  /** Callback appelé quand l'utilisateur clique sur le bouton clear. */
+  onClear?: () => void;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -122,6 +134,8 @@ function SingleYearPicker({
   appearance = "default",
   isInvalid = false,
   isDisabled = false,
+  isClearable = true,
+  onClear,
   className,
   style,
   "aria-label": ariaLabel,
@@ -179,6 +193,24 @@ function SingleYearPicker({
   const [inputValue, setInputValue] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
 
+  // -- Clear state --
+  const [isCleared, setIsCleared] = useState(false);
+  const propKey = `${year ?? "u"}`;
+  const prevPropKey = useRef(propKey);
+  if (prevPropKey.current !== propKey) {
+    prevPropKey.current = propKey;
+    if (isCleared && year !== undefined) setIsCleared(false);
+  }
+
+  const hasValue = year !== undefined;
+  const showClear = isEditable && isClearable && !isDisabled && hasValue && !isCleared;
+
+  const handleClear = () => {
+    setIsCleared(true);
+    setInputValue("");
+    onClear?.();
+  };
+
   const handleInputFocus = () => {
     setInputValue(String(resolvedYear));
     setIsInputFocused(true);
@@ -231,8 +263,17 @@ function SingleYearPicker({
               type="text"
               inputMode="numeric"
               className={styles.yearInput}
-              value={isInputFocused ? inputValue : String(resolvedYear)}
-              onChange={(e) => setInputValue(e.target.value)}
+              value={
+                isInputFocused
+                  ? inputValue
+                  : isCleared
+                    ? ""
+                    : String(resolvedYear)
+              }
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                if (isCleared) setIsCleared(false);
+              }}
               onClick={() => !isDisabled && setIsOpen(true)}
               onFocus={handleInputFocus}
               onBlur={handleInputBlur}
@@ -240,6 +281,16 @@ function SingleYearPicker({
               disabled={isDisabled}
               aria-label={`Année : ${resolvedYear}`}
             />
+            {showClear && (
+              <AriaButton
+                className={styles.clearButton}
+                aria-label="Effacer"
+                onPress={handleClear}
+                excludeFromTabOrder
+              >
+                <Icon icon="CloseSmallFaded" color="subtlest" />
+              </AriaButton>
+            )}
             <Button
               appearance="subtle"
               iconBefore="CalendarMonth"
@@ -324,6 +375,8 @@ function RangeYearPicker({
   appearance = "default",
   isInvalid = false,
   isDisabled = false,
+  isClearable = true,
+  onClear,
   className,
   style,
   "aria-label": ariaLabel,
@@ -399,6 +452,27 @@ function RangeYearPicker({
   const [endInput, setEndInput] = useState("");
   const [startFocused, setStartFocused] = useState(false);
   const [endFocused, setEndFocused] = useState(false);
+
+  // -- Clear state --
+  const [isCleared, setIsCleared] = useState(false);
+  const propKey = `${startYear ?? "u"}-${endYear ?? "u"}`;
+  const prevPropKey = useRef(propKey);
+  if (prevPropKey.current !== propKey) {
+    prevPropKey.current = propKey;
+    if (isCleared && (startYear !== undefined || endYear !== undefined)) {
+      setIsCleared(false);
+    }
+  }
+
+  const hasValue = startYear !== undefined || endYear !== undefined;
+  const showClear = isEditable && isClearable && !isDisabled && hasValue && !isCleared;
+
+  const handleClear = () => {
+    setIsCleared(true);
+    setStartInput("");
+    setEndInput("");
+    onClear?.();
+  };
 
   const handleStartInputFocus = () => {
     setStartInput(String(resolvedStart));
@@ -498,8 +572,17 @@ function RangeYearPicker({
               type="text"
               inputMode="numeric"
               className={styles.yearInput}
-              value={startFocused ? startInput : String(resolvedStart)}
-              onChange={(e) => setStartInput(e.target.value)}
+              value={
+                startFocused
+                  ? startInput
+                  : isCleared
+                    ? ""
+                    : String(resolvedStart)
+              }
+              onChange={(e) => {
+                setStartInput(e.target.value);
+                if (isCleared) setIsCleared(false);
+              }}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleStartInputFocus}
               onBlur={handleStartInputBlur}
@@ -516,8 +599,17 @@ function RangeYearPicker({
               type="text"
               inputMode="numeric"
               className={styles.yearInput}
-              value={endFocused ? endInput : String(resolvedEnd)}
-              onChange={(e) => setEndInput(e.target.value)}
+              value={
+                endFocused
+                  ? endInput
+                  : isCleared
+                    ? ""
+                    : String(resolvedEnd)
+              }
+              onChange={(e) => {
+                setEndInput(e.target.value);
+                if (isCleared) setIsCleared(false);
+              }}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleEndInputFocus}
               onBlur={handleEndInputBlur}
@@ -525,6 +617,17 @@ function RangeYearPicker({
               disabled={isDisabled}
               aria-label={`Année de fin : ${resolvedEnd}`}
             />
+
+            {showClear && (
+              <AriaButton
+                className={styles.clearButton}
+                aria-label="Effacer"
+                onPress={handleClear}
+                excludeFromTabOrder
+              >
+                <Icon icon="CloseSmallFaded" color="subtlest" />
+              </AriaButton>
+            )}
 
             <Button
               appearance="subtle"

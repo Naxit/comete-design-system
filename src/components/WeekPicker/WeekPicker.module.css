@@ -71,6 +71,44 @@
 }
 
 /* ==========================================================================
+   Clear button — visible quand une valeur est saisie (mode éditable)
+   ========================================================================== */
+
+.clearButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--size300);
+  height: var(--size300);
+  padding: 0;
+  border: none;
+  border-radius: var(--radius0375);
+  background: transparent;
+  color: var(--icon-default);
+  cursor: pointer;
+  outline: none;
+}
+
+.clearButton[data-hovered] {
+  background-color: var(--background-neutral-subtlest-hovered);
+}
+
+.clearButton[data-pressed] {
+  background-color: var(--background-neutral-subtlest-pressed);
+}
+
+/* ==========================================================================
+   Invalid state — texte en critical pour signaler l'erreur
+   (utile surtout en mode navigation où la bordure est masquée).
+   ========================================================================== */
+
+.root[data-invalid] .weekButton,
+.root[data-invalid] .weekInput {
+  color: var(--text-critical);
+}
+
+/* ==========================================================================
    Mode range (isRange=true)
    ========================================================================== */
 

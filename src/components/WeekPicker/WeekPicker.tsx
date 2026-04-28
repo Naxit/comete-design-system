@@ -10,11 +10,13 @@ import {
 import {
   Dialog as AriaDialog,
   DialogTrigger,
+  Button as AriaButton,
   useLocale,
 } from "react-aria-components";
 import type { RangeValue } from "react-aria-components";
 import { Button } from "../Button/Button.js";
 import { Calendar } from "../Calendar/Calendar.js";
+import { Icon } from "../Icon/Icon.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
 import { Popover } from "../Popover/Popover.js";
@@ -40,6 +42,13 @@ interface WeekPickerBaseProps {
   isInvalid?: boolean;
   /** Désactive le composant. */
   isDisabled?: boolean;
+  /**
+   * Affiche un bouton clear (×) en mode éditable quand une valeur est saisie.
+   * @default true
+   */
+  isClearable?: boolean;
+  /** Callback appelé quand l'utilisateur clique sur le bouton clear. */
+  onClear?: () => void;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -280,6 +289,8 @@ function SingleWeekPicker({
   appearance = "default",
   isInvalid = false,
   isDisabled = false,
+  isClearable = true,
+  onClear,
   className,
   style,
   "aria-label": ariaLabel,
@@ -371,6 +382,26 @@ function SingleWeekPicker({
     setInputValue(weekLabel);
   }
 
+  // -- Clear state --
+  const [isCleared, setIsCleared] = useState(false);
+  const propKey = `${week ?? "u"}-${year ?? "u"}`;
+  const prevPropKey = useRef(propKey);
+  if (prevPropKey.current !== propKey) {
+    prevPropKey.current = propKey;
+    if (isCleared && (week !== undefined || year !== undefined)) {
+      setIsCleared(false);
+    }
+  }
+
+  const hasValue = week !== undefined && year !== undefined;
+  const showClear = isEditable && isClearable && !isDisabled && hasValue && !isCleared;
+
+  const handleClear = () => {
+    setIsCleared(true);
+    setInputValue("");
+    onClear?.();
+  };
+
   /** Valide la saisie : numéro de semaine ou date → résout la semaine ISO. */
   const commitInput = () => {
     const result = parseInput(inputValue, resolvedYear);
@@ -416,14 +447,28 @@ function SingleWeekPicker({
             <input
               type="text"
               className={styles.weekInput}
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              value={isCleared ? "" : inputValue}
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                if (isCleared) setIsCleared(false);
+              }}
               onClick={() => !isDisabled && setIsOpen(true)}
               onBlur={commitInput}
               onKeyDown={handleInputKeyDown}
               disabled={isDisabled}
               aria-label={`Semaine ${resolvedWeek} : ${weekLabel}`}
             />
+
+            {showClear && (
+              <AriaButton
+                className={styles.clearButton}
+                aria-label="Effacer"
+                onPress={handleClear}
+                excludeFromTabOrder
+              >
+                <Icon icon="CloseSmallFaded" color="subtlest" />
+              </AriaButton>
+            )}
 
             <Button
               appearance="subtle"
@@ -510,6 +555,8 @@ function RangeWeekPicker({
   appearance = "default",
   isInvalid = false,
   isDisabled = false,
+  isClearable = true,
+  onClear,
   className,
   style,
   "aria-label": ariaLabel,
@@ -632,6 +679,35 @@ function RangeWeekPicker({
     setEndInput(endLabel);
   }
 
+  // -- Clear state --
+  const [isCleared, setIsCleared] = useState(false);
+  const propKey = `${startWeek ?? "u"}-${startYear ?? "u"}-${endWeek ?? "u"}-${endYear ?? "u"}`;
+  const prevPropKey = useRef(propKey);
+  if (prevPropKey.current !== propKey) {
+    prevPropKey.current = propKey;
+    if (
+      isCleared &&
+      (startWeek !== undefined ||
+        startYear !== undefined ||
+        endWeek !== undefined ||
+        endYear !== undefined)
+    ) {
+      setIsCleared(false);
+    }
+  }
+
+  const hasValue =
+    (startWeek !== undefined && startYear !== undefined) ||
+    (endWeek !== undefined && endYear !== undefined);
+  const showClear = isEditable && isClearable && !isDisabled && hasValue && !isCleared;
+
+  const handleClear = () => {
+    setIsCleared(true);
+    setStartInput("");
+    setEndInput("");
+    onClear?.();
+  };
+
   const commitStartInput = () => {
     const result = parseInput(startInput, resolvedStartYear);
     if (result) {
@@ -719,8 +795,11 @@ function RangeWeekPicker({
             <input
               type="text"
               className={styles.weekInput}
-              value={startInput}
-              onChange={(e) => setStartInput(e.target.value)}
+              value={isCleared ? "" : startInput}
+              onChange={(e) => {
+                setStartInput(e.target.value);
+                if (isCleared) setIsCleared(false);
+              }}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onBlur={commitStartInput}
               onKeyDown={handleStartInputKeyDown}
@@ -735,14 +814,28 @@ function RangeWeekPicker({
             <input
               type="text"
               className={styles.weekInput}
-              value={endInput}
-              onChange={(e) => setEndInput(e.target.value)}
+              value={isCleared ? "" : endInput}
+              onChange={(e) => {
+                setEndInput(e.target.value);
+                if (isCleared) setIsCleared(false);
+              }}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onBlur={commitEndInput}
               onKeyDown={handleEndInputKeyDown}
               disabled={isDisabled}
               aria-label={`Semaine de fin : ${endLabel}`}
             />
+
+            {showClear && (
+              <AriaButton
+                className={styles.clearButton}
+                aria-label="Effacer"
+                onPress={handleClear}
+                excludeFromTabOrder
+              >
+                <Icon icon="CloseSmallFaded" color="subtlest" />
+              </AriaButton>
+            )}
 
             <Button
               appearance="subtle"

@@ -9,11 +9,13 @@ import {
 import {
   Dialog as AriaDialog,
   DialogTrigger,
+  Button as AriaButton,
   useLocale,
 } from "react-aria-components";
 import type { RangeValue } from "react-aria-components";
 import { Button } from "../Button/Button.js";
 import { Calendar } from "../Calendar/Calendar.js";
+import { Icon } from "../Icon/Icon.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
 import { Popover } from "../Popover/Popover.js";
@@ -39,6 +41,13 @@ interface MonthPickerBaseProps {
   isInvalid?: boolean;
   /** Désactive le composant. */
   isDisabled?: boolean;
+  /**
+   * Affiche un bouton clear (×) en mode éditable quand une valeur est saisie.
+   * @default true
+   */
+  isClearable?: boolean;
+  /** Callback appelé quand l'utilisateur clique sur le bouton clear. */
+  onClear?: () => void;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -209,6 +218,8 @@ function SingleMonthPicker({
   appearance = "default",
   isInvalid = false,
   isDisabled = false,
+  isClearable = true,
+  onClear,
   className,
   style,
   "aria-label": ariaLabel,
@@ -280,6 +291,30 @@ function SingleMonthPicker({
   const [yearInput, setYearInput] = useState("");
   const [monthFocused, setMonthFocused] = useState(false);
   const [yearFocused, setYearFocused] = useState(false);
+
+  // -- Clear state — quand l'utilisateur clique sur le bouton clear, on
+  // affiche les inputs vides jusqu'à ce qu'une nouvelle valeur soit saisie.
+  const [isCleared, setIsCleared] = useState(false);
+  // Reset isCleared quand le consommateur passe de nouvelles valeurs (réagit
+  // à onClear en remettant ses propres props).
+  const propKey = `${month ?? "u"}-${year ?? "u"}`;
+  const prevPropKey = useRef(propKey);
+  if (prevPropKey.current !== propKey) {
+    prevPropKey.current = propKey;
+    if (isCleared && (month !== undefined || year !== undefined)) {
+      setIsCleared(false);
+    }
+  }
+
+  const hasValue = month !== undefined && year !== undefined;
+  const showClear = isEditable && isClearable && !isDisabled && hasValue && !isCleared;
+
+  const handleClear = () => {
+    setIsCleared(true);
+    setMonthInput("");
+    setYearInput("");
+    onClear?.();
+  };
 
   const handleMonthInputFocus = () => {
     setMonthInput(String(resolvedMonth).padStart(2, "0"));
@@ -353,9 +388,14 @@ function SingleMonthPicker({
               value={
                 monthFocused
                   ? monthInput
-                  : String(resolvedMonth).padStart(2, "0")
+                  : isCleared
+                    ? ""
+                    : String(resolvedMonth).padStart(2, "0")
               }
-              onChange={(e) => setMonthInput(e.target.value)}
+              onChange={(e) => {
+                setMonthInput(e.target.value);
+                if (isCleared) setIsCleared(false);
+              }}
               onClick={() => !isDisabled && setIsOpen(true)}
               onFocus={handleMonthInputFocus}
               onBlur={handleMonthInputBlur}
@@ -372,8 +412,17 @@ function SingleMonthPicker({
               type="text"
               inputMode="numeric"
               className={styles.yearInput}
-              value={yearFocused ? yearInput : String(resolvedYear)}
-              onChange={(e) => setYearInput(e.target.value)}
+              value={
+                yearFocused
+                  ? yearInput
+                  : isCleared
+                    ? ""
+                    : String(resolvedYear)
+              }
+              onChange={(e) => {
+                setYearInput(e.target.value);
+                if (isCleared) setIsCleared(false);
+              }}
               onClick={() => !isDisabled && setIsOpen(true)}
               onFocus={handleYearInputFocus}
               onBlur={handleYearInputBlur}
@@ -381,6 +430,17 @@ function SingleMonthPicker({
               disabled={isDisabled}
               aria-label={`Année : ${resolvedYear}`}
             />
+
+            {showClear && (
+              <AriaButton
+                className={styles.clearButton}
+                aria-label="Effacer"
+                onPress={handleClear}
+                excludeFromTabOrder
+              >
+                <Icon icon="CloseSmallFaded" color="subtlest" />
+              </AriaButton>
+            )}
 
             <Button
               appearance="subtle"
@@ -468,6 +528,8 @@ function RangeMonthPicker({
   appearance = "default",
   isInvalid = false,
   isDisabled = false,
+  isClearable = true,
+  onClear,
   className,
   style,
   "aria-label": ariaLabel,
@@ -559,6 +621,35 @@ function RangeMonthPicker({
   const [endInput, setEndInput] = useState("");
   const [startFocused, setStartFocused] = useState(false);
   const [endFocused, setEndFocused] = useState(false);
+
+  // -- Clear state — vide les deux inputs jusqu'à nouvelle saisie. --
+  const [isCleared, setIsCleared] = useState(false);
+  const propKey = `${startMonth ?? "u"}-${startYear ?? "u"}-${endMonth ?? "u"}-${endYear ?? "u"}`;
+  const prevPropKey = useRef(propKey);
+  if (prevPropKey.current !== propKey) {
+    prevPropKey.current = propKey;
+    if (
+      isCleared &&
+      (startMonth !== undefined ||
+        startYear !== undefined ||
+        endMonth !== undefined ||
+        endYear !== undefined)
+    ) {
+      setIsCleared(false);
+    }
+  }
+
+  const hasValue =
+    (startMonth !== undefined && startYear !== undefined) ||
+    (endMonth !== undefined && endYear !== undefined);
+  const showClear = isEditable && isClearable && !isDisabled && hasValue && !isCleared;
+
+  const handleClear = () => {
+    setIsCleared(true);
+    setStartInput("");
+    setEndInput("");
+    onClear?.();
+  };
 
   const startLabel = formatMonthYear(
     resolvedStartMonth,
@@ -671,8 +762,17 @@ function RangeMonthPicker({
             <input
               type="text"
               className={styles.rangeInput}
-              value={startFocused ? startInput : startLabel}
-              onChange={(e) => setStartInput(e.target.value)}
+              value={
+                startFocused
+                  ? startInput
+                  : isCleared
+                    ? ""
+                    : startLabel
+              }
+              onChange={(e) => {
+                setStartInput(e.target.value);
+                if (isCleared) setIsCleared(false);
+              }}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleStartFocus}
               onBlur={handleStartBlur}
@@ -688,8 +788,17 @@ function RangeMonthPicker({
             <input
               type="text"
               className={styles.rangeInput}
-              value={endFocused ? endInput : endLabel}
-              onChange={(e) => setEndInput(e.target.value)}
+              value={
+                endFocused
+                  ? endInput
+                  : isCleared
+                    ? ""
+                    : endLabel
+              }
+              onChange={(e) => {
+                setEndInput(e.target.value);
+                if (isCleared) setIsCleared(false);
+              }}
               onClick={() => !isDisabled && setOpenPopover("range")}
               onFocus={handleEndFocus}
               onBlur={handleEndBlur}
@@ -697,6 +806,17 @@ function RangeMonthPicker({
               disabled={isDisabled}
               aria-label={`Mois de fin : ${endLabel}`}
             />
+
+            {showClear && (
+              <AriaButton
+                className={styles.clearButton}
+                aria-label="Effacer"
+                onPress={handleClear}
+                excludeFromTabOrder
+              >
+                <Icon icon="CloseSmallFaded" color="subtlest" />
+              </AriaButton>
+            )}
 
             <Button
               appearance="subtle"

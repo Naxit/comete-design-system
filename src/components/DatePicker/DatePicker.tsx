@@ -8,6 +8,7 @@ import {
   Group as AriaGroup,
   Dialog as AriaDialog,
   DialogTrigger,
+  Button as AriaButton,
   type DatePickerProps as AriaDatePickerProps,
   type DateValue,
   useLocale,
@@ -16,6 +17,7 @@ import { today, getLocalTimeZone } from "@internationalized/date";
 import type { CalendarDate } from "@internationalized/date";
 import { Button } from "../Button/Button.js";
 import { Calendar } from "../Calendar/Calendar.js";
+import { Icon } from "../Icon/Icon.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
 import { Popover } from "../Popover/Popover.js";
@@ -38,6 +40,13 @@ export interface DatePickerProps<T extends DateValue = DateValue>
    * @default true
    */
   isEditable?: boolean;
+  /**
+   * Affiche un bouton clear (×) en mode éditable quand une date est saisie.
+   * @default true
+   */
+  isClearable?: boolean;
+  /** Callback appelé quand l'utilisateur clique sur le bouton clear. */
+  onClear?: () => void;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -89,6 +98,8 @@ export function DatePicker<T extends DateValue = DateValue>({
   appearance = "default",
   isCompact = false,
   isEditable = true,
+  isClearable = true,
+  onClear,
   className,
   style,
   ...ariaProps
@@ -98,6 +109,8 @@ export function DatePicker<T extends DateValue = DateValue>({
       <EditableDatePicker
         appearance={appearance}
         isCompact={isCompact}
+        isClearable={isClearable}
+        onClear={onClear}
         className={className}
         style={style}
         {...ariaProps}
@@ -124,12 +137,16 @@ DatePicker.displayName = "DatePicker";
 function EditableDatePicker<T extends DateValue = DateValue>({
   appearance,
   isCompact,
+  isClearable,
+  onClear,
   className,
   style,
   ...ariaProps
 }: {
   appearance: DatePickerAppearance;
   isCompact: boolean;
+  isClearable: boolean;
+  onClear?: () => void;
   className?: string;
   style?: CSSProperties;
 } & Omit<AriaDatePickerProps<T>, "className" | "style" | "children">): ReactElement {
@@ -177,6 +194,17 @@ function EditableDatePicker<T extends DateValue = DateValue>({
   const openPopover = useCallback(() => {
     setIsOpen(true);
   }, []);
+
+  // Vide la valeur. Ne touche pas à l'état du popover (cf. exigence UX :
+  // le clic sur le bouton clear ne doit ni ouvrir ni fermer la popup).
+  const handleClear = useCallback(() => {
+    setCurrentValue(null);
+    const onChangeProp = ariaProps.onChange as
+      | ((value: DateValue | null) => void)
+      | undefined;
+    onChangeProp?.(null);
+    onClear?.();
+  }, [ariaProps.onChange, onClear]);
 
   // Clic sur le padding de l'InputContainer → ouvre le popover + focus premier segment
   const handleContainerClick = useCallback(() => {
@@ -256,6 +284,16 @@ function EditableDatePicker<T extends DateValue = DateValue>({
                   <AriaDateSegment className={styles.segment} segment={segment} />
                 )}
               </AriaDateInput>
+              {isClearable && currentValue !== null && !isDisabled && (
+                <AriaButton
+                  className={styles.clearButton}
+                  aria-label="Effacer"
+                  onPress={handleClear}
+                  excludeFromTabOrder
+                >
+                  <Icon icon="CloseSmallFaded" color="subtlest" />
+                </AriaButton>
+              )}
               <Button
                 appearance="subtle"
                 iconBefore="CalendarMonth"

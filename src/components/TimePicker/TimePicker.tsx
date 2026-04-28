@@ -8,6 +8,7 @@ import {
   DateSegment as AriaDateSegment,
   Dialog as AriaDialog,
   DialogTrigger,
+  Button as AriaButton,
   type TimeFieldProps as AriaTimeFieldProps,
   type TimeValue,
   useLocale,
@@ -15,6 +16,7 @@ import {
 import { Time } from "@internationalized/date";
 import { Button } from "../Button/Button.js";
 import { TimeDrumPicker } from "../Calendar/TimeDrumPicker.js";
+import { Icon } from "../Icon/Icon.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
 import { Popover } from "../Popover/Popover.js";
@@ -40,6 +42,13 @@ export interface TimePickerProps<T extends TimeValue = TimeValue>
    * @default true
    */
   isEditable?: boolean;
+  /**
+   * Affiche un bouton clear (×) en mode éditable quand une heure est saisie.
+   * @default true
+   */
+  isClearable?: boolean;
+  /** Callback appelé quand l'utilisateur clique sur le bouton clear. */
+  onClear?: () => void;
   /** Classe CSS additionnelle. */
   className?: string;
   /** Styles inline additionnels. */
@@ -97,6 +106,8 @@ export function TimePicker<T extends TimeValue = TimeValue>({
   isCompact = false,
   showSeconds = false,
   isEditable = true,
+  isClearable = true,
+  onClear,
   className,
   style,
   ...ariaProps
@@ -107,6 +118,8 @@ export function TimePicker<T extends TimeValue = TimeValue>({
         appearance={appearance}
         isCompact={isCompact}
         showSeconds={showSeconds}
+        isClearable={isClearable}
+        onClear={onClear}
         className={className}
         style={style}
         ariaProps={ariaProps}
@@ -148,6 +161,8 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
   appearance,
   isCompact,
   showSeconds,
+  isClearable,
+  onClear,
   className,
   style,
   ariaProps,
@@ -155,6 +170,8 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
   appearance: TimePickerAppearance;
   isCompact: boolean;
   showSeconds: boolean;
+  isClearable: boolean;
+  onClear?: () => void;
   className?: string;
   style?: CSSProperties;
   ariaProps: Omit<AriaTimeFieldProps<T>, "className" | "style" | "children" | "granularity">;
@@ -178,6 +195,16 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
   const openPopover = useCallback(() => {
     setIsOpen(true);
   }, []);
+
+  // Vide la valeur. Ne touche pas à l'état du popover.
+  const handleClear = useCallback(() => {
+    setCurrentValue(null);
+    const onChangeProp = ariaProps.onChange as
+      | ((value: TimeValue | null) => void)
+      | undefined;
+    onChangeProp?.(null);
+    onClear?.();
+  }, [ariaProps.onChange, onClear]);
 
   // Clic sur le padding de l'InputContainer → ouvre le popover + focus premier segment
   const handleContainerClick = useCallback(() => {
@@ -282,6 +309,17 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
                   <AriaDateSegment className={styles.segment} segment={segment} />
                 )}
               </AriaDateInput>
+
+              {isClearable && currentValue !== null && !isDisabled && (
+                <AriaButton
+                  className={styles.clearButton}
+                  aria-label="Effacer"
+                  onPress={handleClear}
+                  excludeFromTabOrder
+                >
+                  <Icon icon="CloseSmallFaded" color="subtlest" />
+                </AriaButton>
+              )}
 
               <Button
                 appearance="subtle"
