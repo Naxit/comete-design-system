@@ -467,7 +467,6 @@ function NavigationDatePicker<T extends DateValue = DateValue>({
           <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
             <Button
               appearance="subtle"
-              iconAfter="ArrowDropDown"
               className={styles.dateButton}
               isDisabled={isDisabled}
               aria-label={formattedDate}
