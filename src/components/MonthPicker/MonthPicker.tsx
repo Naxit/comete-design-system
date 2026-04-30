@@ -488,7 +488,6 @@ function SingleMonthPicker({
             <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
               <Button
                 appearance="subtle"
-                iconAfter="ArrowDropDown"
                 className={styles.monthButton}
                 isDisabled={isDisabled}
                 aria-label={`Mois : ${formattedLabel}`}

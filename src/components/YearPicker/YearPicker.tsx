@@ -334,7 +334,6 @@ function SingleYearPicker({
             <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
               <Button
                 appearance="subtle"
-                iconAfter="ArrowDropDown"
                 className={styles.yearButton}
                 isDisabled={isDisabled}
                 aria-label={`Année : ${resolvedYear}`}

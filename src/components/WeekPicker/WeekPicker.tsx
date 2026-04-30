@@ -526,7 +526,6 @@ function SingleWeekPicker({
             <DialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
               <Button
                 appearance="subtle"
-                iconAfter="ArrowDropDown"
                 className={styles.weekButton}
                 isDisabled={isDisabled}
                 aria-label={`Semaine : ${weekLabel}`}
