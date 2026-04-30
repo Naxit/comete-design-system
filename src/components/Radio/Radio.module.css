@@ -21,6 +21,9 @@
 .radio {
   display: flex;
   align-items: flex-start;
+  /* 2px = (28 − 24) / 2, débordement du halo 28×28 sur l'indicateur 24×24.
+     Halo plus petit que la Checkbox pour éviter de chevaucher le radio voisin
+     dans un RadioGroup empilé. */
   column-gap: var(--space025);
   color: var(--text-default);
   cursor: pointer;
@@ -43,14 +46,33 @@
    Le dot checked est `::after` en `currentColor`.
    ========================================================================== */
 
+/* L'indicateur garde la taille Figma (24×24) pour ne pas perturber
+   l'alignement avec le label. Un ::before absolu étend la zone de halo
+   visuel à 28×28 (style MUI ripple) sans modifier le layout. Halo
+   volontairement plus petit que la Checkbox pour ne pas empiéter sur le
+   radio voisin dans un RadioGroup empilé verticalement. */
 .indicator {
   flex-shrink: 0;
+  position: relative;
   width: var(--size300);
   height: var(--size300);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--background-neutral-bold-default);
+}
+
+.indicator::before {
+  content: "";
+  position: absolute;
+  /* (24 − 28) / 2 = −2 → halo 28×28 centré sur l'icône. */
+  inset: calc((var(--size300) - var(--size350)) / 2);
+  border-radius: var(--radius-round);
+  background-color: transparent;
+  transition-property: background-color;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--easing-default);
+  pointer-events: none;
 }
 
 .iconWrapper {
@@ -63,46 +85,21 @@
   border: var(--size025) solid currentColor;
   border-radius: var(--radius-round);
 }
+
+/* Dot intérieur — invisible par défaut (scale 0), apparaît quand sélectionné.
+   `currentColor` hérité du `.indicator` → suit la couleur d'état (information,
+   critical, disabled). */
 .icon {
-  width: var(--size150);
-  height: var(--size150);
-  /* border: var(--size025) solid currentColor;  */
-  border-radius: var(--radius-round);
-  background-color: red;
-}
-
-/* Ring — bordure ronde, épaisseur constante via border */
-.iconWrapper::before {
-  display: none;
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: var(--size175);
-  height: var(--size175);
-  border: var(--size025) solid currentColor;
-  border-radius: var(--radius-round);
-  background: transparent;
-  box-sizing: border-box;
-}
-
-/* Dot — visible uniquement quand sélectionné */
-.iconWrapper::after {
-  display: none;
-  content: "";
-  position: absolute;
-  inset: 0;
-  margin: auto;
   width: var(--size100);
   height: var(--size100);
   border-radius: var(--radius-round);
-  background: currentColor;
+  background-color: currentColor;
   transform: scale(0);
-  transition: transform 100ms ease;
+  transition: transform var(--duration-fast) var(--easing-default);
 }
 
 /* Selected — le dot apparaît */
-.radio[data-selected] .iconWrapper::after {
+.radio[data-selected] .icon {
   transform: scale(1);
 }
 
@@ -119,20 +116,32 @@
 .radio:not([data-disabled]):not([data-selected])[data-hovered] .indicator {
   color: var(--background-neutral-bold-hovered);
 }
+.radio:not([data-disabled]):not([data-selected])[data-hovered] .indicator::before {
+  background-color: var(--background-neutral-subtler-hovered);
+}
 
 /* Hover — selected */
 .radio[data-selected]:not([data-disabled])[data-hovered] .indicator {
   color: var(--background-information-bold-hovered);
+}
+.radio[data-selected]:not([data-disabled])[data-hovered] .indicator::before {
+  background-color: var(--background-information-subtlest-hovered);
 }
 
 /* Pressed — unselected */
 .radio:not([data-disabled]):not([data-selected])[data-pressed] .indicator {
   color: var(--background-neutral-bold-pressed);
 }
+.radio:not([data-disabled]):not([data-selected])[data-pressed] .indicator::before {
+  background-color: var(--background-neutral-subtler-pressed);
+}
 
 /* Pressed — selected */
 .radio[data-selected]:not([data-disabled])[data-pressed] .indicator {
   color: var(--background-information-bold-pressed);
+}
+.radio[data-selected]:not([data-disabled])[data-pressed] .indicator::before {
+  background-color: var(--background-information-subtlest-pressed);
 }
 
 /* ==========================================================================
@@ -146,9 +155,15 @@
 .radio[data-invalid]:not([data-disabled])[data-hovered] .indicator {
   color: var(--background-critical-bold-hovered);
 }
+.radio[data-invalid]:not([data-disabled])[data-hovered] .indicator::before {
+  background-color: var(--background-critical-subtlest-hovered);
+}
 
 .radio[data-invalid]:not([data-disabled])[data-pressed] .indicator {
   color: var(--background-critical-bold-pressed);
+}
+.radio[data-invalid]:not([data-disabled])[data-pressed] .indicator::before {
+  background-color: var(--background-critical-subtlest-pressed);
 }
 
 /* ==========================================================================
