@@ -13,6 +13,7 @@ import { Calendar } from "../Calendar/Calendar.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
 import { Popover } from "../Popover/Popover.js";
+import { useHoverIntent } from "../../hooks/useHoverIntent.js";
 import styles from "./YearPicker.module.css";
 
 // -----------------------------------------------------------------------
@@ -201,14 +202,17 @@ function SingleYearPicker({
 
   const [inputValue, setInputValue] = useState("");
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const { isHovered, isHoverSuppressed, onMouseEnter, onMouseLeave, suppress } =
+    useHoverIntent();
 
   const hasValue = year !== undefined;
   const showClear =
-    isClearable && hasValue && !isDisabled && isInputFocused;
+    isClearable && hasValue && !isDisabled && (isInputFocused || isHovered);
   const handleClear = () => {
     setInputValue("");
     onChange?.(undefined);
     onClear?.();
+    suppress();
     requestAnimationFrame(() => {
       const input = containerRef.current?.querySelector<HTMLInputElement>("input");
       input?.focus();
@@ -249,6 +253,9 @@ function SingleYearPicker({
       data-disabled={isDisabled || undefined}
       data-invalid={isInvalid || undefined}
       style={style}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      data-suppress-hover={isHoverSuppressed || undefined}
     >
       <InputContainer isBorderless={!isEditable}
         appearance={appearance}
@@ -287,6 +294,9 @@ function SingleYearPicker({
             />
             {showClear ? (
               <Button
+                // REASON: key distincte → unmount/mount propre au swap.
+                // Sans key, React reuse l'instance et préserve l'état hover.
+                key="clear"
                 appearance="subtle"
                 iconBefore="CloseSmallFaded"
                 className={styles.calendarButton}
@@ -300,12 +310,15 @@ function SingleYearPicker({
               />
             ) : (
               <Button
+                key="calendar"
                 appearance="subtle"
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
                 onPress={() => !isDisabled && setIsOpen((o) => !o)}
                 aria-label="Ouvrir le sélecteur d'années"
+                // REASON: cf. DatePicker — neutralise le hover involontaire.
+                style={isHoverSuppressed ? { backgroundColor: "transparent" } : undefined}
               />
             )}
             {isOpen && (
@@ -469,15 +482,19 @@ function RangeYearPicker({
   const [endInput, setEndInput] = useState("");
   const [startFocused, setStartFocused] = useState(false);
   const [endFocused, setEndFocused] = useState(false);
+  const { isHovered, isHoverSuppressed, onMouseEnter, onMouseLeave, suppress } =
+    useHoverIntent();
 
   const isFocused = startFocused || endFocused;
   const hasValue = startYear !== undefined || endYear !== undefined;
-  const showClear = isClearable && hasValue && !isDisabled && isFocused;
+  const showClear =
+    isClearable && hasValue && !isDisabled && (isFocused || isHovered);
   const handleClear = () => {
     setStartInput("");
     setEndInput("");
     onChange?.(undefined, undefined);
     onClear?.();
+    suppress();
     requestAnimationFrame(() => {
       const input = containerRef.current?.querySelector<HTMLInputElement>("input");
       input?.focus();
@@ -570,6 +587,9 @@ function RangeYearPicker({
       data-disabled={isDisabled || undefined}
       data-invalid={effectiveInvalid || undefined}
       style={style}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      data-suppress-hover={isHoverSuppressed || undefined}
     >
       <InputContainer isBorderless={!isEditable}
         appearance={appearance}
@@ -635,6 +655,7 @@ function RangeYearPicker({
 
             {showClear ? (
               <Button
+                key="clear"
                 appearance="subtle"
                 iconBefore="CloseSmallFaded"
                 className={styles.calendarButton}
@@ -648,6 +669,7 @@ function RangeYearPicker({
               />
             ) : (
               <Button
+                key="calendar"
                 appearance="subtle"
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
@@ -657,6 +679,7 @@ function RangeYearPicker({
                   setOpenPopover((o) => (o === "range" ? null : "range"))
                 }
                 aria-label="Ouvrir le sélecteur d'années"
+                style={isHoverSuppressed ? { backgroundColor: "transparent" } : undefined}
               />
             )}
             {openPopover === "range" && (

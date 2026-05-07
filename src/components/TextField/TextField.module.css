@@ -57,14 +57,25 @@
 }
 
 /* ==========================================================================
-   Clear button
+   Clear button — affichage intelligent
+   - Position absolute : ne prend AUCUN slot dans la mise en page (la largeur
+     du champ est strictement identique avec ou sans `isClearable`)
+   - Aligné sur le bord droit interne via `--container-padding-end` exposée
+     par InputContainer (s'adapte aux variantes bordered / compact)
+   - Invisible par défaut (visibility: hidden), visible au hover OU focus-within
+   - Si un `elemAfter` est fourni, il est masqué quand le clear apparaît
+     (l'un OU l'autre, jamais les deux)
    ========================================================================== */
 
 .clearButton {
+  position: absolute;
+  top: 50%;
+  right: var(--container-padding-end, 0);
+  transform: translateY(-50%);
   display: flex;
+  visibility: hidden;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
   width: var(--size300);
   height: var(--size300);
   padding: 0;
@@ -74,6 +85,27 @@
   color: var(--icon-default);
   cursor: pointer;
   outline: none;
+}
+
+/* Apparaît au hover ou focus-within du TextField (le bouton est rendu côté
+   TSX uniquement quand `isClearable && hasValue && !isDisabled`). */
+.textField:hover .clearButton,
+.textField:focus-within .clearButton {
+  visibility: visible;
+}
+
+/* Masque `elemAfter` quand le clear est visible — un seul affichage à la fois
+   au bord droit. visibility (et non display) pour ne pas modifier la largeur. */
+.textField:hover .clearButton ~ .elemAfter,
+.textField:focus-within .clearButton ~ .elemAfter {
+  visibility: hidden;
+}
+
+/* Réserve une marge intérieure à droite quand le clear est rendu, pour que
+   le texte saisi ne passe jamais sous le bouton (largeur extérieure du champ
+   inchangée — c'est uniquement l'aire visible du texte qui se réduit). */
+.textField:has(.clearButton) .input {
+  padding-right: var(--size300);
 }
 
 .clearButton[data-hovered] {

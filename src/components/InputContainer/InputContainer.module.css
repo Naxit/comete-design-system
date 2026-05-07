@@ -17,6 +17,9 @@
   font-size: var(--font-size-ui-xs);
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
+  /* Padding interne exposé en variable pour que les enfants en position absolue
+     (ex : clearButton overlay du TextField) puissent s'aligner sur le contenu. */
+  --container-padding-end: 0;
 }
 
 /* ==========================================================================
@@ -28,6 +31,7 @@
   border: 2px solid var(--border-default);
   border-radius: var(--radius050);
   padding: var(--space100);
+  --container-padding-end: var(--space100);
 }
 
 .bordered:not(:focus-within):not(.disabled):hover {
@@ -85,4 +89,5 @@
 
 .compact.bordered {
   padding: var(--space050);
+  --container-padding-end: var(--space050);
 }
