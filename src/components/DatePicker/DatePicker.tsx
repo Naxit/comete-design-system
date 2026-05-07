@@ -23,6 +23,7 @@ import { Calendar } from "../Calendar/Calendar.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
 import { Popover } from "../Popover/Popover.js";
+import { useHoverIntent } from "../../hooks/useHoverIntent.js";
 import styles from "./DatePicker.module.css";
 
 // -----------------------------------------------------------------------
@@ -190,6 +191,10 @@ function EditableDatePicker<T extends DateValue = DateValue>({
   const containerRef = useRef<HTMLDivElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  // Hover avec délai d'intention (150 ms) — évite un clear accidentel quand
+  // la souris ne fait que traverser le champ pour atteindre le calendrier.
+  const { isHovered, isHoverSuppressed, onMouseEnter, onMouseLeave, suppress } =
+    useHoverIntent();
 
   // Traque la valeur courante pour synchroniser le calendrier
   const [currentValue, setCurrentValue] = useState<DateValue | null>(
@@ -240,13 +245,16 @@ function EditableDatePicker<T extends DateValue = DateValue>({
       | undefined;
     onChangeProp?.(null);
     onClear?.();
+    // Neutralise visuellement le hover du bouton calendrier qui apparaît sous
+    // le curseur après le swap. Reset au prochain mouseLeave du picker.
+    suppress();
     requestAnimationFrame(() => {
       const segment = containerRef.current?.querySelector<HTMLElement>(
         "[data-type]:not([data-type='literal'])",
       );
       segment?.focus();
     });
-  }, [ariaProps.onChange, onClear]);
+  }, [ariaProps.onChange, onClear, suppress]);
 
   // Clic sur le padding de l'InputContainer → ouvre le popover + focus premier segment
   const handleContainerClick = useCallback(() => {
@@ -319,9 +327,14 @@ function EditableDatePicker<T extends DateValue = DateValue>({
     >
       {({ isDisabled, isInvalid, isFocusWithin }) => {
         const showClear =
-          isClearable && currentValue !== null && !isDisabled && isFocusWithin;
+          isClearable && currentValue !== null && !isDisabled && (isFocusWithin || isHovered);
         return (
-        <div ref={containerRef}>
+        <div
+          ref={containerRef}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          data-suppress-hover={isHoverSuppressed || undefined}
+        >
           <AriaGroup>
             <InputContainer
               appearance={appearance}
@@ -337,6 +350,11 @@ function EditableDatePicker<T extends DateValue = DateValue>({
               </AriaDateInput>
               {showClear ? (
                 <Button
+                  // REASON: key distincte → unmount/mount propre au swap.
+                  // Sans key, React reuse l'instance Button et préserve l'état
+                  // interne de useHover (data-hovered) → le bouton calendrier
+                  // qui apparaît après un clear hérite du hover du bouton X.
+                  key="clear"
                   appearance="subtle"
                   iconBefore="CloseSmallFaded"
                   className={styles.calendarButton}
@@ -350,12 +368,19 @@ function EditableDatePicker<T extends DateValue = DateValue>({
                 />
               ) : (
                 <Button
+                  key="calendar"
                   appearance="subtle"
                   iconBefore="CalendarMonth"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
                   aria-label="Ouvrir le calendrier"
                   onPress={isDisabled ? undefined : openPopover}
+                  // REASON: après un clear, le navigateur fire pointerover
+                  // sur le bouton calendrier qui apparaît sous le curseur
+                  // (cible du pointeur changée), ce qui pose data-hovered=true.
+                  // Style inline (gagne sur tout sélecteur CSS sans !important)
+                  // jusqu'au prochain mouseLeave du picker.
+                  style={isHoverSuppressed ? { backgroundColor: "transparent" } : undefined}
                 />
               )}
             </InputContainer>
@@ -526,6 +551,8 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
   const containerRef = useRef<HTMLDivElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const { isHovered, isHoverSuppressed, onMouseEnter, onMouseLeave, suppress } =
+    useHoverIntent();
 
   const [currentValue, setCurrentValue] = useState<RangeValue<DateValue> | null>(
     () => (ariaProps.value ?? ariaProps.defaultValue ?? null) as RangeValue<DateValue> | null,
@@ -572,13 +599,14 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
       | undefined;
     onChangeProp?.(null);
     onClear?.();
+    suppress();
     requestAnimationFrame(() => {
       const segment = containerRef.current?.querySelector<HTMLElement>(
         "[data-type]:not([data-type='literal'])",
       );
       segment?.focus();
     });
-  }, [ariaProps.onChange, onClear]);
+  }, [ariaProps.onChange, onClear, suppress]);
 
   // Clic sur le padding de l'InputContainer → ouvre le popover + focus premier segment
   const handleContainerClick = useCallback(() => {
@@ -644,9 +672,14 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
     >
       {({ isDisabled, isInvalid, isFocusWithin }) => {
         const showClear =
-          isClearable && currentValue !== null && !isDisabled && isFocusWithin;
+          isClearable && currentValue !== null && !isDisabled && (isFocusWithin || isHovered);
         return (
-        <div ref={containerRef}>
+        <div
+          ref={containerRef}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          data-suppress-hover={isHoverSuppressed || undefined}
+        >
           <AriaGroup>
             <InputContainer
               appearance={appearance}
@@ -670,6 +703,7 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
               </AriaDateInput>
               {showClear ? (
                 <Button
+                  key="clear"
                   appearance="subtle"
                   iconBefore="CloseSmallFaded"
                   className={styles.calendarButton}
@@ -679,12 +713,19 @@ function EditableDateRangePicker<T extends DateValue = DateValue>({
                 />
               ) : (
                 <Button
+                  key="calendar"
                   appearance="subtle"
                   iconBefore="CalendarMonth"
                   className={styles.calendarButton}
                   isDisabled={isDisabled}
                   aria-label="Ouvrir le calendrier"
                   onPress={isDisabled ? undefined : openPopover}
+                  // REASON: après un clear, le navigateur fire pointerover
+                  // sur le bouton calendrier qui apparaît sous le curseur
+                  // (cible du pointeur changée), ce qui pose data-hovered=true.
+                  // Style inline (gagne sur tout sélecteur CSS sans !important)
+                  // jusqu'au prochain mouseLeave du picker.
+                  style={isHoverSuppressed ? { backgroundColor: "transparent" } : undefined}
                 />
               )}
             </InputContainer>

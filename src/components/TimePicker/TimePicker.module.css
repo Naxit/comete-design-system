@@ -93,6 +93,16 @@
   flex-shrink: 0;
 }
 
+/* Après un clear, le bouton horloge remplace le bouton X sous le curseur.
+   Le navigateur fire `pointerover` sur le nouvel élément, ce qui pose
+   `data-hovered`. Le picker pose `data-suppress-hover` jusqu'au prochain
+   mouseLeave pour neutraliser visuellement le hover du bouton horloge.
+   NOTE spécificité : chaînage triple pour battre le hover du Button (0,4,0)
+   sans recourir à `!important`. */
+[data-suppress-hover] .clockButton.clockButton.clockButton[data-hovered] {
+  background-color: transparent;
+}
+
 /* ==========================================================================
    Dialog — reset outline
    ========================================================================== */

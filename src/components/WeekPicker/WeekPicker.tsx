@@ -18,6 +18,7 @@ import { Calendar } from "../Calendar/Calendar.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
 import { Popover } from "../Popover/Popover.js";
+import { useHoverIntent } from "../../hooks/useHoverIntent.js";
 import styles from "./WeekPicker.module.css";
 
 // -----------------------------------------------------------------------
@@ -394,6 +395,8 @@ function SingleWeekPicker({
   // -- État local pour le champ de saisie --
   const [inputValue, setInputValue] = useState(displayLabel);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const { isHovered, isHoverSuppressed, onMouseEnter, onMouseLeave, suppress } =
+    useHoverIntent();
   // Synchroniser l'input quand la valeur contrôlée change
   const prevLabelRef = useRef(displayLabel);
   if (prevLabelRef.current !== displayLabel) {
@@ -402,11 +405,12 @@ function SingleWeekPicker({
   }
 
   const showClear =
-    isClearable && hasValue && !isDisabled && isInputFocused;
+    isClearable && hasValue && !isDisabled && (isInputFocused || isHovered);
   const handleClear = () => {
     setInputValue("");
     onChange?.(undefined, undefined);
     onClear?.();
+    suppress();
     requestAnimationFrame(() => {
       const input = containerRef.current?.querySelector<HTMLInputElement>("input");
       input?.focus();
@@ -440,6 +444,9 @@ function SingleWeekPicker({
       aria-label={ariaLabel ?? `Sélecteur de semaine : ${weekLabel}`}
       data-invalid={isInvalid || undefined}
       style={style}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      data-suppress-hover={isHoverSuppressed || undefined}
     >
       <InputContainer isBorderless={!isEditable}
         appearance={appearance}
@@ -479,6 +486,9 @@ function SingleWeekPicker({
 
             {showClear ? (
               <Button
+                // REASON: key distincte → unmount/mount propre au swap.
+                // Sans key, React reuse l'instance et préserve l'état hover.
+                key="clear"
                 appearance="subtle"
                 iconBefore="CloseSmallFaded"
                 className={styles.calendarButton}
@@ -492,12 +502,15 @@ function SingleWeekPicker({
               />
             ) : (
               <Button
+                key="calendar"
                 appearance="subtle"
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
                 isDisabled={isDisabled}
                 onPress={() => !isDisabled && setIsOpen((o) => !o)}
                 aria-label="Ouvrir le sélecteur de semaine"
+                // REASON: cf. DatePicker — neutralise le hover involontaire.
+                style={isHoverSuppressed ? { backgroundColor: "transparent" } : undefined}
               />
             )}
             {isOpen && (
@@ -701,6 +714,8 @@ function RangeWeekPicker({
   const [endInput, setEndInput] = useState(endDisplay);
   const [startFocused, setStartFocused] = useState(false);
   const [endFocused, setEndFocused] = useState(false);
+  const { isHovered, isHoverSuppressed, onMouseEnter, onMouseLeave, suppress } =
+    useHoverIntent();
 
   // Synchroniser l'input quand la valeur contrôlée change
   const prevStartRef = useRef(startDisplay);
@@ -716,12 +731,14 @@ function RangeWeekPicker({
 
   const isFocused = startFocused || endFocused;
   const hasValue = startHasValue || endHasValue;
-  const showClear = isClearable && hasValue && !isDisabled && isFocused;
+  const showClear =
+    isClearable && hasValue && !isDisabled && (isFocused || isHovered);
   const handleClear = () => {
     setStartInput("");
     setEndInput("");
     onChange?.(undefined, undefined, undefined, undefined);
     onClear?.();
+    suppress();
     requestAnimationFrame(() => {
       const input = containerRef.current?.querySelector<HTMLInputElement>("input");
       input?.focus();
@@ -804,6 +821,9 @@ function RangeWeekPicker({
       data-disabled={isDisabled || undefined}
       data-invalid={effectiveInvalid || undefined}
       style={style}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      data-suppress-hover={isHoverSuppressed || undefined}
     >
       <InputContainer isBorderless={!isEditable}
         appearance={appearance}
@@ -861,6 +881,7 @@ function RangeWeekPicker({
 
             {showClear ? (
               <Button
+                key="clear"
                 appearance="subtle"
                 iconBefore="CloseSmallFaded"
                 className={styles.calendarButton}
@@ -874,6 +895,7 @@ function RangeWeekPicker({
               />
             ) : (
               <Button
+                key="calendar"
                 appearance="subtle"
                 iconBefore="CalendarMonth"
                 className={styles.calendarButton}
@@ -883,6 +905,7 @@ function RangeWeekPicker({
                   setOpenPopover((o) => (o === "range" ? null : "range"))
                 }
                 aria-label="Ouvrir le sélecteur de semaine"
+                style={isHoverSuppressed ? { backgroundColor: "transparent" } : undefined}
               />
             )}
             {openPopover === "range" && (

@@ -17,6 +17,7 @@ import { TimeDrumPicker } from "../Calendar/TimeDrumPicker.js";
 import { InputContainer } from "../InputContainer/InputContainer.js";
 import type { InputContainerAppearance } from "../InputContainer/InputContainer.js";
 import { Popover } from "../Popover/Popover.js";
+import { useHoverIntent } from "../../hooks/useHoverIntent.js";
 import styles from "./TimePicker.module.css";
 
 // -----------------------------------------------------------------------
@@ -173,6 +174,8 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
   const popoverRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const { isHovered, isHoverSuppressed, onMouseEnter, onMouseLeave, suppress } =
+    useHoverIntent();
 
   // Traque la valeur courante pour la synchroniser avec le drum picker
   const [currentValue, setCurrentValue] = useState<TimeValue | null>(
@@ -199,13 +202,14 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
       | undefined;
     onChangeProp?.(null);
     onClear?.();
+    suppress();
     requestAnimationFrame(() => {
       const segment = containerRef.current?.querySelector<HTMLElement>(
         "[data-type]:not([data-type='literal'])",
       );
       segment?.focus();
     });
-  }, [ariaProps.onChange, onClear]);
+  }, [ariaProps.onChange, onClear, suppress]);
 
   // Clic sur le padding de l'InputContainer → ouvre le popover + focus premier segment
   const handleContainerClick = useCallback(() => {
@@ -317,9 +321,16 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
       onChange={handleFieldChange}
     >
       {({ isDisabled, isInvalid }) => {
-        const showClear = isClearable && !isDisabled && isFocused;
+        const hasValue = currentValue !== null;
+        const showClear =
+          isClearable && hasValue && !isDisabled && (isFocused || isHovered);
         return (
-        <div ref={containerRef}>
+        <div
+          ref={containerRef}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
+          data-suppress-hover={isHoverSuppressed || undefined}
+        >
           <InputContainer
             appearance={appearance}
             isCompact={isCompact}
@@ -353,6 +364,11 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
 
               {showClear ? (
                 <Button
+                  // REASON: key distincte → unmount/mount propre au swap.
+                  // Sans key, React reuse l'instance et préserve l'état hover
+                  // de useHover (data-hovered) — le bouton horloge qui apparaît
+                  // après un clear hériterait du hover du bouton X.
+                  key="clear"
                   appearance="subtle"
                   iconBefore="CloseSmallFaded"
                   className={styles.clockButton}
@@ -366,12 +382,16 @@ function EditableTimePicker<T extends TimeValue = TimeValue>({
                 />
               ) : (
                 <Button
+                  key="clock"
                   appearance="subtle"
                   iconBefore="Schedule"
                   className={styles.clockButton}
                   isDisabled={isDisabled}
                   aria-label="Ouvrir le sélecteur d'heure"
                   onPress={isDisabled ? undefined : openPopover}
+                  // REASON: cf. DatePicker — neutralise visuellement le hover
+                  // du bouton horloge qui apparaît sous le curseur après clear.
+                  style={isHoverSuppressed ? { backgroundColor: "transparent" } : undefined}
                 />
               )}
             </div>

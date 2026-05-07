@@ -106,6 +106,16 @@
   flex-shrink: 0;
 }
 
+/* Après un clear, le bouton calendrier remplace le bouton X sous le curseur.
+   Le navigateur fire `pointerover` sur le nouvel élément, ce qui pose
+   `data-hovered`. Le picker pose `data-suppress-hover` jusqu'au prochain
+   mouseLeave pour neutraliser visuellement ce hover involontaire.
+   NOTE spécificité : chaînage triple pour battre le hover du Button (0,4,0)
+   sans recourir à `!important`. */
+[data-suppress-hover] .calendarButton.calendarButton.calendarButton[data-hovered] {
+  background-color: transparent;
+}
+
 /* ==========================================================================
    Invalid state — texte en critical pour signaler l'erreur
    (utile surtout en mode navigation où la bordure est masquée).
