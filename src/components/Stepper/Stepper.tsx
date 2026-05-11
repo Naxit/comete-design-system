@@ -222,7 +222,10 @@ export function Step({
     status === "completed" ? (
       <Icon icon="Check" size={16} color="inverted" appearance="filled" />
     ) : status === "error" ? (
-      <Icon icon="CloseSmallFaded" size={16} color="inverted" appearance="filled" />
+      // Convention DS : `Warning` pour signaler un état critique
+      // (cf. Banner, IconTile). `CloseSmallFaded` est réservé aux actions
+      // « effacer » (TextField, Select, Tag).
+      <Icon icon="Warning" size={16} color="inverted" appearance="filled" />
     ) : (
       <span className={styles.indicatorNumber}>{index + 1}</span>
     );
