@@ -1,0 +1,302 @@
+// Stepper — Comète Design System
+// Étapes numérotées avec états (upcoming / active / completed / error).
+// - Orientation horizontale ou verticale (`orientation`).
+// - Mode linear (séquentiel, lecture seule) ou non-linear (steps cliquables).
+// - Status auto-calculé selon position vs `activeStep` ; `isError` est un
+//   override explicite par étape.
+import {
+  Children,
+  cloneElement,
+  createContext,
+  isValidElement,
+  useContext,
+  useMemo,
+  type CSSProperties,
+  type ReactElement,
+  type ReactNode,
+} from "react";
+import { Icon } from "../Icon/index.js";
+import { FocusRing } from "../FocusRing/index.js";
+import styles from "./Stepper.module.css";
+
+// -----------------------------------------------------------------------
+// Types publics
+
+/** Orientation du Stepper. */
+export type StepperOrientation = "horizontal" | "vertical";
+
+/** Statut visuel d'une étape. */
+export type StepStatus = "upcoming" | "active" | "completed" | "error";
+
+export interface StepperProps {
+  /** Index (0-based) de l'étape active. */
+  activeStep: number;
+  /** Orientation du layout. @default "horizontal" */
+  orientation?: StepperOrientation;
+  /**
+   * Mode linear : les étapes ne sont pas cliquables, la progression est
+   * portée par `activeStep`. Mode non-linear : chaque étape est un bouton
+   * cliquable qui appelle `onStepChange`. @default true
+   */
+  isLinear?: boolean;
+  /**
+   * Callback appelé quand l'utilisateur clique sur une étape.
+   * Uniquement utilisé en mode non-linear.
+   */
+  onStepChange?: (step: number) => void;
+  /** Children : composants `<Step>`. */
+  children: ReactNode;
+  /** Classe CSS additionnelle. */
+  className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
+  /** Label accessible du Stepper (sur l'élément `<ol>`). */
+  "aria-label"?: string;
+}
+
+export interface StepProps {
+  /** Label visible de l'étape. */
+  label: string;
+  /**
+   * Force l'état d'erreur sur cette étape (override du status calculé
+   * depuis `activeStep`).
+   * @default false
+   */
+  isError?: boolean;
+  /**
+   * Désactive l'étape : non cliquable en mode non-linear, opacité réduite.
+   * @default false
+   */
+  isDisabled?: boolean;
+  /** Classe CSS additionnelle. */
+  className?: string;
+  /** Styles inline additionnels. */
+  style?: CSSProperties;
+}
+
+// -----------------------------------------------------------------------
+// Context interne — partage activeStep / isLinear / orientation à chaque Step.
+
+interface StepperContextValue {
+  activeStep: number;
+  isLinear: boolean;
+  orientation: StepperOrientation;
+  count: number;
+  onStepChange?: (step: number) => void;
+}
+
+const StepperContext = createContext<StepperContextValue | null>(null);
+
+function useStepperContext(): StepperContextValue {
+  const ctx = useContext(StepperContext);
+  if (!ctx) {
+    throw new Error("<Step> doit être utilisé à l'intérieur de <Stepper>.");
+  }
+  return ctx;
+}
+
+// -----------------------------------------------------------------------
+// Stepper — container
+
+/**
+ * Stepper — Comète Design System
+ *
+ * Affiche une progression en étapes numérotées. Inspiré du
+ * [Material UI Stepper](https://mui.com/material-ui/react-stepper/).
+ *
+ * ```tsx
+ * // Mode linear (par défaut)
+ * <Stepper activeStep={1}>
+ *   <Step label="Compte" />
+ *   <Step label="Adresse" />
+ *   <Step label="Paiement" />
+ * </Stepper>
+ *
+ * // Mode non-linear avec étape en erreur
+ * const [step, setStep] = useState(0);
+ * <Stepper activeStep={step} isLinear={false} onStepChange={setStep}>
+ *   <Step label="Compte" />
+ *   <Step label="Adresse" isError />
+ *   <Step label="Paiement" />
+ * </Stepper>
+ *
+ * // Orientation verticale
+ * <Stepper activeStep={1} orientation="vertical">
+ *   <Step label="Compte" />
+ *   <Step label="Adresse" />
+ *   <Step label="Paiement" />
+ * </Stepper>
+ * ```
+ */
+export function Stepper({
+  activeStep,
+  orientation = "horizontal",
+  isLinear = true,
+  onStepChange,
+  children,
+  className,
+  style,
+  "aria-label": ariaLabel,
+}: StepperProps): ReactElement {
+  // Comptage des Step valides pour pouvoir injecter `__index` et savoir le `last`.
+  const items = Children.toArray(children).filter(isValidElement);
+  const count = items.length;
+
+  const ctx = useMemo<StepperContextValue>(
+    () => ({ activeStep, isLinear, orientation, count, onStepChange }),
+    [activeStep, isLinear, orientation, count, onStepChange],
+  );
+
+  return (
+    <StepperContext.Provider value={ctx}>
+      <ol
+        className={[styles.stepper, className].filter(Boolean).join(" ")}
+        style={style}
+        data-orientation={orientation}
+        aria-label={ariaLabel ?? "Progression"}
+      >
+        {items.map((child, index) =>
+          // REASON : on injecte __index pour que chaque Step connaisse sa
+          // position. Le clone évite à l'utilisateur d'avoir à passer manuellement
+          // index ; le type est masqué par le cast `as ReactElement<StepInternal>`.
+          cloneElement(child as ReactElement<StepInternalProps>, {
+            __index: index,
+            key: index,
+          }),
+        )}
+      </ol>
+    </StepperContext.Provider>
+  );
+}
+
+Stepper.displayName = "Stepper";
+
+// -----------------------------------------------------------------------
+// Step — étape individuelle
+
+/** Props internes (injectées par Stepper) — pas dans l'API publique. */
+interface StepInternalProps extends StepProps {
+  /** @internal Index injecté par Stepper via cloneElement. */
+  __index?: number;
+}
+
+/**
+ * Step — étape d'un Stepper.
+ *
+ * Le status visuel est calculé automatiquement depuis la position vs
+ * `activeStep` du `<Stepper>` parent :
+ * - index < activeStep → `completed`
+ * - index === activeStep → `active`
+ * - index > activeStep → `upcoming`
+ * - `isError={true}` → `error` (override prioritaire)
+ */
+export function Step({
+  label,
+  isError = false,
+  isDisabled = false,
+  className,
+  style,
+  __index,
+}: StepInternalProps): ReactElement {
+  const { activeStep, isLinear, orientation, count, onStepChange } =
+    useStepperContext();
+
+  const index = __index ?? 0;
+  const isLast = index === count - 1;
+
+  // Status calculé : isError prend la priorité.
+  const status: StepStatus = isError
+    ? "error"
+    : index < activeStep
+      ? "completed"
+      : index === activeStep
+        ? "active"
+        : "upcoming";
+
+  // Couleur du connecteur APRÈS cette étape — coloré (brand) uniquement si la
+  // step est `completed`. Les autres statuts (incl. erreur) laissent gris.
+  const connectorStatus: "completed" | "default" =
+    status === "completed" ? "completed" : "default";
+
+  const indicatorContent =
+    status === "completed" ? (
+      <Icon icon="Check" size={16} color="inverted" appearance="filled" />
+    ) : status === "error" ? (
+      <Icon icon="CloseSmallFaded" size={16} color="inverted" appearance="filled" />
+    ) : (
+      <span className={styles.indicatorNumber}>{index + 1}</span>
+    );
+
+  // En non-linear, on rend toujours un <button> (même désactivé) pour conserver
+  // la sémantique. L'attribut `disabled` empêche le déclenchement de onClick.
+  const isInteractive = !isLinear && onStepChange !== undefined;
+
+  // Contenu commun (indicateur + label).
+  const inner = (
+    <>
+      <span
+        className={styles.indicator}
+        data-status={status}
+        data-disabled={isDisabled || undefined}
+        aria-hidden="true"
+      >
+        {indicatorContent}
+      </span>
+      <span
+        className={styles.label}
+        data-status={status}
+        data-disabled={isDisabled || undefined}
+      >
+        {label}
+      </span>
+      {isInteractive && !isDisabled && (
+        <FocusRing borderRadius={4} position="outside" />
+      )}
+    </>
+  );
+
+  // Wrapper : button (linéaire désactivé OU cliquable) en non-linear, div statique en linear.
+  const innerEl = isInteractive ? (
+    <button
+      type="button"
+      className={styles.stepContent}
+      onClick={() => onStepChange?.(index)}
+      disabled={isDisabled}
+      aria-current={status === "active" ? "step" : undefined}
+      aria-label={label}
+    >
+      {inner}
+    </button>
+  ) : (
+    <div
+      className={styles.stepContent}
+      data-disabled={isDisabled || undefined}
+      aria-current={status === "active" ? "step" : undefined}
+    >
+      {inner}
+    </div>
+  );
+
+  return (
+    <li
+      className={[styles.stepItem, className].filter(Boolean).join(" ")}
+      style={style}
+      data-status={status}
+      data-orientation={orientation}
+      data-last={isLast || undefined}
+    >
+      {innerEl}
+      {/* Connecteur après l'étape — caché sur la dernière */}
+      {!isLast && (
+        <span
+          className={styles.connector}
+          data-orientation={orientation}
+          data-status={connectorStatus}
+          aria-hidden="true"
+        />
+      )}
+    </li>
+  );
+}
+
+Step.displayName = "Step";
