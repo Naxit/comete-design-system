@@ -2,6 +2,16 @@
    Stepper — Comète Design System
    Étapes numérotées avec états visuels par status.
    Toutes les valeurs proviennent de @naxit/comete-design-tokens.
+
+   Layout horizontal (style Material UI) :
+   ─ indicateur centré dans chaque cellule
+   ─ label centré dessous
+   ─ connecteur horizontal entre indicateurs voisins, à la hauteur du centre
+     de l'indicateur (positionné en absolute)
+
+   Layout vertical :
+   ─ indicateur à gauche, label à droite (inline)
+   ─ connecteur vertical sous l'indicateur, aligné avec son centre horizontal
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -33,22 +43,23 @@
 .stepItem {
   display: flex;
   position: relative;
-  /* Si le conteneur de focus-ring est à l'intérieur, on évite le clipping. */
   overflow: visible;
 }
 
+/* Horizontal : chaque step occupe une part égale ; indicateur centré au-dessus
+   du label centré. */
 .stepItem[data-orientation="horizontal"] {
   flex: 1 1 0;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   min-width: 0;
 }
 
-/* La dernière étape n'a pas de connecteur et ne doit pas flex-grow inutilement. */
 .stepItem[data-orientation="horizontal"][data-last] {
   flex: 0 0 auto;
 }
 
+/* Vertical : step item en column (stepContent + connecteur dessous) */
 .stepItem[data-orientation="vertical"] {
   flex-direction: column;
   align-items: stretch;
@@ -56,8 +67,8 @@
 
 /* --------------------------------------------------------------------------
    StepContent — wrapper indicator + label
-   En non-linear : c'est un <button> cliquable.
-   En linear : c'est un <div> statique.
+   En non-linear : <button> cliquable. En linear : <div> statique.
+   Layout interne dépend de l'orientation du Stepper parent.
    -------------------------------------------------------------------------- */
 
 .stepContent {
@@ -71,9 +82,22 @@
   background: transparent;
   font: inherit;
   color: inherit;
-  text-align: left;
+  text-align: inherit;
   cursor: default;
   outline: none;
+  /* z-index pour s'assurer que l'indicateur passe au-dessus des connecteurs
+     positionnés en absolute. */
+  z-index: 1;
+}
+
+/* Horizontal : indicateur au-dessus, label en dessous (centré) */
+.stepItem[data-orientation="horizontal"] .stepContent {
+  flex-direction: column;
+}
+
+/* Vertical : indicateur à gauche, label à droite (inline) */
+.stepItem[data-orientation="vertical"] .stepContent {
+  flex-direction: row;
 }
 
 /* En non-linear (rendered as <button>), affordance cliquable. */
@@ -86,8 +110,6 @@ button.stepContent:disabled {
   cursor: not-allowed;
 }
 
-/* Hover sur button non-linear : très subtil — la couleur de l'indicateur
-   et du label porte déjà le statut. On ajoute juste un léger fond. */
 button.stepContent:not(:disabled):hover {
   background-color: var(--background-neutral-subtlest-hovered);
 }
@@ -121,32 +143,26 @@ button.stepContent:not(:disabled):active {
   user-select: none;
 }
 
-/* Status — upcoming (par défaut) */
 .indicator[data-status="upcoming"] {
   background-color: var(--background-neutral-subtler-default);
   color: var(--text-subtle);
 }
 
-/* Status — active : pastille brand, texte inversé */
 .indicator[data-status="active"] {
   background-color: var(--background-brand-bold-default);
   color: var(--text-inverted);
 }
 
-/* Status — completed : pastille brand, icône check inversée */
 .indicator[data-status="completed"] {
   background-color: var(--background-brand-bold-default);
   color: var(--text-inverted);
 }
 
-/* Status — error : pastille critical, icône X inversée */
 .indicator[data-status="error"] {
   background-color: var(--background-critical-bold-default);
   color: var(--text-inverted);
 }
 
-/* Disabled — opacité réduite, neutre, NE PEUT PAS être combiné avec
-   un statut "actif" visuel : on retombe sur la palette désactivée. */
 .indicator[data-disabled] {
   background-color: var(--background-disabled-default);
   color: var(--text-disabled);
@@ -163,10 +179,18 @@ button.stepContent:not(:disabled):active {
   line-height: var(--line-height-ui-xs);
   letter-spacing: var(--letter-spacing-negative-tight);
   color: var(--text-subtle);
-  /* Pour que le label n'overflow pas le step en horizontal ; passe à plusieurs
-     lignes si besoin. */
   word-break: break-word;
   min-width: 0;
+}
+
+/* Horizontal : label centré sous l'indicateur */
+.stepItem[data-orientation="horizontal"] .label {
+  text-align: center;
+}
+
+/* Vertical : label à gauche, à côté de l'indicateur */
+.stepItem[data-orientation="vertical"] .label {
+  text-align: start;
 }
 
 .label[data-status="active"] {
@@ -188,38 +212,42 @@ button.stepContent:not(:disabled):active {
 }
 
 /* --------------------------------------------------------------------------
-   Connector — ligne reliant deux indicateurs
+   Connector — ligne reliant deux indicateurs voisins
    -------------------------------------------------------------------------- */
 
 .connector {
-  flex: 1 1 0;
   background-color: var(--border-default);
   transition-property: background-color;
   transition-duration: var(--duration-fast);
   transition-timing-function: var(--easing-default);
+  z-index: 0;
 }
 
-/* Horizontal : ligne fine horizontale, espacée du content par un petit gap */
+/* Horizontal — positionné en absolute entre l'indicateur courant et le
+   suivant, à la hauteur du centre de l'indicateur.
+
+   Chaque stepItem (sauf le dernier) a flex:1 et le même width que ses voisins.
+   L'indicateur est centré horizontalement (align-items:center sur stepItem
+   column), donc à 50% de la largeur de la cellule. Le connecteur va du centre
+   de l'indicateur courant au centre du suivant — i.e. de 50% à 150% du width
+   de la cellule courante, moins le rayon de chaque indicateur. */
 .connector[data-orientation="horizontal"] {
+  position: absolute;
+  top: calc((var(--size300) - var(--size025)) / 2);
+  left: calc(50% + var(--size300) / 2 + var(--space050));
+  right: calc(-50% + var(--size300) / 2 + var(--space050));
   height: var(--size025);
-  margin-inline: var(--space075);
-  align-self: center;
-  /* `align-self: center` aligne la ligne verticalement avec l'indicateur (qui
-     est plus haut que la ligne). */
 }
 
-/* Vertical : ligne fine verticale, sous l'indicateur, espacée verticalement */
+/* Vertical : ligne verticale, sous l'indicateur, alignée sur son centre */
 .connector[data-orientation="vertical"] {
   width: var(--size025);
   min-height: var(--size300);
   margin-block: var(--space075);
   margin-inline-start: calc(var(--size300) / 2 - var(--size025) / 2);
-  /* `margin-inline-start` aligne la ligne sur le centre de l'indicateur
-     (qui mesure `--size300`). */
   flex: 0 0 auto;
 }
 
-/* Connector coloré pour les étapes complétées */
 .connector[data-status="completed"] {
   background-color: var(--background-brand-bold-default);
 }
