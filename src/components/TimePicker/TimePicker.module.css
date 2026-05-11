@@ -51,8 +51,21 @@
   padding-inline: 0;
 }
 
-.timePicker[data-disabled] .segment[data-type="literal"] {
+/* Disabled — surclasse les couleurs de placeholder ET de literal pour que
+   tous les segments adoptent --text-disabled. Sans ces overrides, les
+   placeholders (HH/MM) restent en text-subtlest (spec (0,2,0)) et écrasent
+   l'héritage du .timeInput parent en text-disabled. */
+.timePicker[data-disabled] .segment[data-type="literal"],
+.timePicker[data-disabled] .segment[data-placeholder] {
   color: var(--text-disabled);
+}
+
+/* Invalid — texte segments en critical pour signaler l'erreur (alignement
+   avec DatePicker.segment[data-invalid]). `:not([data-focused])` car le
+   segment focused garde le fond bleu + texte inversé. `:not([data-disabled])`
+   sur le picker garantit que disabled prime sur invalid. */
+.timePicker[data-invalid]:not([data-disabled]) .segment:not([data-focused]) {
+  color: var(--text-critical);
 }
 
 /* ==========================================================================
