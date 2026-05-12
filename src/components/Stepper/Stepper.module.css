@@ -47,16 +47,16 @@
 }
 
 /* Horizontal : chaque step occupe une part égale ; indicateur centré au-dessus
-   du label centré. */
+   du label centré.
+   NOTE : la dernière étape reste aussi en `flex: 1 1 0` pour que toutes les
+   cellules aient la même largeur. Si elle était content-sized, l'avant-dernière
+   cellule serait plus large et son connecteur (calculé en % de sa propre
+   largeur) déborderait au-delà de l'indicateur de la dernière. */
 .stepItem[data-orientation="horizontal"] {
   flex: 1 1 0;
   flex-direction: column;
   align-items: center;
   min-width: 0;
-}
-
-.stepItem[data-orientation="horizontal"][data-last] {
-  flex: 0 0 auto;
 }
 
 /* Vertical : step item en column (stepContent + connecteur dessous) */
