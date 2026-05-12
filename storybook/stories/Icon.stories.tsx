@@ -5,6 +5,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerProvider,
+  Field,
   Icon,
   SearchField,
   Select,
@@ -564,7 +565,11 @@ function IconDetailPanel({
               onChange={(e) => {
                 setPanelSize(Number(e.target.value));
               }}
-              style={{ width: "100%", cursor: "pointer" }}
+              style={{
+                width: "100%",
+                cursor: "pointer",
+                accentColor: "var(--background-brand-bold-default)",
+              }}
             />
           </div>
 
@@ -758,18 +763,18 @@ function IconExplorer(): ReactElement {
           border: "1px solid var(--border-default)",
         }}
       >
-        {/* Recherche — DS SearchField */}
+        {/* Recherche — SearchField wrappé dans Field pour le label intégré */}
         <div style={{ flex: "1 1 220px", minWidth: 160 }}>
-          <div style={label}>Recherche</div>
-          <SearchField
-            placeholder="Filtrer par nom…"
-            value={search}
-            onChange={setSearch}
-            aria-label="Rechercher une icône"
-          />
+          <Field label="Recherche">
+            <SearchField
+              placeholder="Filtrer par nom…"
+              value={search}
+              onChange={setSearch}
+            />
+          </Field>
         </div>
 
-        {/* Variant — DS ToggleButtonGroup single */}
+        {/* Variant — ToggleButtonGroup n'a pas de prop label, label inline minimal */}
         <div>
           <div style={label}>Variant</div>
           <ToggleButtonGroup
@@ -789,20 +794,19 @@ function IconExplorer(): ReactElement {
           </ToggleButtonGroup>
         </div>
 
-        {/* Couleur — DS Select */}
-        <div style={{ minWidth: 160 }}>
-          <div style={label}>Couleur</div>
+        {/* Couleur — Select avec son label intégré */}
+        <div style={{ width: 140 }}>
           <Select
+            label="Couleur"
             items={COLORS.map((c) => ({ value: c, label: c }))}
             value={color}
             onChange={(v) => {
               if (v !== null) setColor(v as IconColor);
             }}
-            aria-label="Couleur"
           />
         </div>
 
-        {/* Taille — range natif (pas d'équivalent DS) */}
+        {/* Taille — range natif avec accent-color en brand */}
         <div>
           <div style={label}>Taille — {size}px</div>
           <input
@@ -814,11 +818,15 @@ function IconExplorer(): ReactElement {
             onChange={(e) => {
               setSize(Number(e.target.value));
             }}
-            style={{ width: 100, cursor: "pointer" }}
+            style={{
+              width: 100,
+              cursor: "pointer",
+              accentColor: "var(--background-brand-bold-default)",
+            }}
           />
         </div>
 
-        {/* Spacing — DS ToggleButtonGroup single */}
+        {/* Spacing — ToggleButtonGroup n'a pas de prop label, label inline minimal */}
         <div>
           <div style={label}>Spacing</div>
           <ToggleButtonGroup
