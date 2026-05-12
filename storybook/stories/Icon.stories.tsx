@@ -531,7 +531,10 @@ function IconDetailPanel({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       placement="right"
-      size="narrow"
+      // Responsive : min 360 px pour que les boutons du footer + le code
+      // d'import ne soient pas tronqués sur petits écrans ; 30 % d'écran
+      // sur grand écran ; plafonné à 440 px pour ne pas dominer la grille.
+      size="clamp(360px, 30vw, 440px)"
       aria-label={`Détails de l'icône ${name}`}
     >
       <DrawerHeader onClose={() => onOpenChange(false)}>{name}</DrawerHeader>
