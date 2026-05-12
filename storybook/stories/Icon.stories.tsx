@@ -1,4 +1,11 @@
-import { Icon } from "@naxit/comete-design-system";
+import {
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerProvider,
+  Icon,
+} from "@naxit/comete-design-system";
 import type { IconComponentProps } from "@naxit/comete-design-system";
 import * as Icons from "@naxit/comete-icons";
 import type { IconColor, IconName, IconProps, IconVariant } from "@naxit/comete-icons";
@@ -431,30 +438,41 @@ function IconCard({
 }
 
 // ----------------------------------------------------------------------
-// IconDetailPanel — panneau latéral montrant les détails d'une icône
+// IconDetailPanel — Drawer DS montrant les détails d'une icône (pattern
+// Material Symbols : preview en grand, variants cliquables, slider taille,
+// code d'import + boutons de téléchargement)
 
 interface IconDetailPanelProps {
   name: string;
   Component: IconComponent;
-  onClose: () => void;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-/**
- * Panneau de détail latéral (pattern Material Symbols).
- * - Icône en grand
- * - Nom complet (sans troncature)
- * - 3 variants côte à côte (outlined / filled / duotone)
- * - Code d'import
- * - Boutons Download SVG / PNG
- */
+const PANEL_SIZE_MIN = 16;
+const PANEL_SIZE_MAX = 128;
+const PANEL_SIZE_DEFAULT = 96;
+
 function IconDetailPanel({
   name,
   Component,
-  onClose,
+  isOpen,
+  onOpenChange,
 }: IconDetailPanelProps): ReactElement {
   const previewRef = useRef<HTMLDivElement>(null);
+  const [panelVariant, setPanelVariant] = useState<IconVariant>("outlined");
+  const [panelSize, setPanelSize] = useState(PANEL_SIZE_DEFAULT);
   const [codeCopied, setCodeCopied] = useState(false);
   const codeCopyTimerRef = useRef<number | null>(null);
+
+  // Reset variant + size à chaque ouverture sur une nouvelle icône.
+  useEffect(() => {
+    if (isOpen) {
+      setPanelVariant("outlined");
+      setPanelSize(PANEL_SIZE_DEFAULT);
+      setCodeCopied(false);
+    }
+  }, [isOpen, name]);
 
   useEffect(
     () => () => {
@@ -465,7 +483,11 @@ function IconDetailPanel({
     [],
   );
 
-  const importCode = `<Icon icon="${name}" />`;
+  // Code d'import — inclut `appearance` si différent du défaut (outlined).
+  const importCode =
+    panelVariant === "outlined"
+      ? `<Icon icon="${name}" />`
+      : `<Icon icon="${name}" appearance="${panelVariant}" />`;
 
   const handleCopyCode = (): void => {
     void navigator.clipboard.writeText(importCode);
@@ -481,15 +503,24 @@ function IconDetailPanel({
   const handleDownloadSvg = (): void => {
     if (!previewRef.current) return;
     const blob = buildSvgBlob(previewRef.current);
-    if (blob) downloadBlob(blob, `${name}.svg`);
+    if (blob) downloadBlob(blob, `${name}-${panelVariant}.svg`);
   };
 
   const handleDownloadPng = (): void => {
     if (!previewRef.current) return;
-    void downloadPng(previewRef.current, `${name}.png`);
+    void downloadPng(previewRef.current, `${name}-${panelVariant}.png`);
   };
 
-  const btnStyle: CSSProperties = {
+  const sectionLabel: CSSProperties = {
+    fontSize: 11,
+    fontWeight: 600,
+    color: "var(--text-subtlest)",
+    textTransform: "uppercase",
+    letterSpacing: "0.05em",
+    marginBottom: 8,
+  };
+
+  const dlBtnStyle: CSSProperties = {
     padding: "8px 16px",
     border: "1px solid var(--border-default)",
     borderRadius: 6,
@@ -502,214 +533,167 @@ function IconDetailPanel({
   };
 
   return (
-    <aside
-      style={{
-        width: 360,
-        flexShrink: 0,
-        padding: 24,
-        background: "var(--background-surface-elevation-raise-default)",
-        borderLeft: "1px solid var(--border-default)",
-        position: "sticky",
-        top: 0,
-        alignSelf: "flex-start",
-        maxHeight: "100vh",
-        overflowY: "auto",
-        display: "flex",
-        flexDirection: "column",
-        gap: 20,
-      }}
+    <Drawer
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      placement="right"
+      size="narrow"
+      aria-label={`Détails de l'icône ${name}`}
     >
-      {/* Header : nom + close */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          gap: 12,
-        }}
-      >
-        <h3
-          style={{
-            margin: 0,
-            fontSize: 18,
-            fontWeight: 600,
-            color: "var(--text-default)",
-            wordBreak: "break-word",
-            lineHeight: 1.3,
-          }}
-        >
-          {name}
-        </h3>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Fermer"
-          style={{
-            border: "none",
-            background: "transparent",
-            cursor: "pointer",
-            fontSize: 20,
-            padding: 4,
-            color: "var(--text-subtle)",
-            flexShrink: 0,
-            lineHeight: 1,
-          }}
-        >
-          ✕
-        </button>
-      </div>
-
-      {/* Icône en grand (preview SVG pour téléchargement) */}
-      <div
-        ref={previewRef}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 32,
-          background: "var(--background-surface-elevation-sunken-default)",
-          borderRadius: 8,
-        }}
-      >
-        <Component size={96} />
-      </div>
-
-      {/* 3 variants côte à côte */}
-      <div>
-        <div
-          style={{
-            fontSize: 11,
-            fontWeight: 600,
-            color: "var(--text-subtlest)",
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-            marginBottom: 8,
-          }}
-        >
-          Variants
-        </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: 8,
-          }}
-        >
-          {VARIANTS.map((v) => (
-            <div
-              key={v}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 6,
-                padding: 12,
-                background: "var(--background-surface-elevation-sunken-default)",
-                borderRadius: 6,
-              }}
-            >
-              <Component variant={v} size={32} />
-              <span
-                style={{
-                  fontSize: 10,
-                  color: "var(--text-subtlest)",
-                  textTransform: "capitalize",
-                }}
-              >
-                {v}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Code d'import */}
-      <div>
-        <div
-          style={{
-            fontSize: 11,
-            fontWeight: 600,
-            color: "var(--text-subtlest)",
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-            marginBottom: 8,
-          }}
-        >
-          Import
-        </div>
-        <button
-          type="button"
-          onClick={handleCopyCode}
-          title="Cliquer pour copier"
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            padding: "10px 12px",
-            border: "1px solid var(--border-default)",
-            borderRadius: 6,
-            background: codeCopied
-              ? "var(--background-success-subtlest-default)"
-              : "var(--background-surface-elevation-sunken-default)",
-            cursor: "pointer",
-            fontFamily: "var(--font-family-monospace, ui-monospace, monospace)",
-            fontSize: 12,
-            color: "var(--text-default)",
-            textAlign: "left",
-            transition: "background 0.15s",
-          }}
-        >
-          <code>{importCode}</code>
-          <span
+      <DrawerHeader onClose={() => onOpenChange(false)}>{name}</DrawerHeader>
+      <DrawerBody>
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          {/* Preview SVG (utilisé pour téléchargement) */}
+          <div
+            ref={previewRef}
             style={{
-              fontSize: 11,
-              color: codeCopied
-                ? "var(--text-success)"
-                : "var(--text-subtlest)",
-              fontWeight: 600,
-              fontFamily: "inherit",
-              flexShrink: 0,
-              marginLeft: 8,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 32,
+              minHeight: 160,
+              background: "var(--background-surface-elevation-sunken-default)",
+              borderRadius: 8,
             }}
           >
-            {codeCopied ? "✓ Copié" : "Copier"}
-          </span>
-        </button>
-      </div>
+            <Component variant={panelVariant} size={panelSize} />
+          </div>
 
-      {/* Boutons de téléchargement */}
-      <div>
-        <div
-          style={{
-            fontSize: 11,
-            fontWeight: 600,
-            color: "var(--text-subtlest)",
-            textTransform: "uppercase",
-            letterSpacing: "0.05em",
-            marginBottom: 8,
-          }}
+          {/* Slider de taille */}
+          <div>
+            <div style={sectionLabel}>Taille — {panelSize} px</div>
+            <input
+              type="range"
+              min={PANEL_SIZE_MIN}
+              max={PANEL_SIZE_MAX}
+              step={4}
+              value={panelSize}
+              onChange={(e) => {
+                setPanelSize(Number(e.target.value));
+              }}
+              style={{ width: "100%", cursor: "pointer" }}
+            />
+          </div>
+
+          {/* 3 variants cliquables */}
+          <div>
+            <div style={sectionLabel}>Variants — clique pour changer</div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: 8,
+              }}
+            >
+              {VARIANTS.map((v) => {
+                const isActive = v === panelVariant;
+                return (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => {
+                      setPanelVariant(v);
+                    }}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 6,
+                      padding: 12,
+                      background: isActive
+                        ? "var(--background-selected-subtlest-default)"
+                        : "var(--background-surface-elevation-sunken-default)",
+                      border: `1.5px solid ${
+                        isActive ? "var(--border-focus)" : "transparent"
+                      }`,
+                      borderRadius: 6,
+                      cursor: "pointer",
+                      fontFamily: "inherit",
+                      transition: "background 0.15s, border-color 0.15s",
+                    }}
+                  >
+                    <Component variant={v} size={32} />
+                    <span
+                      style={{
+                        fontSize: 10,
+                        color: isActive
+                          ? "var(--text-selected)"
+                          : "var(--text-subtlest)",
+                        textTransform: "capitalize",
+                        fontWeight: isActive ? 600 : 400,
+                      }}
+                    >
+                      {v}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Code d'import */}
+          <div>
+            <div style={sectionLabel}>Import</div>
+            <button
+              type="button"
+              onClick={handleCopyCode}
+              title="Cliquer pour copier"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+                padding: "10px 12px",
+                border: "1px solid var(--border-default)",
+                borderRadius: 6,
+                background: codeCopied
+                  ? "var(--background-success-subtlest-default)"
+                  : "var(--background-surface-elevation-sunken-default)",
+                cursor: "pointer",
+                fontFamily:
+                  "var(--font-family-monospace, ui-monospace, monospace)",
+                fontSize: 12,
+                color: "var(--text-default)",
+                textAlign: "left",
+                transition: "background 0.15s",
+              }}
+            >
+              <code>{importCode}</code>
+              <span
+                style={{
+                  fontSize: 11,
+                  color: codeCopied
+                    ? "var(--text-success)"
+                    : "var(--text-subtlest)",
+                  fontWeight: 600,
+                  fontFamily: "inherit",
+                  flexShrink: 0,
+                  marginLeft: 8,
+                }}
+              >
+                {codeCopied ? "✓ Copié" : "Copier"}
+              </span>
+            </button>
+          </div>
+        </div>
+      </DrawerBody>
+      <DrawerFooter>
+        <button
+          type="button"
+          onClick={handleDownloadSvg}
+          style={{ ...dlBtnStyle, flex: 1 }}
         >
-          Téléchargement
-        </div>
-        <div style={{ display: "flex", gap: 8 }}>
-          <button
-            type="button"
-            onClick={handleDownloadSvg}
-            style={{ ...btnStyle, flex: 1 }}
-          >
-            SVG
-          </button>
-          <button
-            type="button"
-            onClick={handleDownloadPng}
-            style={{ ...btnStyle, flex: 1 }}
-          >
-            PNG
-          </button>
-        </div>
-      </div>
-    </aside>
+          Télécharger SVG
+        </button>
+        <button
+          type="button"
+          onClick={handleDownloadPng}
+          style={{ ...dlBtnStyle, flex: 1 }}
+        >
+          Télécharger PNG
+        </button>
+      </DrawerFooter>
+    </Drawer>
   );
 }
 
@@ -776,20 +760,12 @@ function IconExplorer(): ReactElement {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "flex-start",
-        minHeight: "100vh",
-      }}
-    >
-      {/* Zone principale (toolbar + grille) */}
+    <DrawerProvider>
       <div
         style={{
-          flex: 1,
           padding: 24,
           fontFamily: "var(--font-family-primary, system-ui, sans-serif)",
-          minWidth: 0,
+          minHeight: "100vh",
         }}
       >
       {/* Barre d'outils */}
@@ -963,17 +939,20 @@ function IconExplorer(): ReactElement {
         </div>
       )}
       </div>
-      {/* Panneau de détail latéral (pattern Material Symbols) */}
-      {selected !== null && selectedComponent !== null && selectedComponent !== undefined && (
+      {/* Drawer de détail latéral (pattern Material Symbols) — rendu
+          inconditionnellement et contrôlé par `isOpen` pour bénéficier des
+          transitions slide-in/out du Drawer DS. */}
+      {selectedComponent !== null && selectedComponent !== undefined && (
         <IconDetailPanel
-          name={selected}
+          name={selected ?? ""}
           Component={selectedComponent}
-          onClose={() => {
-            setSelected(null);
+          isOpen={selected !== null}
+          onOpenChange={(open) => {
+            if (!open) setSelected(null);
           }}
         />
       )}
-    </div>
+    </DrawerProvider>
   );
 }
 
