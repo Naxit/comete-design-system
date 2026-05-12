@@ -342,9 +342,16 @@ interface IconCardProps {
   size: number;
   spacing: IconSpacing;
   isCopied: boolean;
-  onCopy: (name: string, container: HTMLElement) => void;
+  isSelected: boolean;
+  onClick: (name: string, container: HTMLElement) => void;
 }
 
+/**
+ * Carte de la grille — icône + nom uniquement.
+ * Hover : background subtle + cursor pointer.
+ * Sélectionnée (panneau ouvert) : outline brand.
+ * Copiée : check + label « Copié ! » pendant 1.5 s.
+ */
 function IconCard({
   name,
   Component,
@@ -353,93 +360,356 @@ function IconCard({
   size,
   spacing,
   isCopied,
-  onCopy,
+  isSelected,
+  onClick,
 }: IconCardProps): ReactElement {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const dlBtnStyle: CSSProperties = {
-    fontSize: 10,
-    fontWeight: 600,
-    padding: "2px 7px",
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        if (containerRef.current) onClick(name, containerRef.current);
+      }}
+      title={name}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 8,
+        padding: "16px 8px",
+        border: `1.5px solid ${
+          isSelected ? "var(--border-focus)" : "transparent"
+        }`,
+        borderRadius: 8,
+        background: isCopied
+          ? "var(--background-success-subtlest-default)"
+          : isSelected
+            ? "var(--background-selected-subtlest-default)"
+            : "transparent",
+        cursor: "pointer",
+        width: "100%",
+        transition: "background 0.15s, border-color 0.15s",
+        fontFamily: "inherit",
+      }}
+      onMouseEnter={(e) => {
+        if (!isCopied && !isSelected) {
+          e.currentTarget.style.background =
+            "var(--background-neutral-subtlest-hovered)";
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!isCopied && !isSelected) {
+          e.currentTarget.style.background = "transparent";
+        }
+      }}
+    >
+      <div ref={containerRef}>
+        <Component variant={variant} color={color} spacing={spacing} size={size} />
+      </div>
+      <span
+        style={{
+          fontSize: 10,
+          color: isCopied
+            ? "var(--text-success)"
+            : isSelected
+              ? "var(--text-selected)"
+              : "var(--text-subtlest)",
+          textAlign: "center",
+          lineHeight: 1.2,
+          width: "100%",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
+          fontWeight: isCopied || isSelected ? 600 : 400,
+        }}
+      >
+        {isCopied ? "✓ Copié !" : name}
+      </span>
+    </button>
+  );
+}
+
+// ----------------------------------------------------------------------
+// IconDetailPanel — panneau latéral montrant les détails d'une icône
+
+interface IconDetailPanelProps {
+  name: string;
+  Component: IconComponent;
+  onClose: () => void;
+}
+
+/**
+ * Panneau de détail latéral (pattern Material Symbols).
+ * - Icône en grand
+ * - Nom complet (sans troncature)
+ * - 3 variants côte à côte (outlined / filled / duotone)
+ * - Code d'import
+ * - Boutons Download SVG / PNG
+ */
+function IconDetailPanel({
+  name,
+  Component,
+  onClose,
+}: IconDetailPanelProps): ReactElement {
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [codeCopied, setCodeCopied] = useState(false);
+  const codeCopyTimerRef = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (codeCopyTimerRef.current !== null) {
+        window.clearTimeout(codeCopyTimerRef.current);
+      }
+    },
+    [],
+  );
+
+  const importCode = `<Icon icon="${name}" />`;
+
+  const handleCopyCode = (): void => {
+    void navigator.clipboard.writeText(importCode);
+    setCodeCopied(true);
+    if (codeCopyTimerRef.current !== null) {
+      window.clearTimeout(codeCopyTimerRef.current);
+    }
+    codeCopyTimerRef.current = window.setTimeout(() => {
+      setCodeCopied(false);
+    }, 1500);
+  };
+
+  const handleDownloadSvg = (): void => {
+    if (!previewRef.current) return;
+    const blob = buildSvgBlob(previewRef.current);
+    if (blob) downloadBlob(blob, `${name}.svg`);
+  };
+
+  const handleDownloadPng = (): void => {
+    if (!previewRef.current) return;
+    void downloadPng(previewRef.current, `${name}.png`);
+  };
+
+  const btnStyle: CSSProperties = {
+    padding: "8px 16px",
     border: "1px solid var(--border-default)",
-    borderRadius: 4,
+    borderRadius: 6,
     background: "var(--background-neutral-subtler-default)",
-    color: "var(--text-subtlest)",
+    color: "var(--text-default)",
     cursor: "pointer",
-    letterSpacing: "0.03em",
+    fontSize: 13,
+    fontWeight: 500,
+    fontFamily: "inherit",
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
-      <button
-        type="button"
-        onClick={() => {
-          if (containerRef.current) onCopy(name, containerRef.current);
-        }}
-        title={`Copier le SVG de "${name}"`}
+    <aside
+      style={{
+        width: 360,
+        flexShrink: 0,
+        padding: 24,
+        background: "var(--background-surface-elevation-raise-default)",
+        borderLeft: "1px solid var(--border-default)",
+        position: "sticky",
+        top: 0,
+        alignSelf: "flex-start",
+        maxHeight: "100vh",
+        overflowY: "auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: 20,
+      }}
+    >
+      {/* Header : nom + close */}
+      <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 6,
-          padding: "12px 4px 8px",
-          border: `1.5px solid ${isCopied ? "var(--border-focus)" : "transparent"}`,
-          borderRadius: 8,
-          background: isCopied
-            ? "var(--background-selected-subtlest-default)"
-            : "transparent",
-          cursor: "pointer",
-          width: "100%",
-          transition: "background 0.1s, border-color 0.1s",
-          fontFamily: "inherit",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          gap: 12,
         }}
       >
-        <div ref={containerRef}>
-          <Component variant={variant} color={color} spacing={spacing} size={size} />
-        </div>
-        <span
+        <h3
           style={{
-            fontSize: 10,
-            color: isCopied
-              ? "var(--text-selected)"
-              : "var(--text-subtlest)",
-            textAlign: "center",
-            lineHeight: 1.2,
-            width: "100%",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
+            margin: 0,
+            fontSize: 18,
+            fontWeight: 600,
+            color: "var(--text-default)",
+            wordBreak: "break-word",
+            lineHeight: 1.3,
           }}
         >
-          {isCopied ? "✓ SVG copié" : name}
-        </span>
-      </button>
-      <div style={{ display: "flex", gap: 4, marginTop: 2 }}>
+          {name}
+        </h3>
         <button
           type="button"
-          title={`Télécharger ${name}.svg`}
-          onClick={() => {
-            if (!containerRef.current) return;
-            const blob = buildSvgBlob(containerRef.current);
-            if (blob) downloadBlob(blob, `${name}.svg`);
+          onClick={onClose}
+          aria-label="Fermer"
+          style={{
+            border: "none",
+            background: "transparent",
+            cursor: "pointer",
+            fontSize: 20,
+            padding: 4,
+            color: "var(--text-subtle)",
+            flexShrink: 0,
+            lineHeight: 1,
           }}
-          style={dlBtnStyle}
         >
-          SVG
-        </button>
-        <button
-          type="button"
-          title={`Télécharger ${name}.png`}
-          onClick={() => {
-            if (!containerRef.current) return;
-            void downloadPng(containerRef.current, `${name}.png`);
-          }}
-          style={dlBtnStyle}
-        >
-          PNG
+          ✕
         </button>
       </div>
-    </div>
+
+      {/* Icône en grand (preview SVG pour téléchargement) */}
+      <div
+        ref={previewRef}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 32,
+          background: "var(--background-surface-elevation-sunken-default)",
+          borderRadius: 8,
+        }}
+      >
+        <Component size={96} />
+      </div>
+
+      {/* 3 variants côte à côte */}
+      <div>
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 600,
+            color: "var(--text-subtlest)",
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+            marginBottom: 8,
+          }}
+        >
+          Variants
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 8,
+          }}
+        >
+          {VARIANTS.map((v) => (
+            <div
+              key={v}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 6,
+                padding: 12,
+                background: "var(--background-surface-elevation-sunken-default)",
+                borderRadius: 6,
+              }}
+            >
+              <Component variant={v} size={32} />
+              <span
+                style={{
+                  fontSize: 10,
+                  color: "var(--text-subtlest)",
+                  textTransform: "capitalize",
+                }}
+              >
+                {v}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Code d'import */}
+      <div>
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 600,
+            color: "var(--text-subtlest)",
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+            marginBottom: 8,
+          }}
+        >
+          Import
+        </div>
+        <button
+          type="button"
+          onClick={handleCopyCode}
+          title="Cliquer pour copier"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+            padding: "10px 12px",
+            border: "1px solid var(--border-default)",
+            borderRadius: 6,
+            background: codeCopied
+              ? "var(--background-success-subtlest-default)"
+              : "var(--background-surface-elevation-sunken-default)",
+            cursor: "pointer",
+            fontFamily: "var(--font-family-monospace, ui-monospace, monospace)",
+            fontSize: 12,
+            color: "var(--text-default)",
+            textAlign: "left",
+            transition: "background 0.15s",
+          }}
+        >
+          <code>{importCode}</code>
+          <span
+            style={{
+              fontSize: 11,
+              color: codeCopied
+                ? "var(--text-success)"
+                : "var(--text-subtlest)",
+              fontWeight: 600,
+              fontFamily: "inherit",
+              flexShrink: 0,
+              marginLeft: 8,
+            }}
+          >
+            {codeCopied ? "✓ Copié" : "Copier"}
+          </span>
+        </button>
+      </div>
+
+      {/* Boutons de téléchargement */}
+      <div>
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 600,
+            color: "var(--text-subtlest)",
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+            marginBottom: 8,
+          }}
+        >
+          Téléchargement
+        </div>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button
+            type="button"
+            onClick={handleDownloadSvg}
+            style={{ ...btnStyle, flex: 1 }}
+          >
+            SVG
+          </button>
+          <button
+            type="button"
+            onClick={handleDownloadPng}
+            style={{ ...btnStyle, flex: 1 }}
+          >
+            PNG
+          </button>
+        </div>
+      </div>
+    </aside>
   );
 }
 
@@ -450,6 +720,7 @@ function IconExplorer(): ReactElement {
   const [size, setSize] = useState(24);
   const [spacing, setSpacing] = useState<IconSpacing>("default");
   const [copied, setCopied] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(null);
   const timerRef = useRef<number | null>(null);
 
   useEffect(
@@ -463,15 +734,28 @@ function IconExplorer(): ReactElement {
     name.toLowerCase().includes(search.toLowerCase())
   );
 
-  function handleCopy(name: string, container: HTMLElement): void {
+  /**
+   * Clic sur une carte d'icône :
+   * 1. Copie le SVG dans le clipboard.
+   * 2. Affiche un check « ✓ Copié ! » sur la carte pendant 1.5 s.
+   * 3. Ouvre le panneau de détail latéral (pattern Material Symbols).
+   */
+  function handleIconClick(name: string, container: HTMLElement): void {
     const svgString = buildSvgString(container);
     if (svgString) void navigator.clipboard.writeText(svgString);
     setCopied(name);
+    setSelected(name);
     if (timerRef.current !== null) window.clearTimeout(timerRef.current);
     timerRef.current = window.setTimeout(() => {
       setCopied(null);
     }, 1500);
   }
+
+  // Composant de l'icône sélectionnée (pour passer au panneau de détail).
+  const selectedComponent =
+    selected !== null
+      ? ICON_ENTRIES.find(([name]) => name === selected)?.[1]
+      : null;
 
   const label: CSSProperties = {
     fontSize: 11,
@@ -494,11 +778,20 @@ function IconExplorer(): ReactElement {
   return (
     <div
       style={{
-        padding: 24,
-        fontFamily: "var(--font-family-primary, system-ui, sans-serif)",
+        display: "flex",
+        alignItems: "flex-start",
         minHeight: "100vh",
       }}
     >
+      {/* Zone principale (toolbar + grille) */}
+      <div
+        style={{
+          flex: 1,
+          padding: 24,
+          fontFamily: "var(--font-family-primary, system-ui, sans-serif)",
+          minWidth: 0,
+        }}
+      >
       {/* Barre d'outils */}
       <div
         style={{
@@ -637,7 +930,7 @@ function IconExplorer(): ReactElement {
         {" / "}
         {ICON_ENTRIES.length} icônes
         {search !== "" && ` — "${search}"`}
-        {" · cliquer pour copier le SVG"}
+        {" · cliquer pour copier le SVG et ouvrir les détails"}
       </p>
 
       {/* Grille */}
@@ -663,10 +956,22 @@ function IconExplorer(): ReactElement {
               size={size}
               spacing={spacing}
               isCopied={copied === name}
-              onCopy={handleCopy}
+              isSelected={selected === name}
+              onClick={handleIconClick}
             />
           ))}
         </div>
+      )}
+      </div>
+      {/* Panneau de détail latéral (pattern Material Symbols) */}
+      {selected !== null && selectedComponent !== null && selectedComponent !== undefined && (
+        <IconDetailPanel
+          name={selected}
+          Component={selectedComponent}
+          onClose={() => {
+            setSelected(null);
+          }}
+        />
       )}
     </div>
   );
