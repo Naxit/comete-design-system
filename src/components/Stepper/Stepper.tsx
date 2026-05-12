@@ -16,7 +16,6 @@ import {
   type ReactNode,
 } from "react";
 import { Icon } from "../Icon/index.js";
-import { FocusRing } from "../FocusRing/index.js";
 import styles from "./Stepper.module.css";
 
 // -----------------------------------------------------------------------
@@ -240,6 +239,10 @@ export function Step({
 
   const index = __index ?? 0;
   const isLast = index === count - 1;
+  // `isActive` est tracé indépendamment de `status` : une étape en erreur
+  // qui est aussi l'étape courante doit pouvoir être stylée différemment
+  // (graisse medium) sans changer son data-status.
+  const isActive = index === activeStep;
 
   // Détermine si l'étape est complétée :
   // - override explicite via `isCompleted` (prioritaire) ;
@@ -293,6 +296,7 @@ export function Step({
       <span
         className={styles.indicator}
         data-status={status}
+        data-active={isActive || undefined}
         data-disabled={isDisabled || undefined}
         aria-hidden="true"
       >
@@ -301,13 +305,11 @@ export function Step({
       <span
         className={styles.label}
         data-status={status}
+        data-active={isActive || undefined}
         data-disabled={isDisabled || undefined}
       >
         {label}
       </span>
-      {renderAsButton && !isDisabled && (
-        <FocusRing borderRadius={4} position="outside" />
-      )}
     </>
   );
 

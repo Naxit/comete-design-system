@@ -196,9 +196,9 @@ button.stepContent:not(:disabled):active {
   text-align: start;
 }
 
+/* Couleur par status — la graisse est gérée séparément via `data-active` */
 .label[data-status="active"] {
   color: var(--text-default);
-  font-weight: var(--font-weight-medium);
 }
 
 .label[data-status="completed"] {
@@ -207,6 +207,12 @@ button.stepContent:not(:disabled):active {
 
 .label[data-status="error"] {
   color: var(--text-critical);
+}
+
+/* Étape courante (active) → graisse medium, quel que soit le status.
+   Ainsi une étape en erreur qui n'est pas l'étape courante garde la graisse
+   normale, et une étape en erreur qui EST l'étape courante est emphased. */
+.label[data-active] {
   font-weight: var(--font-weight-medium);
 }
 
